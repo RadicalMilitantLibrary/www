@@ -1,4 +1,4 @@
-# Jotunbane-s-Library-Project
+## Radical Militant Library web interface
 
 An attempt to raise the quality of ebooks.
 
