@@ -353,3 +353,5 @@ function getDateFormatted( $d, $f = 'DD MMM YYYY', $s = array( 'space' => '&nbsp
 					.substr( $d, 0, 4 );
 	}
 }
+
+?>

@@ -1,7 +1,7 @@
 <?php
 // ============================================================================
 //  Comments for Radical Militant Library
-//  Copyright (C) 2009-2016 Jotunbane 
+//  Copyright (C) 2009-2016 Jotunbane
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,20 +26,20 @@ function RMLdisplaycomment()
 		$threadid = $thisrow->thread_id;
 		$postedon = $thisrow->posted_on;
 		$body = $thisrow->body;
-		$author = $thisrow->author;	
+		$author = $thisrow->author;
 		$level = $thisrow->level;
 
 		setTimeZone();
 		$date = strtotime($postedon);
 		$date = strftime('%d %b %Y %H:%M',$date);
 
-		$body = nl2br($body);		
+		$body = nl2br($body);
 
 		print("\n<div class=\"inlineitem\">");
 		if($threadid > 0) { // ewa: todo: css-class
 			print("\n<a href=\"?document=view&amp;id=$threadid\"><img style=\"float:left;width:150px;margin:0px;margin-right:10px;border-width:1px;border-color:black\" alt=\"Cover\" src=\"./covers/cover$threadid\"/></a>");
 		}
-		
+
 		$thistitle = RMLgetdocumenttitle($threadid);
 		print("\n<p class=\"boxheader\"><big>$thistitle</big></p>");
 		print("\n<hr class=\"forumseperator\">");
@@ -51,17 +51,17 @@ function RMLdisplaycomment()
 		print("\n<div class=\"inlineclear\"></div>");
 		print("\n</div>");
 	}
-	
+
 	if($numrows == 0) {
 		print("ERROR : Forum is empty.<br>");
-	}	
+	}
 }
 
 // ============================================================================
 
 function RMLforumread() {
 	global $id, $order;
-	
+
 	$result = RMLfiresql("SELECT thread_id,body,posted_on,level,author,parent_id FROM forum WHERE id=$id");
 	$numres = pg_numrows($result);
 	if($numres == 0) {
@@ -76,7 +76,7 @@ function RMLforumread() {
 	$parent = $thismessage->parent_id;
 	$body = $thismessage->body;
 	$body = nl2br($thismessage->body);
-	
+
 	$date = RMLfixdate($date);
 	print("\n<div class=\"order\"><small>by : <b>$author</b> <i>$date</i></small></div>");
 	RMLdisplay("$body",5);
@@ -98,7 +98,7 @@ function RMLforumread() {
 	print("\n</div>");
 
 	$result = RMLfiresql("SELECT id,body,subject,author,posted_on FROM forum WHERE thread_id=$threadid AND parent_id=$id ORDER BY posted_on DESC");
-	
+
 	$numres = pg_numrows($result);
 	$count = 0;
 
@@ -149,7 +149,7 @@ function RMLforumread() {
 
 function RMLforumpost( $print_on = true ) {
 	global $id;
-	
+
 	if( RMLgetcurrentuser() == null ) {
 		//return false;
 		$author = "Anonymous";
@@ -206,7 +206,7 @@ function RMLsaveforum( $id, $print_on = true ) {
 /*		if($score == 0) {
 			RMLfiresql("INSERT INTO news (id,headline,body,author,posted) VALUES(DEFAULT,'New comment.','<b>$author</b>, on <b><a href=\"./?document=view&id=$id\">$docname</a></b>. No Rating','SYSTEM',NOW())");
 		} else {
-			RMLfiresql("INSERT INTO news (id,headline,body,author,posted) VALUES(DEFAULT,'New comment.','<b>$author</b>, on <b><a href=\"./?document=view&id=$id\">$docname</a></b>. Rating <b>$score</b>.','SYSTEM',NOW())"); 
+			RMLfiresql("INSERT INTO news (id,headline,body,author,posted) VALUES(DEFAULT,'New comment.','<b>$author</b>, on <b><a href=\"./?document=view&id=$id\">$docname</a></b>. Rating <b>$score</b>.','SYSTEM',NOW())");
 		}*/
 	}
 	return processOutput( $out, $print_on );
@@ -259,3 +259,4 @@ function RMLdisplaycomments( $id, $print_on = true )
 	return processOutput( $out, $print_on );
 }
 
+?>

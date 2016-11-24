@@ -1,7 +1,7 @@
 <?php
 // ============================================================================
 //  Database functions for Radical Militant Library
-//  Copyright (C) 2009-2016 Jotunbane 
+//  Copyright (C) 2009-2016 Jotunbane
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ class pgDB	// https://secure.php.net/manual/en/language.oop5.static.php
 			$this->connection_string .= $k .'=' .$v .' ';
 		}
 		$this::connect();//unsure
-	} 
+	}
 
 	public static function connect()	// method handling static var
 	{
@@ -109,3 +109,5 @@ function RMLclosedb() // vv01f: later to be called by a deconstructor, now just 
 		return pg_close( $conn );
 	}
 }
+
+?>

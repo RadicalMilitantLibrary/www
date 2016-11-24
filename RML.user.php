@@ -2,7 +2,7 @@
 
 // ============================================================================
 //  User functions for Radical Militant Library
-//  Copyright (C) 2009-2015 Jotunbane 
+//  Copyright (C) 2009-2015 Jotunbane
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -154,9 +154,9 @@ function RMLdisplayuserpage( $print_on = true ) {
 
 /* vv01f: Password Change Day: 1st of Feb ... let's go for it in 2016 ! as J. called the feature recently
  * and sha1 was encapsuled in a single function where it might be changed in another commit
- * 
+ *
  * also see: https://www.owasp.org/index.php/Password_length_%26_complexity
- * 
+ *
  * */
 function RMLdisplaychpwd( $print_on = true )
 {
@@ -188,7 +188,7 @@ function RMLdisplaychpwd( $print_on = true )
 			$err .= 'Error in new password<br>';
 		} /*elseif () {	//maybe apply $policy
 		}/**/
-		
+
 		//set new pass as long as no errors occured
 		if ( $err === '' ) {
 			$result = RMLfiresql( "UPDATE \"user\" SET pass='" .getPwdHash( $pwd1 ) ."' WHERE handle='".$user."'" );
@@ -259,7 +259,7 @@ function RMLdisplaystylesheets( $print_on = true ) {
 function RMLnewstylesheet( $print_on = true ) {
 	$user = RMLgetcurrentuser();
 	if( $user ) {
-		
+
 		$result = RMLfiresql("SELECT style FROM stylesheet WHERE owner='$user' AND name='default'");
 		if(pg_numrows($result) > 0) {
 			$thisrow = pg_Fetch_Object($result,0);
@@ -272,7 +272,7 @@ function RMLnewstylesheet( $print_on = true ) {
 			$style = "/* This is the Global 'Default' stylesheet. You can use that as a template.*/\n\n" . $style;
 			$name = "default";
 		}
-		
+
 		$out = "\n<form method=\"post\" action=\"?style=save\"><table class=\"form\">
 <tr><td valign=\"top\"><b>Name:</b></td><td><input class=\"norm\" type=\"text\" name=\"title\" value=\"$name\"></td></tr>
 <tr><td valign=\"top\"><b>Stylesheet:</b></td><td><textarea class=\"norm\" rows=\"20\" cols=\"41\" wrap=\"none\" name=\"body\">$style</textarea></td></tr>
@@ -287,7 +287,7 @@ function RMLnewstylesheet( $print_on = true ) {
 
 function RMLeditstylesheet($id, $print_on = true ) {
 	$user = RMLgetcurrentuser();
-	
+
 	$result = RMLfiresql("SELECT owner,style,name FROM stylesheet WHERE id=$id");
 	$thisrow = pg_Fetch_Object($result,0);
 	$owner = $thisrow->owner;
@@ -376,7 +376,7 @@ function RMLdisplaydocuments( $print_on = true ) {
 	$user = RMLgetcurrentuser();
 
 	$out = '';
-	if( $user ) {	
+	if( $user ) {
 		$result = RMLfiresql( "SELECT id,status,posted_on,title,subject_id,author_id,year,teaser FROM document WHERE handle='$user' AND status<3 ORDER BY title" );
 
 	$out .= "\n<div class=\"box\"><div class=\"boxheader\"><b>Documents</b></div><div class=\"boxtext\">";
@@ -462,7 +462,7 @@ function RMLreplymessage( $id, $print_on = true ) {
 		$thissender = $thisrow->sender_handle;
 		$thisbody = $thisrow->body;
 		$thissubject = $thisrow->subject;
-		
+
 		if( $thishandle <> $user ) {
 			$out = "ERROR: Cookie Bad : Not your message??";
 		} else {
@@ -582,3 +582,5 @@ function hasRights( $action = '', $arr = array() )
 	}
 	return false;
 }
+
+?>

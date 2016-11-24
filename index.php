@@ -167,7 +167,7 @@ switch( $message ) {
 		if( $out == '' ) {
 			header( 'Location: ?function=user' );
 		} else {
-			
+
 		}
 	break;
 }
@@ -193,7 +193,7 @@ switch ($comment) {
 		RMLsaveforum( $id, false );
 		header( 'Location: ?document=view&id='.$id );
 	break;
-} 
+}
 
 switch ( $news ) {
 	case 'delete':
@@ -224,3 +224,5 @@ $out .= RMLdisplayhead( false )
 	.RMLdisplaybottom( false )
 	.RMLdisplayend( false );
 return processOutput( $out, true );
+
+?>

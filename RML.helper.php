@@ -1482,7 +1482,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 				case '33': $thisbody = "\n<div class=\"vignet\">&nbsp;<img src=\"vignet.jpg\"/>&nbsp;</div><div class=\"paravignet\">" . $thisbody . "</div>"; break;
 				case '34': $thisbody = "\n<div class=\"boxstart\">"; break;
 				case '35': $thisbody = "\n</div>"; break;
-				case '36': $thisbody = "\n<div class=\"boxhead\">" . $thisbody . "</div>"; break; 
+				case '36': $thisbody = "\n<div class=\"boxhead\">" . $thisbody . "</div>"; break;
 			}
 			$thissection = $thissection . $thisbody;
 		}
@@ -1532,7 +1532,7 @@ function RMLcountdownload()
 function RMLgetstylesheet($authorid,$subjectid,$id)
 {
 	$owner = RMLgetcurrentuser();
-	
+
 	$result = RMLfiresql("SELECT style FROM stylesheet WHERE owner='$owner' AND name='document$id'");
 	if(pg_numrows($result) > 0) {
 		$thisrow = pg_Fetch_Object($result,0);
@@ -1546,7 +1546,7 @@ function RMLgetstylesheet($authorid,$subjectid,$id)
 		$style = $thisrow->style;
 		return $style;
 	}
-	
+
 	$result = RMLfiresql("SELECT style FROM stylesheet WHERE owner='$owner' AND name='subject$subjectid'");
 	if(pg_numrows($result) > 0) {
 		$thisrow = pg_Fetch_Object($result,0);
@@ -1644,7 +1644,7 @@ function RMLsavenews( $print_on = true )
 
 		$author = RMLgetcurrentuser();
 
-	// ewa: load of news should be ommitted on view not deleted 
+	// ewa: load of news should be ommitted on view not deleted
 	//	RMLfiresql("DELETE FROM news WHERE author='SYSTEM'");
 
 		RMLfiresql("INSERT INTO news (id,headline,body,author,posted) VALUES(DEFAULT,'$headline','$body','$author',NOW())");
@@ -1869,3 +1869,5 @@ function processOutput( $output, $printit )
 		return $output;
 	}
 }
+
+?>

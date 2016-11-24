@@ -1,7 +1,7 @@
 <?php
 // ============================================================================
 //  Radical Militant Library image class
-//  Copyright (C) 2011 Jotunbane 
+//  Copyright (C) 2011 Jotunbane
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@
 //  Copyright (C) 2006 Simon Jarvis
 //  http://www.white-hat-web-design.co.uk/articles/php-image-resizing.php
 // ============================================================================
- 
+
 class RMLimage {
-   
+
    var $image;
    var $image_type;
 
-// ============================================================================ 
+// ============================================================================
 
    function load($filename) {
       $image_info = getimagesize($filename);
@@ -43,10 +43,10 @@ class RMLimage {
       if( $image_type == IMAGETYPE_JPEG ) {
          imagejpeg($this->image,$filename,$compression);
       } elseif( $image_type == IMAGETYPE_GIF ) {
-         imagegif($this->image,$filename);         
+         imagegif($this->image,$filename);
       } elseif( $image_type == IMAGETYPE_PNG ) {
          imagepng($this->image,$filename);
-      }   
+      }
       if( $permissions != null) {
          chmod($filename,$permissions);
       }
@@ -58,10 +58,10 @@ class RMLimage {
       if( $image_type == IMAGETYPE_JPEG ) {
          imagejpeg($this->image);
       } elseif( $image_type == IMAGETYPE_GIF ) {
-         imagegif($this->image);         
+         imagegif($this->image);
       } elseif( $image_type == IMAGETYPE_PNG ) {
          imagepng($this->image);
-      }   
+      }
    }
 
 // ============================================================================
@@ -96,7 +96,7 @@ class RMLimage {
 
    function scale($scale) {
       $width = $this->getWidth() * $scale/100;
-      $height = $this->getheight() * $scale/100; 
+      $height = $this->getheight() * $scale/100;
       $this->resize($width,$height);
    }
 
@@ -105,6 +105,8 @@ class RMLimage {
    function resize($width,$height) {
       $new_image = imagecreatetruecolor($width, $height);
       imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
-      $this->image = $new_image;   
-   }      
+      $this->image = $new_image;
+   }
 }
+
+?>

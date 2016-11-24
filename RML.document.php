@@ -293,7 +293,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 	<p class="boxtext">
 	<small><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a>,
 	<b>' .$thisyear .'</b></small>'
-				. '<span class="right-float">' .getRatingDisplay( $avgscore ) .'</span>' 
+				. '<span class="right-float">' .getRatingDisplay( $avgscore ) .'</span>'
 				.'</p><p class="boxtext">'.$thisteaser.'</p>
 	<div class="inlineclear"></div></div>';
 		}
@@ -454,11 +454,11 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 	if( $thisstatus > 0		//book is published
 		&& $user !== null	//and user logged in
 	) {
-		/* todo:	adding 404-handler so the webserver shows a nice error page when a document is not found 
+		/* todo:	adding 404-handler so the webserver shows a nice error page when a document is not found
 		 * 			then this one can be used to serve the book if the requested filetype has the id and file extension we assume
 		 * 			and this way filenames will work on all browsers even without considering the header (issue #105)
 		 * */
-		
+
 		$out .= '<div class="center"><a class="button save" href="./?function=download&amp;id='.$id.'">Borrow Book</a></div>';
 	} else if ( $user === null ) { // Anonymous downloads re enabled (jotunbane)
 		$out .= '<div class="center"><a class="button star" href="./?function=download&amp;id='.$id.'">Borrow Book</a></div>';
@@ -500,7 +500,7 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 		."\n<div class=\"inlineclear\">&nbsp;</div>"
 		."\n<div class=\"box\"><div class=\"boxheader\"><b>Colophon</b></div><div class=\"boxtext\"><small>$thiscopyright</small></div></div>"
 		.RMLdisplaytoc( $id, false );
-		if($user) { 
+		if($user) {
 			$out .= RMLdisplaycomments( $id, false );
 		}
 	return processOutput( $out, $print_on );
@@ -542,7 +542,7 @@ function RMLdisplaydocumentlocation( $print_on = true )
 function RMLdisplaydocumentupload( $id, $print_on = true )
 {
 	$out = "\n".'<form enctype="multipart/form-data" method="post" action="?function=import&amp;id='.$id.'">
-ODT Content : 
+ODT Content :
 <input type="file" size="49" name="content"><br/>
 <input type="submit" value="Upload">
 </form>';
@@ -1013,7 +1013,7 @@ function RMLdeletedocument( $id )
 	$result = RMLfiresql( "SELECT handle FROM document WHERE id=$id" );
 	if( ! $result ) {
 		$out = 'ERROR: No such document: #'.$id;
-	} else { 
+	} else {
 		$thisrow = pg_Fetch_Object( $result, 0 );
 		$owner = $thisrow->handle;
 		if( ! hasRights( 'deldocument', array( $owner ) ) ) {
@@ -1163,3 +1163,5 @@ function RMLsaveimage()
 	$dbentry = '<img alt="Picture" src="./pictures/'.$id.'/' . $picname . '">';
 	RMLfiresql( "UPDATE $table_name SET body='$dbentry' WHERE doc_id=$id AND id=$sequence" );
 }
+
+?>
