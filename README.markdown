@@ -1,6 +1,8 @@
-## Radical Militant Library web interface
+![ReadersAgainstDRM](img/logo.png "Readers Against DRM")
 
-An attempt to raise the quality of ebooks.
+# The Radical Militant Library
+
+This web interface is an attempt to raise the quality of ebooks.
 
 ## Other Resources
 
