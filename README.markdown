@@ -9,7 +9,8 @@ This web interface is an attempt to raise the quality of ebooks.
 * [Manual](https://github.com/RadicalMilitantLibrary/manual/)
 * [Template for ODT](http://c3jemx2ube5v5zpg.onion/reading_club.odt) (links the onion-service)
 * [Libre Office](https://www.libreoffice.org/download/) for editing the template
-* [public Wishlist](https://gitlab.com/lazy-book-crowd/more-bookz)
+* [Public Wishlist](https://gitlab.com/lazy-book-crowd/more-bookz)
+* [Database-Example](https://github.com/RadicalMilitantLibrary/database) 
 
 ## License Terms
 
