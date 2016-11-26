@@ -35,7 +35,7 @@ function RMLdisplaytop( $print_on = true )
 	$out = "\n\n<!-- TOP START -->
 <table class=\"body\">
 <tr><td colspan=\"3\" class=\"location\">
-<a href=\".\"><img class=\"logo\" alt=\"Logo\" src=\"./img/logo.png\" /></a>"
+<a href=\".\"><img class=\"logo\" alt=\"Logo\" src=\"./img/logo.png\" /></a><a href=\"https://github.com/RadicalMilitantLibrary\"><img style=\"float : right\" src=\"./img/github.png\" /></a>"
 	.RMLdisplaylocation( false )
 	.RMLdisplaytitle( false )
 	."\n</td></tr>";
