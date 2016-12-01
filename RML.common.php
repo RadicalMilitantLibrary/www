@@ -1036,18 +1036,18 @@ function RMLdisplaymanual( $print_on = true )
 	$out = ''
 	.RMLdisplay( 'A helpful documentation for all of you that are willing to rise from ordinary Reader to Librarian or are eager to know sligtly more about this place and how it works.', 5, false )
 /*	.RMLdisplay( '<i>kittyhawk</i>&#39;s original draft ... --> <a href="./manual.odt">HERE</a> <--', 5, false ) */
-	.RMLdisplay( '<i>ewa4boeker</i>&#39;s continuing version <a href="https://gitlab.com/lazy-book-crowd/jrc-manual" target="_blank">RML.manual hosted on GitLab for collaboration</a>...<br>
-	also available here as <ul>
+	.RMLdisplay( 'The <a href="https://github.com/RadicalMilitantLibrary/manual/blob/master/README.markdown" target="_blank">RML communities continuous manual</a> hosted on the <a href="https://github.com/RadicalMilitantLibrary/" target="_blank">GitHub-Organization</a> for mor collaboration and user input…<br>
+	also you can build yourself or dowload the available files (built on ' .date( "d. M Y H:i:s.", filemtime( './readingclub-man.pdf' ) ).') here: <ul>
 	<li><a href="./readingclub-man.md">Markdown</a>,</li>
 	<li><a href="./readingclub-man.epub">EPUB</a> and</li>
-	<li><a href="./readingclub-man.pdf">PDF</a> (built on ' .date( "d. M Y H:i:s.", filemtime( './readingclub-man.pdf' ) ).')</li>
+	<li><a href="./readingclub-man.pdf">PDF</a></li>
 	</ul>', 5, false )
 	.'<h2>Resources</h2>'
 	.RMLdisplay( 'You will need at the very least:
 	<ul>
 	<li>most important, the <a href="http://c3jemx2ube5v5zpg.onion/reading_club.odt">template for ODT</a></li>
 	<li><a href="https://www.libreoffice.org/download/">Libre Office</a> for editing the ODT</li>
-	</ul> More is described in the above manual.', 5, false );
+	</ul> More is described in the manual obove.', 5, false );
 	return processOutput( $out, $print_on );
 }
 
