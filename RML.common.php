@@ -515,9 +515,9 @@ function RMLdisplaytitle( $print_on = true ) {
 
 function RMLdisplayfrontpage( $print_on = true ) {
 
-	$out = "\n<div class=\"order\" style=\"text-align:center\">Upholding the <a href=\"http://readersbillofrights.info\">Readers Bill of Rights</a> since 2010</div>
-<div class=\"box\"><div class=\"boxheader\"><b>New Books</b></div>
-\n<p class=\"boxtext\" style=\"text-align:center\">";
+	$out = "\n".'<div class="order" style="text-align:center">Upholding the <a href="http://readersbillofrights.info/">Readers Bill of Rights</a> since 2010</div>
+<div class="box"><div class="boxheader"><b>New Books</b></div>
+<p class="boxtext" style="text-align:center">';
 	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
@@ -531,8 +531,8 @@ function RMLdisplayfrontpage( $print_on = true ) {
 	}
 	$out .= "\n</p></div>";
 
-		$out .= "\n<div class=\"box\"><div class=\"boxheader\"><b>Highest Rated Books</b></div>
-<p class=\"boxtext\" style=\"text-align:center\">";
+		$out .= "\n".'<div class="box"><div class="boxheader"><b>Highest Rated Books</b></div>
+<p class="boxtext" style="text-align:center">';
 
 	$result = RMLfiresql("SELECT DISTINCT thread_id, AVG(level) AS score FROM forum WHERE level > 0 GROUP BY thread_id ORDER BY score DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {
