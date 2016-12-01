@@ -45,7 +45,7 @@ function RMLdisplayauthor( $id, $print_on = true )
 			}
 			$bio = strip_tags( $bio );
 			if( strlen( $bio ) > 400 ) {
-				$bio = substr( $bio, 0, 400 ) . ' ...';
+				$bio = substr( $bio, 0, 400 ) . ' …';
 			}
 
 
