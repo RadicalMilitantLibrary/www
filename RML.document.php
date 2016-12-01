@@ -393,7 +393,7 @@ function RMLviewdocument( $id, $print_on = true )
 </tr>';
 
 	if( $thiskeywords ) {
-		$out .= "\n<tr valign=\"middle\" style=\"height:20px\"><td align=\"right\">keywords :</td><td style=\"padding-left:10px\"><b>$thiskeywords</b></td></tr>";
+		$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">keywords :</td><td style="padding-left:10px"><b>'.$thiskeywords.'</b></td></tr>';
 	}
 
 	$tablename = RMLgetactivetable( $id );
@@ -494,10 +494,10 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 	}
 	$out .= "</div>";
 
-	$out .= "\n<div class=\"inlineclear\">&nbsp;</div>"
-		."\n<p class=\"ParaNoIndent\">$thisteaser</p>"
-		."\n<div class=\"inlineclear\">&nbsp;</div>"
-		."\n<div class=\"box\"><div class=\"boxheader\"><b>Colophon</b></div><div class=\"boxtext\"><small>$thiscopyright</small></div></div>"
+	$out .= "\n".'<div class="inlineclear">&nbsp;</div>
+<p class="ParaNoIndent">'.$thisteaser.'</p>
+<div class="inlineclear">&nbsp;</div>
+<div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
 		.RMLdisplaytoc( $id, false );
 		if($user) { 
 			$out .= RMLdisplaycomments( $id, false );
@@ -896,20 +896,16 @@ function RMLeditelement( $id, $print_on = true )
 			} else {
 				$out .= "\n<option value=\"35\" selected=\"yes\">BoxEnd</option>";
 			}
-			if($thistype <> 36) {
-				$out .= "\n<option value=\"36\">BoxHead</option>";
-			} else {
-				$out .= "\n<option value=\"36\" selected=\"yes\">BoxHead</option>";
-			}
+			$out .= '<option value="36"' . (($thistype == 36)?' selected="yes"':'') .'>BoxHead</option>';
 
 		}
-		$out .= "\n</select>
+		$out .= "\n".'</select>
 </td></tr>
-<tr><td valign=\"top\"><b>Contents:</b></td>
-<td><textarea class=\"norm\" rows=\"12\" cols=\"41\" wrap=\"none\" name=\"body\">$thisbody</textarea>
+<tr><td valign="top"><b>Contents:</b></td>
+<td><textarea class="norm" rows="12" cols="41" wrap="none" name="body">'.$thisbody.'</textarea>
 </td></tr>
-<tr><td></td><td><input type=\"submit\" value=\"Update element\"></td></tr></table>
-</form>";
+<tr><td></td><td><input type="submit" value="Update element"></td></tr></table>
+</form>';
 }
 	return processOutput( $out, $print_on );
 }
