@@ -583,117 +583,89 @@ function RMLsavepicture($docid,$odtfile,$picturepath)
 
 // ============================================================================
 
-function RMLgettexttype( $typename )
+function RMLgettexttype( $typename, $reverse = false )
 {
+	//todo: enable lookup and reverse, then use this in e.g. RMLeditelement
+	/* new style with array
+	$a[1] = 'Head1';
+	$a[2] = 'Head2';
+	$a[3] = 'Head3';
+	$a[4] = 'ParaIndent';
+	$a[5] = 'ParaBlankOver';
+	$a[6] = 'QuoteIndent';
+	$a[7] = 'QuoteBlankOver';
+	$a[8] = 'ParaNoIndent';
+	$a[9] = 'QuoteNoIndent';
+	//$a[10] = '';
+	$a[11] = 'Part';
+	$a[12] = 'Book';
+	$a[13] = '';
+	$a[14] = '';
+	$a[15] = '';
+	$a[16] = '';
+	$a[17] = '';
+	$a[18] = '';
+	$a[19] = '';
+	$a[20] = '';
+	$a[21] = '';
+	$a[22] = '';
+	$a[23] = '';
+	$a[24] = '';
+	$a[25] = '';
+	$a[26] = '';
+	$a[27] = '';
+	$a[28] = '';
+	$a[29] = '';
+	$a[30] = '';
+	$a[31] = '';
+	$a[32] = '';
+	$a[33] = '';
+	$a[34] = '';
+	$a[35] = '';
+	$a[36] = '';/ **/
+	//$a[7] = '';
+	//if ( !$reverse ) $a = array_flip( $a );
+	//return $a[$typename];
+	
+	//old style
 	switch( $typename ) {
-	case 'Head1':
-		$result = 1;
-	break;
-	case 'Head2':
-		$result = 2;
-	break;
-	case 'Head3':
-		$result = 3;
-	break;
-	case 'ParaIndent':
-		$result = 4;
-	break;
-	case 'ParaBlankOver':
-		$result = 5;
-	break;
-	case 'QuoteIndent':
-		$result = 6;
-	break;
-	case 'QuoteBlankOver':
-		$result = 7;
-	break;
-	case 'ParaNoIndent':
-		$result = 8;
-	break;
-	case 'QuoteNoIndent':
-		$result = 9;
-	break;
-	case 'Part':
-		$result = 11;
-	break;
-	case 'Book':
-		$result = 12;
-	break;
-	case 'Chapter':
-		$result = 13;
-	break;
-	case 'PartNoTOC':
-		$result = 14;
-	break;
-	case 'BookNoTOC':
-		$result = 15;
-	break;
-	case 'ChapterNoTOC':
-		$result = 16;
-	break;
-	case 'ParaPreBlankOver':
-		$result = 17;
-	break;
-	case 'ParaPreNoIndent':
-		$result = 18;
-	break;
-	case 'Footnote':
-		$result = 19;
-	break;
-	case 'Picture':
-		$result = 20;
-	break;
-	case 'TableStart':
-		$result = 21;
-	break;
-	case 'TableCell':
-		$result = 22;
-	break;
-	case 'TableRow':
-		$result = 23;
-	break;
-	case 'TableEnd':
-		$result = 24;
-	break;
-	case 'ListStart':
-		$result = 25;
-	break;
-	case 'ListItem':
-		$result = 26;
-	break;
-	case 'ListEnd':
-		$result = 27;
-	break;
-	case 'OrderListStart':
-		$result = 28;
-	break;
-	case 'OrderListItem':
-		$result = 29;
-	break;
-	case 'OrderListEnd':
-		$result = 30;
-	break;
-	case 'HangingBlankOver':
-		$result = 31;
-	break;
-	case 'HangingIndent':
-		$result = 32;
-	break;
-	case 'ParaVignet':
-		$result = 33;
-	break;
-	case 'BoxStart':
-		$result = 34;
-	break;
-	case 'BoxEnd':
-		$result = 35;
-	break;
-	case 'BoxHead':
-		$result = 36;
-	break;
-	default:
-		$result = 0;
-	break;
+	case 'Head1':		$result = 1;	break;
+	case 'Head2':		$result = 2;	break;
+	case 'Head3':		$result = 3;	break;
+	case 'ParaIndent':	$result = 4;	break;
+	case 'ParaBlankOver':	$result = 5;	break;
+	case 'QuoteIndent':	$result = 6;	break;
+	case 'QuoteBlankOver':	$result = 7;	break;
+	case 'ParaNoIndent':	$result = 8;	break;
+	case 'QuoteNoIndent':	$result = 9;	break;
+			//10 missing, fill in new single entry here
+	case 'Part':		$result = 11;	break;
+	case 'Book':		$result = 12;	break;
+	case 'Chapter':		$result = 13;	break;
+	case 'PartNoTOC':	$result = 14;	break;
+	case 'BookNoTOC':	$result = 15;	break;
+	case 'ChapterNoTOC':	$result = 16;	break;
+	case 'ParaPreBlankOver':$result = 17;	break;
+	case 'ParaPreNoIndent':	$result = 18;	break;
+	case 'Footnote':	$result = 19;	break;
+	case 'Picture':		$result = 20;	break;
+	case 'TableStart':	$result = 21;	break;
+	case 'TableCell':	$result = 22;	break;
+	case 'TableRow':	$result = 23;	break;
+	case 'TableEnd':	$result = 24;	break;
+	case 'ListStart':	$result = 25;	break;
+	case 'ListItem':	$result = 26;	break;
+	case 'ListEnd':		$result = 27;	break;
+	case 'OrderListStart':	$result = 28;	break;
+	case 'OrderListItem':	$result = 29;	break;
+	case 'OrderListEnd':	$result = 30;	break;
+	case 'HangingBlankOver':$result = 31;	break;
+	case 'HangingIndent':	$result = 32;	break;
+	case 'ParaVignet':	$result = 33;	break;
+	case 'BoxStart':	$result = 34;	break;
+	case 'BoxEnd':		$result = 35;	break;
+	case 'BoxHead':		$result = 36;	break;
+	default:		$result = 0;	break;
 	}
 
 	return $result;
