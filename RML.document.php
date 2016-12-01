@@ -268,7 +268,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			$out .= "\n".'<a href="?author=edit&amp;id='.$id.'" class="button edit" title="edit author">Edit</a>' ;
 		}
 
-		$out .= "\n<div class=\"inlineclear\">&nbsp;</div>";
+		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
 
 		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT AVG(level) FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
@@ -288,7 +288,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			}
 
 			$out .= '<div class="box">
-	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></p>
+	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></a></p>
 	<p class="boxtext">
 	<small><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a>,
 	<b>' .$thisyear .'</b></small>'
@@ -489,8 +489,8 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 	}
 
 	if( ( ( $thishandle == RMLgetcurrentuser() ) || ( RMLgetcurrentuser() == 'admin') ) && ( $thisstatus == 3) ) {
-		$out .= "\n<a class=\"button edit\" href=\"?document=edit&amp;id=$id\">Edit</a>"
-			."\n<a class=\"button delete\" href=\"?function=withdraw&amp;id=$id\">Un-Publish</a>";
+		$out .= "\n".'<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>"
+			."\n".'<a class="button delete" href="?function=withdraw&amp;id='.$id.'">Un-Publish</a>';
 	}
 	$out .= "</div>";
 
@@ -731,6 +731,7 @@ function RMLeditelement( $id, $print_on = true )
 <td><select class="norm" name="paragraphtype">';
 
 		if( ( $thistype == 11 ) || ($thistype == 12) || ($thistype == 13) || ($thistype == 14) || ($thistype == 15) || ($thistype == 16) ) {
+			//todo: substitute with function for array lookup like RMLgettexttype
 			if( $thistype <> 11 ) {
 				$out .= "\n".'<option value="11">Part</option>';
 			} else {
@@ -995,9 +996,9 @@ function RMLsendconfirmmessage( $id, $owner, $subject_owner )
 	} else {//just publish
 		$title = RMLgetdocumenttitle( $id );
 		$title = preg_replace( "@'@", "", $title );
-		$message = "The document <a href=\"?document=view&amp;id=$id\"><i>$title</i></a> was submitted for review. As the maintainer for this subject, please review it and either confirm it as a working document, or send it back to <i>$owner</i>. If it takes longer than " .getMaxReviewDays() ." days, the submitter is allowed to publish wothout your consent.";
+		$message = 'The document <a href="?document=view&amp;id='.$id.'"><i>'.$title.'</i></a> was submitted for review. As the maintainer for this subject, please review it and either confirm it as a working document, or send it back to <i>'.$owner.'</i>. If it takes longer than ' .getMaxReviewDays() .' days, the submitter is allowed to publish wothout your consent.';
 		RMLsendmessage( $subject_owner, $message, $owner, 'Review document', true );
-		$message = "The document <a href=\"?document=view&amp;id=$id\"><i>$title</i></a> was submitted for review. The maintainer <i>$subject_owner</i> will review it and either confirm it as a working document, or send it back to you.";
+		$message = 'The document <a href="?document=view&amp;id='.$id.'"><i>'.$title.'</i></a> was submitted for review. The maintainer <i>'.$subject_owner.'</i> will review it and either confirm it as a working document, or send it back to you.';
 		RMLsendmessage( $owner, $message, 'SYSTEM', 'Document in review', true );
 	}
 }
