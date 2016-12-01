@@ -49,7 +49,7 @@ function RMLnewdocument( $print_on = true )
 	//todo: move to createdocument is that is less error prone
 	$ISBN = RMLgetuniqueid();
 
-	//todo: add automatic author/subject selecttion (attribute selected)
+	//todo: add automatic author/subject selection (attribute selected)
 	$out = '';
 	$options_auth = getAuthorOptions( $author );
 	$options_subj = getSubjectOptions( $subject );
