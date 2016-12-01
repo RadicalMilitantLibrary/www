@@ -118,16 +118,16 @@ function RMLdisplayauthororder( $print_on = true )
 
 	for( $i = 0; $i < strlen($sortletters); $i++ ) {
 		if( $oldletter <> $sortletters[$i] ) {
+			$out .= "\n".'<a class="';
 			if( $letter == $sortletters[$i] ) {
-				$out .= "\n<a class=\"activebutton\" href=\"?author=view&amp;letter=$sortletters[$i]\">$sortletters[$i]</a>";
-			} else {
-				$out .= "\n<a class=\"button\" href=\"?author=view&amp;letter=$sortletters[$i]\">$sortletters[$i]</a>";
+				$out .= 'active';
 			}
+			$out .= 'button" href="?author=view&amp;letter='.$sortletters[$i].'">'.$sortletters[$i].'</a>';
 		}
 		$oldletter = $sortletters[$i];
 	}
 
-	$out .= "</div>";
+	$out .= '</div>';
 	return processOutput( $out, $print_on );
 }
 
