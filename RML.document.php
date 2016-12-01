@@ -553,7 +553,7 @@ ODT Content :
 function RMLimportdocument( $id, $print_on = true )
 {
 	$target_path = "./uploads/";
-	$target_path = $target_path . basename( $_FILES['content']['tmp_name'] );
+	$target_path .= date( "Y-m-d\THis", time() ) .'-DocID' .$id .'-' .basename( $_FILES['content']['tmp_name'] ) . '.odt';
 
 	$out = '';
 	if( ! move_uploaded_file( $_FILES['content']['tmp_name'], $target_path ) ) {
