@@ -72,29 +72,41 @@ img.docicon {
 }
 
 img.Author {
-	float			: left;
-	width			: 150px;
-	margin			: 0px;
+	float		: left;
+	width		: 150px;
+	margin		: 0px;
 	margin-right	: 10px;
 	margin-bottom	: 5px;
-	margin-left		: 5px;
-	margin-top		: 5px;
-	border			: 0;
+	margin-left	: 5px;
+	margin-top	: 5px;
+	border		: 0;
 	border-width	: 1px;
 	border-style	: solid;
 	border-color	: black
 }
 
+div.statusbox {
+	display		: inline-block; 
+	font-size	: 12pt;
+	height		: 20px;
+}
+
+.authorphoto {
+	margin	: 0 0 20px 20px;
+	float	: right;
+	border	: 1px solid black;
+}
+
 img.Cover {
-	margin			: 0px;
+	margin		: 0px;
 	margin-right	: 10px;
 	margin-bottom	: 5px;
-	border			: 0;
+	border		: 0;
 	border-width	: 1px;
 	border-style	: solid;
 	border-color	: black;
-	width			: 150px;
-	float			: left
+	width		: 150px;
+	float		: left
 
 }
 
