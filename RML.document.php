@@ -552,15 +552,16 @@ ODT Content :
 
 function RMLimportdocument( $id, $print_on = true )
 {
-	$target_path = "./uploads/";
-	$target_path .= date( "Y-m-d\THis", time() ) .'-DocID' .$id .'-' .basename( $_FILES['content']['tmp_name'] ) . '.odt';
+	$target_path = './uploads/';
+	$target_fn = date( "Y-m-d\THis", time() ) .'-DocID' .$id .'-' .basename( $_FILES['content']['tmp_name'] ) . '.odt';
+	$target_path .= $target_fn;
 
 	$out = '';
 	if( ! move_uploaded_file( $_FILES['content']['tmp_name'], $target_path ) ) {
-		$out = "ERROR : Importing unknown file : $filename???";
+		$out = 'ERROR : Importing unknown file : ' .$filename .'???';
 	} else {
-		$filename = basename( $_FILES['content']['name']);
-		$out .= 'File uploaded : <b>'.$filename.'</b>"';
+		$filename = basename( $_FILES['content']['name'] );
+		$out .= 'File uploaded : <b>' .$filename .'</b> and stored <b><a href="' .$target_path .'">' .$target_fn .'</b></a>';
 
 		$zip = zip_open( $target_path );
 
