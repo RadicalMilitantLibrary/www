@@ -287,7 +287,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 				$thisteaser = strip_tags( $thisteaser );
 			}
 
-			$out .= '<div class="statusbox">
+			$out .= '<div class="box">
 	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></a></p>
 	<p class="boxtext">
 	<small><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a>,

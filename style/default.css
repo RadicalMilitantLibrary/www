@@ -99,6 +99,20 @@ img.Author {
 	border-bottom-right-radius: 5px;
 }
 
+.box {
+	display		: inline-block;
+	margin-bottom	: 10px;
+	padding			: 0px;
+	background		: white;
+	color			: #222;
+	border			: 1px solid #aaa;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+
 img.authorphoto {
 	margin	: 0 0 20px 20px;
 	float	: right;
