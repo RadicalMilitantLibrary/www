@@ -258,8 +258,8 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			.' age <b>' .$age .'</b> (+' . getNumberFormatted( $doom, 0 ) .')
 	<br/><br/><b>'. getNumberFormatted( $numdoc, 0 ) .'</b>&nbsp;book'
 			.( ( $numdoc > 1 ) ? 's' : '' )
-			. ' online (<b>' .$kilobyte .'</b> in <b>' .getNumberFormatted( $element, 0 ) .'</b>&nbsp;paragraphs)</big></p></div></div>'
-			.'</table>'
+			. ' online (<b>' .$kilobyte .'</b> in <b>' .getNumberFormatted( $element, 0 ) .'</b>&nbsp;paragraphs)</big></p></div><div class="inlineclear"></div>'
+		//	.'</table>'
 			.'<p class="ParaBlankOver">'.$bio.'</p>';
 
 		// ewa: todo: show source links, later ...

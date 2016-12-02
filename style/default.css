@@ -91,7 +91,7 @@ div.statusbox {
 	height		: 20px;
 }
 
-.authorphoto {
+img.authorphoto {
 	margin	: 0 0 20px 20px;
 	float	: right;
 	border	: 1px solid black;
