@@ -93,9 +93,7 @@ img.Author {
 	background	: white;
 	color		: #222;
 	border		: 1px solid #aaa;
-	border-radius	: 5px;
-	display		: inline-block;
-	float		: right;
+	border-radius	: 5px
 }
 
 .box {
