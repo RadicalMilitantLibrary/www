@@ -100,7 +100,6 @@ img.Author {
 }
 
 .box {
-	display		: inline-block;
 	margin-bottom	: 10px;
 	padding			: 0px;
 	background		: white;
@@ -256,7 +255,7 @@ p.pagetitle {
 	margin			: 0;
 	padding-top		: 75px;
 	font-size		: 24pt;
-	padding-left	: 150px;
+	padding-left	: 288px;
 	color			: #222;
 	font-weight		: bold;
 	color			: black;
