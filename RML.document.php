@@ -251,7 +251,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 		$out .=
 			"\n".'<img class="authorphoto" alt="Author #'.$id.'" src="./authors/author'.$id.'"/>
 <div class="statusbox">	
-	<div class="box"><p class="boxheader"><b><big>Status</big></b></p><p class="boxtext"><big>
+	<p class="boxheader"><b><big>Status</big></b></p><p class="boxtext"><big>
 	born <b>'.$born.'</b>'
 			.( ( $born != 'Unknown' ) ? ' (+' .$would .')' : '' )
 			.( ( strlen( $dead ) >= 4 ) ? ' died <b>' .$dead .'</b> at' : '' )
