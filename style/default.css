@@ -101,14 +101,11 @@ img.Author {
 
 .box {
 	margin-bottom	: 10px;
-	padding			: 0px;
-	background		: white;
-	color			: #222;
-	border			: 1px solid #aaa;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
+	padding		: 0px;
+	background	: white;
+	color		: #222;
+	border		: 1px solid #aaa;
+	border-radius	: 5px;
 }
 
 
