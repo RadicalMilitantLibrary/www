@@ -46,7 +46,7 @@ function RMLdisplaytop( $print_on = true )
 
 function RMLdisplayleft( $print_on = true )
 {
-	global $author, $subject, $news, $document, $function, $message, $style;
+	global $author, $subject, $news, $document, $function, $message, $style, $lists;
 	$currentuser = RMLgetcurrentuser();
 
 	$out = "\n\n<!-- LEFT START -->
@@ -74,6 +74,12 @@ function RMLdisplayleft( $print_on = true )
 		$out .= "\n<a class=\"activebutton star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
 	} else {
 		$out .= "\n<a class=\"button star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
+	}
+
+	if(($lists == 'view') || ($lists == 'add')){
+		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&amp&amp;id=0\">Reading Lists</a>";
+	} else {
+		$out .= "\n<a class=\"button star\" href=\"?lists=view&amp;id=0\">Reading Lists</a>";
 	}
 
 	if($function == 'librarians') {
@@ -118,7 +124,7 @@ function RMLdisplayleft( $print_on = true )
 
 function RMLdisplaymain( $id, $print_on = true ) {
 	global $function, $subject, $static, $message, $document,
-		$author, $section, $comment, $news, $footnote, $note, $style;
+		$author, $section, $comment, $news, $footnote, $note, $style, $lists;
 
 	$out = "\n\n<!-- MAIN START -->
 <td class=\"main\">";
@@ -177,6 +183,19 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	break;
 	case 'edit':
 		$out .= RMLeditsubject( $id, false );
+		$frontpage = false;
+	break;
+	}
+	
+	// ======================================
+	
+	switch($lists) {
+	case 'view':
+		$out .= RMLdisplaylists( false );
+		$frontpage = false;
+	break;
+	case 'create':
+		$out .= RMLaddlist(false);
 		$frontpage = false;
 	break;
 	}
@@ -358,7 +377,7 @@ function RMLdisplaylocation( $print_on = true ) {
 // ============================================================================
 
 function RMLdisplaytitle( $print_on = true ) {
-	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style;
+	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists;
 
 	//default
 	$title = '~ Radical Militant Library ~';
@@ -449,6 +468,19 @@ function RMLdisplaytitle( $print_on = true ) {
 	break;
 	case 'edit':
 		$title = "Edit Subject";
+	break;
+	}
+
+	switch($lists) {
+	case 'view' :
+		if($id > 0) {
+			$title = RMLgetlistname($id);
+		} else {
+			$title = '~ Radical Militant Reading Lists ~';
+		}			
+	break;
+	case 'create' :
+		$title = "~ New Radical Militant Reading List ~";
 	break;
 	}
 

@@ -30,6 +30,7 @@ require 'RML.document.php';
 require 'RML.forum.php';
 require 'RML.author.php';
 require 'RML.image.php';
+require 'RML.lists.php';
 
 $id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
 if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
@@ -77,6 +78,8 @@ $note = RMLpreparestring($_REQUEST['note']);
 $messageto = RMLpreparestring($_REQUEST['messageto']);
 $messagesubject = RMLpreparestring($_REQUEST['messagesubject']);
 $style = RMLpreparestring($_REQUEST['style']);
+$lists = RMLpreparestring($_REQUEST['lists']);
+$docid = RMLpreparestring($_REQUEST['docid']);
 
 switch( $para ) {
 	case 'delete':
@@ -94,6 +97,17 @@ switch( $subject ) {
 	case 'update':
 		RMLupdatesubject( $id, $headline, $bodytext );
 		header( 'Location: ?subject=view&id='.$id );
+	break;
+}
+
+switch($lists) {
+	case 'new':
+		RMLnewlist(false);
+		header('Location: ?lists=view&id=0');
+	break;
+	case 'add':
+		RMLaddtolist($id, false);
+		header("Location: ?lists=view&id=$id");
 	break;
 }
 
