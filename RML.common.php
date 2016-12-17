@@ -77,7 +77,7 @@ function RMLdisplayleft( $print_on = true )
 	}
 
 	if(($lists == 'view') || ($lists == 'add')){
-		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&amp&amp;id=0\">Reading Lists</a>";
+		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&ampid=0\">Reading Lists</a>";
 	} else {
 		$out .= "\n<a class=\"button star\" href=\"?lists=view&amp;id=0\">Reading Lists</a>";
 	}
