@@ -44,6 +44,11 @@ function RMLdisplaytop( $print_on = true )
 
 // ============================================================================
 
+// assemble button for navigation
+function RMLMenuButton( $tile, $href = "", $class = "", $decoration = 'star' ) {
+	return  "\n".'<a class="' .$class .' ' .$decoration .'" href="' .$href .'">' .$title .'</a>';
+}
+
 function RMLdisplayleft( $print_on = true )
 {
 	global $author, $subject, $news, $document, $function, $message, $style, $lists;
@@ -52,53 +57,14 @@ function RMLdisplayleft( $print_on = true )
 	$out = "\n\n".'<!-- LEFT START -->
 <tr><td class="left">';
 
-	if($function == 'about') {
-		$out .= "\n<a class=\"activebutton about\" href=\"?function=about\">About</a>";
-	} else {
-		$out .= "\n<a class=\"button about\" href=\"?function=about\">About</a>";
-	}
-
-	if($news) {
-		$out .= "\n<a class=\"activebutton email\" href=\"?news=view\">News</a>";
-	} else {
-		$out .= "\n<a class=\"button email\" href=\"?news=view\">News</a>";
-	}
-
-	if(($author == 'view') || ($document == 'view')) {
-		$out .= "\n<a class=\"activebutton like\" href=\"?author=view&amp;letter=A\">Authors</a>";
-	} else {
-		$out .= "\n<a class=\"button like\" href=\"?author=view&amp;letter=A\">Authors</a>";
-	}
-
-	if($subject == 'view') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
-	} else {
-		$out .= "\n<a class=\"button star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
-	}
-
-	if(($lists == 'view') || ($lists == 'add')){
-		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&ampid=0\">Reading Lists</a>";
-	} else {
-		$out .= "\n<a class=\"button star\" href=\"?lists=view&amp;id=0\">Reading Lists</a>";
-	}
-
-	if($function == 'librarians') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=librarians\">Librarians</a>";
-	} else {
-		$out .= "\n<a class=\"button star\" href=\"?function=librarians\">Librarians</a>";
-	}
-
-//	if($function == 'readers') {
-//		$out .= "\n<a class=\"activebutton star\" href=\"?function=readers\">Readers</a>";
-//	} else {
-//		$out .= "\n<a class=\"button star\" href=\"?function=readers\">Readers</a>";
-//	}
-
-	if($function == 'manual') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=manual\">Manual</a>";
-	} else {
-		$out .= "\n<a class=\"button star\" href=\"?function=manual\">Manual</a>";
-	}
+	$out .= RMLMenuButton( 'About', '?function=about', ''.( $function == 'about' ) ? 'active' : '' ) .'button', 'about' );
+	$out .= RMLMenuButton( 'News', '?news=view', ''.( $news ) ? 'active' : '' ) .'button', 'email' );
+	$out .= RMLMenuButton( 'Authors','?function=about?author=view&amp;letter=A', ''.( ($author == 'view') || ($document == 'view') ) ? 'active' : '' ) .'button', 'like' );
+	$out .= RMLMenuButton( 'Subjects', '?subject=view&amp;letter=All&amp;id=0', ''.( $subject == 'view' ) ? 'active' : '' ) .'button' );
+	$out .= RMLMenuButton( 'Reading Lists', '?lists=view&amp;id=0', ''.( $news($lists == 'view') || ($lists == 'add') ) ? 'active' : '' ) .'button' );
+	$out .= RMLMenuButton( 'Librarians', '?function=librarians', ''.( $function == 'librarians' ) ? 'active' : '' ) .'button' );
+//	$out .= RMLMenuButton( 'Readers', '?function=readers', ''.( $news$function == 'readers' ) ? 'active' : '' ) .'button' );
+	$out .= RMLMenuButton( 'Manual', '?function=manual', ''.( $news$function == 'manual' ) ? 'active' : '' ) .'button' );
 
 	if( ( !$currentuser ) && ( $function <> 'login' ) ) {
 		$out .= "\n<a class=\"button star\" href=\"?function=login\">Login</a>";
@@ -114,9 +80,16 @@ function RMLdisplayleft( $print_on = true )
 		$out .= "\n<a class=\"activebutton like\" href=\"?function=user\">My Page</a>";
 	}
 
-	$out .= "\n<div class=\"center\"><a href=\"http://answerstedhctbek.onion\"><img style=\"border:0;margin-top:10px\" src=\"./img/banner.gif\" alt=\"\" /></a></div><div class=\"center\"><a href=\"bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA\"><img style=\"border:0\" src=\"./img/qrcode.png\" alt=\"I can haz bitcoinz\" /></a></div>
-<div class=\"center\"><a href=\"http://www.catb.org/hacker-emblem/\"><img style=\"border:0\" src=\"./img/hacker.png\" alt=\"Hacker\" /></a></div><div class=\"center\"><a href=\"./jotunbane.asc\"><img src=\"./img/pgp.png\" /></a></div>
-</td>";
+	$out .= "\n"
+	// banner ad
+	.'<div class="center"><a href="http://answerstedhctbek.onion"><img style="border:0;margin-top:10px" src="./img/banner.gif" alt="answerstedhctbek.onion" /></a></div>'
+	// bitcoin donation address
+	.'<div class="center"><a href="bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA"><img style="border:0" src="./img/qrcode.png" alt="I can haz bitcoinz" /></a></div>'
+	// glider
+	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Glider => Hacker" /></a></div>'
+	// pgp pubkey
+	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
+.'</td>';
 	return processOutput( $out, $print_on );
 }
 
