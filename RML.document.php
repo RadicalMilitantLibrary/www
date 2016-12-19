@@ -488,7 +488,7 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 	}
 
 	if( ( ( $thishandle == RMLgetcurrentuser() ) || ( RMLgetcurrentuser() == 'admin') ) && ( $thisstatus == 3) ) {
-		$out .= "\n".'<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>"'
+		$out .= "\n".'<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>'
 			."\n".'<a class="button delete" href="?function=withdraw&amp;id='.$id.'">Un-Publish</a>';
 	}
 	$out .= "</div>";
