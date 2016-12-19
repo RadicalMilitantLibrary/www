@@ -32,13 +32,13 @@ function RMLdisplayhead( $print_on = true ) {
 
 function RMLdisplaytop( $print_on = true )
 {
-	$out = "\n\n<!-- TOP START -->
-<table class=\"body\">
-<tr><td colspan=\"3\" class=\"location\">
-<a href=\".\"><img class=\"logo\" alt=\"Logo\" src=\"./img/logo.png\" /></a><a href=\"https://github.com/RadicalMilitantLibrary\"><img style=\"float : right\" src=\"./img/github.png\" /></a>"
+	$out = "\n\n".'<!-- TOP START -->
+<table class="body">
+<tr><td colspan="3" class="location">
+<a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a href="https://github.com/RadicalMilitantLibrary"><img style="float : right" src="./img/github.png" /></a>'
 	.RMLdisplaylocation( false )
 	.RMLdisplaytitle( false )
-	."\n</td></tr>";
+	."\n".'</td></tr>';
 	return processOutput( $out, $print_on );
 }
 
@@ -49,8 +49,8 @@ function RMLdisplayleft( $print_on = true )
 	global $author, $subject, $news, $document, $function, $message, $style, $lists;
 	$currentuser = RMLgetcurrentuser();
 
-	$out = "\n\n<!-- LEFT START -->
-<tr><td class=\"left\">";
+	$out = "\n\n".'<!-- LEFT START -->
+<tr><td class="left">';
 
 	if($function == 'about') {
 		$out .= "\n<a class=\"activebutton about\" href=\"?function=about\">About</a>";
@@ -126,8 +126,8 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	global $function, $subject, $static, $message, $document,
 		$author, $section, $comment, $news, $footnote, $note, $style, $lists;
 
-	$out = "\n\n<!-- MAIN START -->
-<td class=\"main\">";
+	$out = "\n\n".'<!-- MAIN START -->
+<td class="main">';
 
 	$frontpage = true; // HACK
 
