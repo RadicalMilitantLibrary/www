@@ -453,6 +453,44 @@ function RMLuploadavatar() {
 
 // ============================================================================
 
+function RMLdisplaymessage( $id, $print_on = true ) {
+	$result = RMLfiresql( "SELECT handle,body,posted_on,sender_handle FROM message WHERE id=$id" );
+	$thisrow = pg_Fetch_Object( $result, 0 );
+	$handle = $thisrow->handle;
+	$body = nl2br($thisrow->body);
+	$posted = $thisrow->posted_on;
+	$posted = RMLfixdate( $posted );
+	$sender = $thisrow->sender_handle;
+
+	$out = '';
+	if( hasRights( 'readmsg', array( $handle ) ) ) {
+		$out .= "\n".'<img class="docicon" src="./users/' .$sender .'.png" />
+From : <b>' .$sender.'</b><br/>Sent : <b>' .$posted.'</b>
+<div class="inlineclear"></div>'
+		.RMLdisplay( $body, 5, false )
+		."\n".'<div class="bottom"><a class="button add" href="?message=reply&amp;id=' .$id.'">Reply</a>&nbsp;<a class="button delete" href="?message=delete&amp;id=' .$id.'">Delete</a></div>';
+	} else {
+		$out = "ERROR: Display Message : Cookiii baaaaaadddd...";
+	}
+	return processOutput( $out, $print_on );
+}
+
+// ============================================================================
+
+function RMLdeletemessage( $id ) {
+	$result = RMLfiresql( "SELECT handle FROM message WHERE id=$id" );
+	$thisrow = pg_Fetch_Object( $result, 0 );
+	$handle = $thisrow->handle;
+
+	if( hasRights( 'delmsg', array( $handle ) ) ) {
+		RMLfiresql("DELETE FROM message WHERE id=$id");
+	}
+
+	header("Location: ?function=user");
+}
+
+// ============================================================================
+
 function RMLreplymessage( $id, $print_on = true ) {
 	$user = RMLgetcurrentuser();
 	if( ( $user ) && ( $id ) ) {

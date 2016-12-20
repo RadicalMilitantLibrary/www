@@ -31,6 +31,7 @@ require 'RML.forum.php';
 require 'RML.author.php';
 require 'RML.image.php';
 require 'RML.lists.php';
+require 'RML.subject.php';
 
 $id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
 if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
