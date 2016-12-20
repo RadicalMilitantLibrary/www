@@ -495,12 +495,8 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 
 	$out .= "\n".'<div class="inlineclear">&nbsp;</div>
 <p class="ParaNoIndent">'.$thisteaser.'</p>
-<div class="inlineclear">&nbsp;</div>
-<div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
+<div class="inlineclear">&nbsp;</div>' . RMLdisplaycomments($id, false) . '<div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
 		.RMLdisplaytoc( $id, false );
-		if($user) { 
-			$out .= RMLdisplaycomments( $id, false );
-		}
 	return processOutput( $out, $print_on );
 }
 
