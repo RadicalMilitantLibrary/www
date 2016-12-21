@@ -616,11 +616,11 @@ function RMLdisplayfrontpage( $print_on = true ) {
 // ============================================================================
 
 function RMLgetlatestcomment( $print_on = true ) {
-	$result = RMLfiresql("SELECT author,body,\"level\",thread_id,posted_on FROM forum ORDER BY posted_on DESC LIMIT 1");
+	$result = RMLfiresql("SELECT author,body,level,thread_id,posted_on FROM forum WHERE level > 0 ORDER BY posted_on DESC LIMIT 1");
 	$thisrow = pg_Fetch_Object($result,0);
 	$thishandle = $thisrow->author;
 	$thisbody = nl2br($thisrow->body);
-	$thisrating -> $thisrow->level;
+	$thisrating = $thisrow->level;
 	$thisdocument = $thisrow->thread_id;
 	$thisdate = RMLfixdate($thisrow->posted_on);
 	
@@ -630,7 +630,7 @@ function RMLgetlatestcomment( $print_on = true ) {
 		$image = $thishandle;
 	}
 	
-	$result = "<div class=\"box\"><div class=\"boxheader\"><b>Latest Comment</b><a href=\"?document=view&amp;id=$thisdocument\"><img style=\"float : right;margin : 0;margin-left : 10px;width : 125px\" src=\"./covers/cover$thisdocument\" /></a></div><div class=\"boxtext\"><img class=\"docicon\" src=\"./users/$image.png\" /><small> from : <b>$thishandle</b> ($thisdate) &nbsp;</small>" . getRatingDisplay($thisrating) . "<br />$thisbody</div><div class=\"inlineclear\"></div></div>";
+	$result = "<div class=\"box\"><div class=\"boxheader\"><b>Latest Rating</b><a href=\"?document=view&amp;id=$thisdocument\"><img style=\"float : right;margin : 0;margin-left : 10px;margin-bottom : 5px;width : 125px\" src=\"./covers/cover$thisdocument\" /></a></div><div class=\"boxtext\"><img class=\"docicon\" src=\"./users/$image.png\" /><small> from : <b>$thishandle</b> ($thisdate) &nbsp;</small>" . getRatingDisplay($thisrating) . "<br />$thisbody</div><div class=\"inlineclear\"></div></div>";
 	return processOutput( $result, $print_on );
 }
 
