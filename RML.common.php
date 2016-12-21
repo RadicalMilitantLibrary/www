@@ -631,7 +631,7 @@ function RMLgetlatestcomment( $print_on = true ) {
 	}
 	
 	$result = "<div class=\"box\"><div class=\"boxheader\"><b>Latest Comment</b></div><div class=\"boxtext\"><a href=\"?document=view&amp;id=$thisdocument\"><img style=\"float : right;margin : 0;margin-left : 10px;margin-bottom : 10px;width : 125px\" src=\"./covers/cover$thisdocument\" /></a><img class=\"docicon\" src=\"./users/$image.png\" /><small> from : <b>$thishandle</b> ($thisdate) &nbsp;</small>" . getRatingDisplay($thisrating) . "<br />$thisbody</div><div class=\"inlineclear\"></div></div>";
-	return $result;
+	return processOutput( $result, $print_on );
 }
 
 // ============================================================================
