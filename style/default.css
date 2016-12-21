@@ -500,6 +500,10 @@ p.boxtext {
 	font-weight		: bold
 }
 
+.librarian ul {
+	list-style:	none;
+}
+
 .inlineitem {
 	padding-bottom	: 15px;
 	margin-bottom	: 15px;
