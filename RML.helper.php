@@ -78,8 +78,8 @@ function RMLgetpagetitle()
 
 	switch( $footnote ) {
 	case 'view':
-		$title = RMLgetdocumenttitle( $id );
-		$title = $title . " : Footnote $note";
+	case 'edit':
+		$title = RMLgetdocumenttitle( $id ) .': Footnote ' .$note;			
 	break;
 	}
 
