@@ -834,7 +834,7 @@ function RMLdisplaylibrarians( $print_on = true )
 <p class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numdocs.')</p>
 <ul>
 <li><span>Books</span>: ' .$thisrow->docs .'</li>
-<li><span>Since</span>: ' .$thisrow->first .'</li>
+<li><span>Since</span>: ' .RMLfixdate( $thisrow->first ) .'</li>
 </ul>
 </div>
 <div class="inlineclear">&nbsp;</div>';
