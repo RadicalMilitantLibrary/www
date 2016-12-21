@@ -586,7 +586,7 @@ function RMLimportdocument( $id, $print_on = true )
 			}
 
 			if( $texttype == 0 ) {
-				$out .= "\n".'<br/><b>Unknown Element</b>: ".$value"<br/><b>Content</b>: '.$entry.'<br/>';
+				$out .= "\n".'<br/><b>Unknown Element</b>: '.$value .'<br/><b>Content</b>: '.$entry.'<br/>';
 			}
 
 			$myentry = RMLpreparexml( $entry->asXML() );

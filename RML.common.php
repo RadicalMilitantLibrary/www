@@ -559,17 +559,20 @@ function RMLdisplaytitle( $print_on = true ) {
 
 function RMLdisplayfrontpage( $print_on = true ) {
 
-	$out = "\n".'<div class="order" style="text-align:center">Upholding the <a href="http://readersbillofrights.info/">Readers Bill of Rights</a> since 2010</div>
-<div class="box"><div class="boxheader"><b>New Books</b></div>
+	$out = "\n".'<div class="order" style="text-align:center">Upholding the <a href="http://readersbillofrights.info/">Readers Bill of Rights</a> since 2010</div>';
+	
+	$out .= RMLgetlatestcomment( false );
+
+	$out .= '<div class="box"><div class="boxheader"><b>New Books</b></div>
 <p class="boxtext" style="text-align:center">';
-	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
+	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 10");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;
 		$thistitle = $thisrow->title;
 		$out .= "\n<a href=\"?document=view&amp;id=$thisid\">
 <img class=\"FrontCover\" alt=\"$thistitle Cover\" src=\"./covers/cover$thisid\" /></a>";
-		if(($row == 4) || ($row == 9) || ($row == 14)) {
+		if(($row == 4)) {
 			$out .= "\n<br/>";
 		}
 	}
@@ -578,14 +581,14 @@ function RMLdisplayfrontpage( $print_on = true ) {
 		$out .= "\n".'<div class="box"><div class="boxheader"><b>Highest Rated Books</b></div>
 <p class="boxtext" style="text-align:center">';
 
-	$result = RMLfiresql("SELECT DISTINCT thread_id, AVG(level) AS score FROM forum WHERE level > 0 GROUP BY thread_id ORDER BY score DESC LIMIT 20");
+	$result = RMLfiresql("SELECT DISTINCT thread_id, AVG(level) AS score FROM forum WHERE level > 0 GROUP BY thread_id ORDER BY score DESC LIMIT 10");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->thread_id;
 
 		$out .= "\n<a href=\"?document=view&amp;id=$thisid\"><img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
 
-		if(($row == 4) || ($row == 9) || ($row == 14)) {
+		if(($row == 4)) {
 			$out .= "\n<br/>";
 		}
 	}
@@ -594,7 +597,7 @@ function RMLdisplayfrontpage( $print_on = true ) {
 	$out .= "\n<div class=\"box\"><div class=\"boxheader\"><b>Most Downloaded Books</b></div>
 <p class=\"boxtext\" style=\"text-align:center\">";
 
-	$result = RMLfiresql("SELECT id,downloads FROM document ORDER BY downloads DESC LIMIT 20");
+	$result = RMLfiresql("SELECT id,downloads FROM document ORDER BY downloads DESC LIMIT 10");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;
@@ -602,12 +605,32 @@ function RMLdisplayfrontpage( $print_on = true ) {
 		$out .= "\n<a href=\"?document=view&amp;id=$thisid\">
 <img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
 
-		if(($row == 4) || ($row == 9) || ($row == 14)) {
+		if(($row == 4)) {
 			$out .= "\n<br/>";
 		}
 	}
 	$out .= "\n</p></div>";
 	return processOutput( $out, $print_on );
+}
+
+// ============================================================================
+
+function RMLgetlatestcomment( $print_on = true ) {
+	$result = RMLfiresql("SELECT author,body,\"level\",thread_id FROM forum ORDER BY posted_on DESC LIMIT 1");
+	$thisrow = pg_Fetch_Object($result,0);
+	$thishandle = $thisrow->author;
+	$thisbody = $thisrow->body;
+	$thisrating -> $thisrow->level;
+	$thisdocument = $thisrow->thread_id;
+	
+	if( !file_exists( './users/'.$thishandle.'.png' ) ) {
+		$image = 'Anonymous';
+	} else {
+		$image = $thishandle;
+	}
+	
+	$result = "<div class=\"box\"><div class=\"boxheader\"><b>Latest Comment</b></div><div class=\"boxtext\"><a href=\"?document=view&amp;id=$thisdocument\"><img style=\"float : right;margin-left : 10px\" src=\"./covers/cover$thisdocument\" /></a><img class=\"docicon\" src=\"./users/'.$image.'.png\" /> from : <b>$thishandle</b> " . getRatingDisplay($thisrating) . "<br />$thisbody</div>";
+	return $result;
 }
 
 // ============================================================================
