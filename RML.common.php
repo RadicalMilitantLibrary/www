@@ -830,7 +830,7 @@ function RMLdisplaylibrarians( $print_on = true )
 			$image = $thisuser;
 		}
 
-		$out .= "\n".'<div class="box">
+		$out .= "\n".'<div class="librarian box">
 <p class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numdocs.')</p>
 <ul>
 <li><span>Books</span>: ' .$thisrow->docs .'</li>
