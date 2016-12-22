@@ -842,7 +842,7 @@ function RMLdisplayreaders( $print_on = true )
 function RMLdisplaylibrarians( $print_on = true )
 {
 	$out = '';
-	$sql = RMLfiresql( "SELECT DISTINCT(handle) AS owner, COUNT(handle) AS docs, MIN(posted_on) AS first FROM document WHERE status=3 GROUP BY owner ORDER BY docs DESC, first DESC" );
+	$sql = RMLfiresql( "SELECT DISTINCT(handle) AS owner, COUNT(handle) AS docs, MIN(posted_on) AS first, MAX(posted_on) AS last FROM document WHERE status=3 GROUP BY owner ORDER BY docs DESC, first DESC" );
 	for( $row=0; $row < pg_numrows( $sql ); $row++ ) {
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->owner;
@@ -858,7 +858,8 @@ function RMLdisplaylibrarians( $print_on = true )
 <p class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numdocs.')</p>
 <ul>
 <li><span>Books</span>: ' .$thisrow->docs .'</li>
-<li><span>Since</span>: ' .RMLfixdate( $thisrow->first ) .'</li>
+<li><span>First</span>: ' .RMLfixdate( $thisrow->first ) .'</li>
+<li><span>Last</span>: ' .RMLfixdate( $thisrow->last ) .'</li>
 </ul>
 </div>
 <div class="inlineclear">&nbsp;</div>';
