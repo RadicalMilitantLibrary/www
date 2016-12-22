@@ -630,7 +630,7 @@ function RMLgetlatestcomment( $print_on = true ) {
 		$image = $thishandle;
 	}
 	
-	$result = "<div class=\"box\"><div class=\"boxheader\"><a href=\"?document=view&amp;id=$thisdocument\"><img class=\"FrontCover\" style=\"float : right;margin : 0;margin-left : 10px;margin-bottom : 5px\" src=\"./covers/cover$thisdocument\" /></a><img class=\"docicon\" src=\"./users/$image.png\" /><b>$thishandle</b> &nbsp;" . getRatingDisplay($thisrating) . "</div><div class=\"boxtext\"><small><sup>$thisdate</sup></small><br />$thisbody</div><div class=\"inlineclear\"></div></div>";
+	$result = "<div class=\"box\"><div class=\"boxheader\"><a href=\"?document=view&amp;id=$thisdocument\"><img class=\"FrontCover\" style=\"float : right;margin : 0;margin-left : 10px;margin-bottom : 5px\" src=\"./covers/cover$thisdocument\" /></a><img class=\"docicon\" src=\"./users/$image.png\" /> &nbsp;" . getRatingDisplay($thisrating) . "</div><div class=\"boxtext\"><small>Added by : <b>$thishandle</b> (<i>$thisdate</i>)</small><br />$thisbody</div><div class=\"inlineclear\"></div></div>";
 	return processOutput( $result, $print_on );
 }
 
