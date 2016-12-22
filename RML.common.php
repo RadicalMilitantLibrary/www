@@ -565,14 +565,14 @@ function RMLdisplayfrontpage( $print_on = true ) {
 
 	$out .= '<div class="box"><div class="boxheader"><b>New Books</b></div>
 <p class="boxtext" style="text-align:center">';
-	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 10");
+	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 15");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;
 		$thistitle = $thisrow->title;
 		$out .= "\n<a href=\"?document=view&amp;id=$thisid\">
 <img class=\"FrontCover\" alt=\"$thistitle Cover\" src=\"./covers/cover$thisid\" /></a>";
-		if(($row == 4)) {
+		if(($row == 4) || ($row == 9)) {
 			$out .= "\n<br/>";
 		}
 	}
@@ -581,20 +581,20 @@ function RMLdisplayfrontpage( $print_on = true ) {
 		$out .= "\n".'<div class="box"><div class="boxheader"><b>Highest Rated Books</b></div>
 <p class="boxtext" style="text-align:center">';
 
-	$result = RMLfiresql("SELECT DISTINCT thread_id, AVG(level) AS score FROM forum WHERE level > 0 GROUP BY thread_id ORDER BY score DESC LIMIT 10");
+	$result = RMLfiresql("SELECT DISTINCT thread_id, AVG(level) AS score FROM forum WHERE level > 0 GROUP BY thread_id ORDER BY score DESC LIMIT 15");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->thread_id;
 
 		$out .= "\n<a href=\"?document=view&amp;id=$thisid\"><img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
 
-		if(($row == 4)) {
+		if(($row == 4) || ($row == 9)) {
 			$out .= "\n<br/>";
 		}
 	}
 	$out .= "\n</p></div>";
 
-	$out .= "\n<div class=\"box\"><div class=\"boxheader\"><b>Most Downloaded Books</b></div>
+/*	$out .= "\n<div class=\"box\"><div class=\"boxheader\"><b>Most Downloaded Books</b></div>
 <p class=\"boxtext\" style=\"text-align:center\">";
 
 	$result = RMLfiresql("SELECT id,downloads FROM document ORDER BY downloads DESC LIMIT 10");
@@ -609,7 +609,7 @@ function RMLdisplayfrontpage( $print_on = true ) {
 			$out .= "\n<br/>";
 		}
 	}
-	$out .= "\n</p></div>";
+	$out .= "\n</p></div>"; */
 	return processOutput( $out, $print_on );
 }
 
