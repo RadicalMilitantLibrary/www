@@ -154,6 +154,8 @@ function RMLfixdate( $date, $f = 'DD MMM YYYY' )
 	switch ( $f ) {
 		case 'DD MMM YYYY':
 			return strftime( '%d %b %Y', $date );
+		case 'U':// seconds since January 1st 1970
+			return strftime( '%s', $date );			
 		break;
 		default:
 			return false;
