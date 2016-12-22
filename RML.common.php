@@ -855,14 +855,16 @@ function RMLdisplaylibrarians( $print_on = true )
 		}
 
 		$out .= "\n".'<div class="librarian box">
-<p class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numdocs.')</p>
-<ul>
-<li><span>Books</span>: ' .$thisrow->docs .'</li>
-<li><span>First</span>: ' .RMLfixdate( $thisrow->first ) .'</li>
-<li><span>Last</span>: ' .RMLfixdate( $thisrow->last ) .'</li>
-</ul>
-</div>
-<div class="inlineclear">&nbsp;</div>';
+<div class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numdocs.')</div>
+<div class="boxtext">Added <b>' .$thisrow->docs .'</b> books between <b>' .RMLfixdate( $thisrow->first ) .'</b> and <b>' .RMLfixdate( $thisrow->last ) .'</b></div><div class="inlineclear"></div></div>';
+
+//<ul>
+//<li><span>Books</span>: ' .$thisrow->docs .'</li>
+//<li><span>First</span>: ' .RMLfixdate( $thisrow->first ) .'</li>
+//<li><span>Last</span>: ' .RMLfixdate( $thisrow->last ) .'</li>
+//</ul>
+
+
 	}
 	return processOutput( $out, $print_on );
 }
