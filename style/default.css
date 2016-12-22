@@ -504,6 +504,11 @@ p.boxtext {
 	list-style:	none;
 }
 
+.librarian ul li span {
+	display:	inline-block;
+	width:		7ex;
+}
+
 .inlineitem {
 	padding-bottom	: 15px;
 	margin-bottom	: 15px;
