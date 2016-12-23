@@ -847,6 +847,7 @@ function RMLdisplaylibrarians( $print_on = true )
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->owner;
 		$numdocs = RMLgetrating( $thisrow->docs );
+		$booksperday = getNumberFormatted( $thisrow->docs / ( RMLfixdate( $thisrow->last, 'U' ) - RMLfixdate( $thisrow->first, 'U' ) ) / ( 60*60*24 ), -2 );
 
 		if( !file_exists( './users/'.$thisuser.'.png' ) ) {
 			$image = 'Anonymous';
@@ -856,7 +857,7 @@ function RMLdisplaylibrarians( $print_on = true )
 
 		$out .= "\n".'<div class="librarian box">
 <div class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numdocs.')</div>
-<div class="boxtext">Added <b>' .$thisrow->docs .'</b> books between <b>' .RMLfixdate( $thisrow->first ) .'</b> and <b>' .RMLfixdate( $thisrow->last ) .'</b></div><div class="inlineclear"></div></div>';
+<div class="boxtext">Added <b>' .$thisrow->docs .'</b> books between <b>' .RMLfixdate( $thisrow->first ) .'</b> and <b>' .RMLfixdate( $thisrow->last ) .'</b> (~<b>' .$booksperday .'</b>&nbsp;books/day)</div><div class="inlineclear"></div></div>';
 
 //<ul>
 //<li><span>Books</span>: ' .$thisrow->docs .'</li>
