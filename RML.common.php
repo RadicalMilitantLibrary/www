@@ -93,11 +93,11 @@ function RMLdisplayleft( $print_on = true )
 		$out .= "\n<a class=\"button star\" href=\"?function=librarians\">Librarians</a>";
 	}
 
-//	if($function == 'readers') {
-//		$out .= "\n<a class=\"activebutton star\" href=\"?function=readers\">Readers</a>";
-//	} else {
-//		$out .= "\n<a class=\"button star\" href=\"?function=readers\">Readers</a>";
-//	}
+	if($function == 'readers') {
+		$out .= "\n<a class=\"activebutton star\" href=\"?function=readers\">Readers</a>";
+	} else {
+		$out .= "\n<a class=\"button star\" href=\"?function=readers\">Readers</a>";
+	}
 
 	if($function == 'manual') {
 		$out .= "\n<a class=\"activebutton star\" href=\"?function=manual\">Manual</a>";
@@ -630,7 +630,7 @@ function RMLgetlatestcomment( $print_on = true ) {
 		$image = $thishandle;
 	}
 	
-	$result = "<div class=\"box\"><div class=\"boxheader\"><a href=\"?document=view&amp;id=$thisdocument\"><img class=\"FrontCover\" style=\"float : right;margin : 0;margin-left : 10px;margin-bottom : 5px\" src=\"./covers/cover$thisdocument\" /></a><img class=\"docicon\" src=\"./users/$image.png\" /> &nbsp;" . getRatingDisplay($thisrating) . "</div><div class=\"boxtext\"><small>Added by : <b>$thishandle</b> (<i>$thisdate</i>)</small><br />$thisbody</div><div class=\"inlineclear\"></div></div>";
+	$result = "<div class=\"box\"><div class=\"boxheader\"><a href=\"?document=view&amp;id=$thisdocument\"><img class=\"FrontCover\" style=\"float : right;margin : 0;margin-left : 10px;margin-bottom : 5px\" src=\"./covers/cover$thisdocument\" /></a><img class=\"docicon\" src=\"./users/$image.png\" /> &nbsp;" . getRatingDisplay($thisrating) . "</div><div class=\"boxtext\"><sup>Added by : <b>$thishandle</b> (<i>$thisdate</i>)</sup><br />$thisbody</div><div class=\"inlineclear\"></div></div>";
 	return processOutput( $result, $print_on );
 }
 
@@ -817,10 +817,11 @@ function RMLdisplaymanual( $print_on = true )
 function RMLdisplayreaders( $print_on = true )
 {
 	$out = '';
-	$sql = RMLfiresql("SELECT DISTINCT(author) AS users, COUNT(id) AS comments FROM forum WHERE level>0 AND author<>'Anonymous' GROUP BY users ORDER BY comments DESC;");
+	$sql = RMLfiresql("SELECT DISTINCT(author) AS users, COUNT(id) AS comments, AVG(level) AS avgrating FROM forum WHERE level>0 AND author<>'Anonymous' GROUP BY users ORDER BY comments DESC;");
 	for( $row=0; $row < pg_numrows( $sql ); $row++ ) {
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->users;
+		$avgrating = round($thisrow->avgrating,2);
 		$numcomments = RMLgetrating( $thisrow->comments );
 
 		if(!file_exists("./users/$thisuser.png")) {
@@ -830,9 +831,8 @@ function RMLdisplayreaders( $print_on = true )
 		}
 
 		$out .= "\n".'<div class="box">
-<p class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numcomments.')</p>
-</div>
-<div class="inlineclear">&nbsp;</div>';
+<div class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numcomments.')</div><div class="boxtext">Read <b>'.$thisrow->comments.'</b> books, scoring <b>'.$avgrating.'</b> on average.</div>
+<div class="inlineclear"></div></div>';
 	}
 	return processOutput( $out, $print_on );
 }
@@ -847,7 +847,10 @@ function RMLdisplaylibrarians( $print_on = true )
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->owner;
 		$numdocs = RMLgetrating( $thisrow->docs );
-		$booksperday = getNumberFormatted( $thisrow->docs / ( RMLfixdate( $thisrow->last, 'U' ) - RMLfixdate( $thisrow->first, 'U' ) ) / ( 60*60*24 ), -2 );
+		$daysactive = abs((strtotime($thisrow->last) - strtotime($thisrow->first)) / (60*60*24)) + 1;
+		// +1 because from today to today is 1 day and not 0
+		// awoids division by zero on users active for just 1 day (Jotunbane)
+		$booksperday = getNumberFormatted( $thisrow->docs / $daysactive ,3);
 
 		if( !file_exists( './users/'.$thisuser.'.png' ) ) {
 			$image = 'Anonymous';
