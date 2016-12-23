@@ -850,7 +850,7 @@ function RMLdisplaylibrarians( $print_on = true )
 		$daysactive = abs((strtotime($thisrow->last) - strtotime($thisrow->first)) / (60*60*24)) + 1;
 		// +1 because from today to today is 1 day and not 0
 		// awoids division by zero on users active for just 1 day (Jotunbane)
-		$booksperday = getNumberFormatted( $thisrow->docs / $daysactive ,3);
+		$booksperweek = getNumberFormatted( ($thisrow->docs / $daysactive)*7 ,1);
 
 		if( !file_exists( './users/'.$thisuser.'.png' ) ) {
 			$image = 'Anonymous';
@@ -860,7 +860,7 @@ function RMLdisplaylibrarians( $print_on = true )
 
 		$out .= "\n".'<div class="librarian box">
 <div class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numdocs.')</div>
-<div class="boxtext">Added <b>' .$thisrow->docs .'</b> books between <b>' .RMLfixdate( $thisrow->first ) .'</b> and <b>' .RMLfixdate( $thisrow->last ) .'</b> (~<b>' .$booksperday .'</b>&nbsp;books/day)</div><div class="inlineclear"></div></div>';
+<div class="boxtext">Added <b>' .$thisrow->docs .'</b> books between <b>' .RMLfixdate( $thisrow->first ) .'</b> and <b>' .RMLfixdate( $thisrow->last ) .'</b> (~<b>' .$booksperweek .'</b>&nbsp;books/week)</div><div class="inlineclear"></div></div>';
 
 //<ul>
 //<li><span>Books</span>: ' .$thisrow->docs .'</li>
