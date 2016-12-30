@@ -777,16 +777,29 @@ function RMLdisplayabout( $print_on = true )
 <b>'.$cover_size.'</b> covers,
 <b>'.$picture_size.'</b> pictures.<br />
 <b>'.$readers.'</b> Radical Militant Readers have borrowed
-<b>'.$total.'</b> Books.</small></div>
-<img src="./img/about.jpg" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
+<b>'.$total.'</b> Books.</small></div>'
+//.'<!-- <figure> -->'
+//.'<!-- html5 picture <picture><source /> -->'
+.'<img src="' .getAboutImage() .'" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
+//.'<!-- </picture> -->'
+//.'<!-- <figcaption>' .$aboutcaption .'</figcaption></figure> -->'
 	.RMLdisplay( "We are the Radical Militant Librarians, these are our books. We will accept no barriers between readers and our books. We will never register who borrows what and when. All books are welcome in our library (bring your own books).", 8, false )
 	.RMLdisplay( "We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can send a message to the librarian in charge of the book. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.", 5, false )
 	.RMLdisplay( "This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation. Readers can define a different layout for each book, author or subject. Or just make their own \"default\" and completely change the layout of all the books they borrow.", 4, false )
 	.RMLdisplay( "If you want to chat, we hang out in the #readingclub channel on <a href=\"http://www.oftc.net/\">OFTC</a>. Or you can try to reach jotunbane@<a href=\"http://cloak.dk\">cloak.dk</a> on jabber (OTR required), at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:i4oltgzz53xy7aqm, or <a href=\"https://en.wikipedia.org/wiki/Bitmessage\">Bitmessage</a> BM-2cV7JNNkafKxDbJiNeLfSK8q6uPJNDQ8gj.", 4, false )
-	.RMLdisplay( "<a href=\"?function=login\">Sign up</a> and you too can become a Radical Militant Librarian, or you can start by becoming a Radical Militant Reader by telling us what books you liked (or hated).", 4, false )
-	.RMLdisplay( "The logo is released under a Creative Commons Attribution-ShareAlike license by <a href=\"http://readersbillofrights.info\">Readers Bill of Rights</a>. It is created by cartoonist and <a href=\"http://questioncopyright.org/\">QuestionCopyright.org</a> artist-in-residence <a href=\"http://blog.ninapaley.com/\">Nina Paley</a>. You can support Nina's work and view her amazing and Creative Commons licensed film, <a href=\"http://www.sitasingstheblues.com/\">Sita Sings the Blues</a>, over at her website.", 5, false )
+	.RMLdisplay( '<a href="?function=login">Sign up</a> and you too can become a Radical Militant Librarian, or you can start by becoming a Radical Militant Reader by telling us what books you liked (or hated).', 4, false )
+	.RMLdisplay( 'The logo is released under a Creative Commons Attribution-ShareAlike license by <a href="http://readersbillofrights.info">Readers Bill of Rights</a>. It is created by cartoonist and <a href="http://questioncopyright.org/">QuestionCopyright.org</a> artist-in-residence <a href="http://blog.ninapaley.com/">Nina Paley</a>. You can support Nina`s work and view her amazing and Creative Commons licensed film, <a href="http://www.sitasingstheblues.com/">Sita Sings the Blues</a>, over at her website.', 5, false )
 	;
 	return processOutput( $out, $print_on );
+}
+
+// ewa: prepare for random image
+function getAboutImage( $filename='about', $path='./img/' ) {
+	//todo:
+	//list all files in directory
+	//count files in path that match on /^filename/
+	//return e.g. a random one of those
+	return $path.$filename.'.jpg';//int rand ( int $min , int $max )
 }
 
 // ============================================================================
