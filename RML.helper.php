@@ -1843,3 +1843,23 @@ function processOutput( $output, $printit )
 		return $output;
 	}
 }
+
+function getBibTeX( $docID ) {
+	//request from db
+	if( true ){
+		return '';
+	}
+	//
+	return '@book{rml:' .$docid .','
+.'	title = {' .$book->title .'},'
+.'	author = {' .$book->authors .'},'
+.'	publisher = {' .$book->publisher .'},'
+.'	isbn =      {' .$book->isbn .'},'
+.'	year =      {' .$book->year .'},'
+.'	date = {}' .$book->date .'},'
+.'	series =    {Complete Idiot's},'
+.'	edition =   {' .'},'
+.'	volume =    {},'
+.'	url =       {http://gen.lib.rus.ec/book/index.php?md5=E5BE6F3B7C2E15F244FB332BE9CFC1C7}'
+.'}';
+}
