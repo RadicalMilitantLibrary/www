@@ -1852,14 +1852,23 @@ function getBibTeX( $docID ) {
 	//
 	return '@book{rml:' .$docid .','
 .'	title = {' .$book->title .'},'
-.'	author = {' .$book->authors .'},'
-.'	publisher = {' .$book->publisher .'},'
-.'	isbn =      {' .$book->isbn .'},'
+//.'	indextitle = {' .$book->title .'},' //
+//.'	shorttitle = {' .$book->shorttitle .'},' //
+.'	subtitle = {' .$book->subtitle .'},'
+.'	author = {' .$book->author .'},'
+//.'	editor = {' .$book->editor .'},'
+//.'	translator = {' .$book->translator .'},'
+//.'	publisher = {' .$book->publisher .'},'
+//.'	isbn =      {' .$book->isbn .'},'
 .'	year =      {' .$book->year .'},'
-.'	date = {}' .$book->date .'},'
-.'	series =    {Complete Idiot's},'
-.'	edition =   {' .'},'
-.'	volume =    {},'
-.'	url =       {http://gen.lib.rus.ec/book/index.php?md5=E5BE6F3B7C2E15F244FB332BE9CFC1C7}'
+//.'	month = {' .$book->month .'},'
+//.'	date = {' .$book->date .'},'
+//.'	series =    {' .$book->series .'},'
+//.'	number =    {' .$book->series .'},'
+//.'	edition =   {' .$book->edition .'},'
+.'	keywords = {' .$book->keywords .'}',
+//.'	volume =    {' .$book->volume .'},'
+.'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$book->id .'}'
+.'	note = {' $book->note .'}'
 .'}';
 }
