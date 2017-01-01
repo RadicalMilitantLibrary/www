@@ -1845,30 +1845,47 @@ function processOutput( $output, $printit )
 }
 
 function getBibTeX( $docID ) {
-	//request from db
-	if( true ){
-		return '';
-	}
-	//
+	//request data from db
+	$result = RMLfiresql( "
+SELECT title,
+	subtitle,
+	author_id, (SELECT name FROM author WHERE id=document.author_id) AS author,
+	subject_id,
+	(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subject,
+	year,
+	\"unique\",
+	keywords,
+	copyright AS colophon,
+	teaser,
+	downloads,
+	(SELECT owner FROM subject WHERE id=document.subject_id) AS owner
+FROM document WHERE id=" .$docID
+	);
+	if( !$result ){ return ''; }
+
+	$book = pg_Fetch_Object( $result, 0 );
+
 	return '@book{rml:' .$docid .','
 .'	title = {' .$book->title .'},'
 //.'	indextitle = {' .$book->title .'},' //
 //.'	shorttitle = {' .$book->shorttitle .'},' //
 .'	subtitle = {' .$book->subtitle .'},'
 .'	author = {' .$book->author .'},'
-//.'	editor = {' .$book->editor .'},'
-//.'	translator = {' .$book->translator .'},'
-//.'	publisher = {' .$book->publisher .'},'
-//.'	isbn =      {' .$book->isbn .'},'
+//.'	editor = {' .$book->editor .'},'//maybe in colophon, alternative to author
+//.'	translator = {' .$book->translator .'},'//maybe in colophon
+//.'	origlanguage = {' .$book->origlanguage .'},'//maybe in colophon
+//.'	language = {' .$book->language .'},'//maybe in colophon
+//.'	publisher = {' .$book->publisher .'},'//maybe in colophon
+//.'	isbn =      {' .$book->isbn .'},' //still in colophon
 .'	year =      {' .$book->year .'},'
-//.'	month = {' .$book->month .'},'
-//.'	date = {' .$book->date .'},'
-//.'	series =    {' .$book->series .'},'
-//.'	number =    {' .$book->series .'},'
-//.'	edition =   {' .$book->edition .'},'
+//.'	month = {' .$book->month .'},'//maybe in colophon
+//.'	date = {' .$book->date .'},'//maybe in colophon, alternatuve to year and month
+//.'	series =    {' .$book->series .'},'//maybe in colophon or reading lists
+//.'	number =    {' .$book->series .'},'//maybe in colophon
+//.'	edition =   {' .$book->edition .'},'//maybe in colophon
 .'	keywords = {' .$book->keywords .'}',
-//.'	volume =    {' .$book->volume .'},'
-.'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$book->id .'}'
-.'	note = {' $book->note .'}'
+//.'	volume =    {' .$book->volume .'},'//maybe in colophon
+.'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$docID .'}'
+.'	note = {' $book->colophon .'}'//for now just colophon
 .'}';
 }
