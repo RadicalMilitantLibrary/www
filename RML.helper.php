@@ -1917,6 +1917,12 @@ FROM document WHERE id=" .$docID
 				case 'volume':
 					$book->volume = $elm[1];
 				break;
+				case 'series':
+					$book->series = $elm[1];
+				break;
+				case 'number':
+					$book->number = $elm[1];
+				break;
 			}
 
 		}
