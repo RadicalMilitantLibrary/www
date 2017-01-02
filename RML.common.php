@@ -120,14 +120,18 @@ function RMLdisplayleft( $print_on = true )
 	}
 
 	$out .= "\n"
-	// banner ad
-	.'<div class="center"><a href="http://answerstedhctbek.onion"><img style="border:0;margin-top:10px" src="./img/banner.gif" alt="hidden answers" /></a></div>'
+
 	// bitcoin donation address
 	.'<div class="center"><a href="bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA"><img style="border:0" src="./img/qrcode.png" alt="I can haz bitcoinz" /></a></div>'
+
 	// glider
 	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Glider => Hacker" /></a></div>'
+
 	// pgp pubkey
 	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
+
+	// banner ad
+	.'<div class="center"><a href="http://answerstedhctbek.onion"><img style="border:0;margin-top:10px" src="./img/banner.gif" alt="hidden answers" /></a></div>'
 .'</td>';
 	return processOutput( $out, $print_on );
 }
@@ -559,7 +563,7 @@ function RMLdisplaytitle( $print_on = true ) {
 
 function RMLdisplayfrontpage( $print_on = true ) {
 
-	$out = "\n".'<div class="order" style="text-align:center">Upholding the <a href="http://readersbillofrights.info/">Readers Bill of Rights</a> since 2010</div>';
+	$out = "\n".'<div class="order" style="text-align:center">Protecting your <a href="http://www.ala.org/advocacy/intfreedom/statementspols/freedomreadstatement">Freedom to Read</a> since 2010</div>';
 	
 	$out .= RMLgetlatestcomment( false );
 
