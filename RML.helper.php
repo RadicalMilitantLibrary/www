@@ -1956,9 +1956,9 @@ FROM document WHERE id=" .$docID
 .( !isset( $book->year ) )?'':'	year =      {' .$book->year .'},'
 .( !isset( $book->month ) )?'':'	month = {' .$book->month .'},'
 .( !isset( $book->series ) )?'':'	series =    {' .$book->series .'},'
-.( !isset( $book->number ) )?'':'	number =    {' .$book->series .'},'
+.( !isset( $book->number ) )?'':'	number =    {' .$book->number .'},'
 .( !isset( $book->edition ) )?'':'	edition =   {' .$book->edition .'},'
-.( !isset( $book->keywords ) )?'':'	keywords = {' .$book->keywords .'}',
+.( !isset( $book->keywords ) )?'':'	keywords = {' .$book->keywords .'},'
 .( !isset( $book->volume ) )?'':'	volume =    {' .$book->volume .'},'
 .'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$docID .'},'
 //.'	note = {' $book->colophon .'}'//for now just colophon
