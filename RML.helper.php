@@ -1864,28 +1864,97 @@ FROM document WHERE id=" .$docID
 	if( !$result ){ return ''; }
 
 	$book = pg_Fetch_Object( $result, 0 );
+	$colophon = explode("\n", $s );
+	foreach( $colophon as $line ) {
+
+		if ( strpos( $line, ':' ) ) {
+			$elm = explode( ":", $line );
+
+			switch( strtolower( $elm[0] ) ) {
+				case 'translator':
+				case 'translation':
+					//translator
+					$book->translator = $elm[1];
+					//orig language
+					$start = strpos( $elm[1] , ' (' );
+					if ( $start > -1 ) {
+						$book->translator = substr( $elm[1], 0, $start );
+						$start += 2;
+						$length = strlen( $elm[1] ) - $start - 1;
+						//last elm in space-separated list (e.g. "from English", "from the English")
+						$book->origlanguage = array_slice( explode( ' ', substr( $elm[1], $start, $length ) ), -1 )[0];
+					}
+				break;
+				case 'language':
+					$book->language = $elm[1];
+				break;
+				case 'isbn':
+					$book->isbn = $elm[1];
+				break;
+				case 'first published':
+				case 'published':
+					//publisher
+					$start = strpos( $elm[1] , ' by ' );
+					if ( $start > -1 ) {
+						$start += 4;
+						$length = strlen( $elm[1] ) - $start;
+						$book->publisher = substr( $elm[1], $start, $length );
+					} else {
+						$start = 0;
+					}
+					//date
+					//todo
+				break;
+				case 'publisher':
+					$book->publisher = $elm[1];
+				break;
+				case 'edition':
+					$book->edition = $elm[1];
+				break;
+				case 'editor':
+					$book->editor = $elm[1];
+				break;
+				case 'volume':
+					$book->volume = $elm[1];
+				break;
+			}
+
+		}
+
+	}
+
+	if ( isset( $book->date ) ) {
+		unset( $book->year );
+		unset( $book->month );
+	}
+	if ( isset( $book->editor ) ) {
+		unset( $book->author );
+	}
+	if ( strlen( $book->subtitle ) <= 0 ) {
+		unset( $book->subtitle );
+	}
 
 	return '@book{rml:' .$docid .','
 .'	title = {' .$book->title .'},'
 //.'	indextitle = {' .$book->title .'},' //
 //.'	shorttitle = {' .$book->shorttitle .'},' //
-.'	subtitle = {' .$book->subtitle .'},'
+.( !isset( $book->subtitle ) )?'':'	subtitle = {' .$book->subtitle .'},'
 .'	author = {' .$book->author .'},'
-//.'	editor = {' .$book->editor .'},'//maybe in colophon, alternative to author
-//.'	translator = {' .$book->translator .'},'//maybe in colophon
-//.'	origlanguage = {' .$book->origlanguage .'},'//maybe in colophon
-//.'	language = {' .$book->language .'},'//maybe in colophon
-//.'	publisher = {' .$book->publisher .'},'//maybe in colophon
-//.'	isbn =      {' .$book->isbn .'},' //still in colophon
-.'	year =      {' .$book->year .'},'
-//.'	month = {' .$book->month .'},'//maybe in colophon
-//.'	date = {' .$book->date .'},'//maybe in colophon, alternatuve to year and month
-//.'	series =    {' .$book->series .'},'//maybe in colophon or reading lists
-//.'	number =    {' .$book->series .'},'//maybe in colophon
-//.'	edition =   {' .$book->edition .'},'//maybe in colophon
-.'	keywords = {' .$book->keywords .'}',
-//.'	volume =    {' .$book->volume .'},'//maybe in colophon
-.'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$docID .'}'
-.'	note = {' $book->colophon .'}'//for now just colophon
+.( !isset( $book->editor ) )?'':'	editor = {' .$book->editor .'},'
+.( !isset( $book->translator ) )?'':'	translator = {' .$book->translator .'},'
+.( !isset( $book->origlanguage ) )?'':'	origlanguage = {' .$book->origlanguage .'},'
+.( !isset( $book->language ) )?'':'	language = {' .$book->language .'},'
+.( !isset( $book->publisher ) )?'':'	publisher = {' .$book->publisher .'},'
+.( !isset( $book->isbn ) )?'':'	isbn =      {' .$book->isbn .'},'
+.( !isset( $book->date ) )?'':'	date = {' .$book->date .'},'
+.( !isset( $book->year ) )?'':'	year =      {' .$book->year .'},'
+.( !isset( $book->month ) )?'':'	month = {' .$book->month .'},'
+.( !isset( $book->series ) )?'':'	series =    {' .$book->series .'},'
+.( !isset( $book->number ) )?'':'	number =    {' .$book->series .'},'
+.( !isset( $book->edition ) )?'':'	edition =   {' .$book->edition .'},'
+.( !isset( $book->keywords ) )?'':'	keywords = {' .$book->keywords .'}',
+.( !isset( $book->volume ) )?'':'	volume =    {' .$book->volume .'},'
+.'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$docID .'},'
+//.'	note = {' $book->colophon .'}'//for now just colophon
 .'}';
 }
