@@ -616,6 +616,17 @@ input.norm {
 	font-family		: sans-serif
 }
 
+input[type="checkbox"].flipcheck {
+	position	: absolute;
+	left		: -9999em;
+}
+.flipcheck + .flipcontent {
+	display		: hidden;
+}
+.flipcheck:checked + .flipcontent {
+	display		: inherit;
+}
+
 textarea.norm {
 	width			: 500px;
 	font-size		: 12pt;
