@@ -1861,7 +1861,7 @@ SELECT title,
 	(SELECT owner FROM subject WHERE id=document.subject_id) AS owner
 FROM document WHERE id=" .$docID
 	);
-	if( !$result ){ return ''; }
+	//if( !$result ){ return ''; }
 
 	$book = pg_Fetch_Object( $result, 0 );
 	$colophon = explode("\n", $s );
