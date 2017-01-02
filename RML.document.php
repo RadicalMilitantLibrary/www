@@ -390,7 +390,7 @@ function RMLviewdocument( $id, $print_on = true )
 </tr><tr valign="middle" style="height:20px">
 	<td align="right">subject :</td><td style="padding-left:10px"><b><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a></b></td>
 </tr>'
-.'<div class="bibtex"><textarea id="bibtext" name="bibtext" rows="13" cols="40" readonly="readonly">' .getBibTeX( $id ) .'</textarea></div>';
+.'<tr valign="top"><td align="right">BiBTeX :</td><td><div class="bibtex"><textarea id="bibtext" name="bibtext" rows="13" cols="40" readonly="readonly">' .getBibTeX( $id ) .'</textarea></div></td></tr>';
 
 	if( $thiskeywords ) {
 		$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">keywords :</td><td style="padding-left:10px"><b>'.$thiskeywords.'</b></td></tr>';
