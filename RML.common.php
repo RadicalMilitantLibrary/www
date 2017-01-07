@@ -131,7 +131,10 @@ function RMLdisplayleft( $print_on = true )
 	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
 
 	// banner ad
-	.'<div class="center"><a href="http://answerstedhctbek.onion"><img style="border:0;margin-top:10px" src="./img/banner.gif" alt="hidden answers" /></a></div>'
+	// turns out these guys are Scammers.
+	// no more banners
+	
+//	.'<div class="center"><a href="http://answerstedhctbek.onion"><img style="border:0;margin-top:10px" src="./img/banner.gif" alt="hidden answers" /></a></div>'
 .'</td>';
 	return processOutput( $out, $print_on );
 }
