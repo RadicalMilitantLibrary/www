@@ -157,6 +157,9 @@ switch( $function ) {
 		if ( !in_array( $format, array( 'epub','html','markdown','text' ) ) ) {
 			$format = 'epub';
 		}
+		if(!RMLgetcurrentuser()) {
+			header( 'Location: ?function=login' );
+		}
 		RMLdownloaddocument( $id, $format );
 		header( 'Location: ?document=view&id='.$id );
 	break;
