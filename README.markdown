@@ -12,6 +12,16 @@ This web interface is an attempt to raise the quality of ebooks.
 * [Public Wishlist](https://gitlab.com/lazy-book-crowd/more-bookz)
 * [Database-Example](https://github.com/RadicalMilitantLibrary/database) 
 
+## Requirements (as of news from 2017-01-08 by Jotunbane)
+
+* HTTP Server (e.g. apache, nginx, ...)
+* PHP
+  + incl. GD library (for image manipulation)
+  + enabled to use ZIP files (compiled with `--enable-zip`)
+* PostgresQL (or a shitload of work and some rewrite to enable another DBMS)
+  + php_pgsql (or PHP compiled with `--with-pgsql'`)
+  + the actual [database](https://github.com/RadicalMilitantLibrary/database) or a recent dump by Jotunbane (you may find contact via the [manual](https://github.com/RadicalMilitantLibrary/manual))
+
 ## License Terms
 
 Every contributor accepts that his code will be available to the public under the terms of at least one of the following licenses:
