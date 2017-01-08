@@ -22,6 +22,14 @@ This web interface is an attempt to raise the quality of ebooks.
   + php_pgsql (or PHP compiled with `--with-pgsql'`)
   + the actual [database](https://github.com/RadicalMilitantLibrary/database) or a recent dump by Jotunbane (you may find contact via the [manual](https://github.com/RadicalMilitantLibrary/manual))
 
+## Donation
+
+Maybe you cannot code and have no time to engage.
+The service is running as one of the first publicly known onion (back then called hidden) services.
+It is maintained and mainly funded by Jotunbane, so if you are willing to help, send your bits:
+
+via Bitcoin [1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA](bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA)
+
 ## License Terms
 
 Every contributor accepts that his code will be available to the public under the terms of at least one of the following licenses:
