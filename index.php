@@ -159,6 +159,7 @@ switch( $function ) {
 		}
 		if(!RMLgetcurrentuser()) {
 			header( 'Location: ?function=login' );
+			break;
 		}
 		RMLdownloaddocument( $id, $format );
 		header( 'Location: ?document=view&id='.$id );
