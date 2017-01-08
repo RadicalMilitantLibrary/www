@@ -1307,7 +1307,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	$title = preg_replace("@&@","&amp;",$title);
 	$subtitle = preg_replace("@&@","&amp;",$subtitle);
 
-	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ Scimus quae legis, et non dicimus ~</b><br/>https://c3jemx2ube5v5zpg.onion</div>" . $pageend;
+	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
 
 	$epub->addFromString('title.html', $thistitle);
 	// ************************************** COPYRIGHT

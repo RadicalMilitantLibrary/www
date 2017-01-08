@@ -464,7 +464,7 @@ function RMLdisplaytitle( $print_on = true ) {
 		$title = "Edit Element";
 	break;
 	case 'about':
-		$title = "~ Scimus quae legis, et non dicimus ~";
+		$title = "~ All Your Books Are Belong to Us !!! ~";
 	break;
 	case 'manual':
 		$title = "~ Radical Militant Manual ~";
