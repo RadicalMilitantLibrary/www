@@ -122,7 +122,7 @@ function RMLdisplayleft( $print_on = true )
 	$out .= "\n"
 
 	// bitcoin donation address
-	.'<div class="center"><a href="bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA"><img style="border:0" src="./img/qrcode.png" alt="I can haz bitcoinz" /></a></div>'
+	.'<div class="center">&nbsp;<br/><a href="bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA"><img style="border:0" src="./img/qrcode.png" alt="I can haz bitcoinz" /></a></div>'
 
 	// glider
 	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Glider => Hacker" /></a></div>'
@@ -130,11 +130,6 @@ function RMLdisplayleft( $print_on = true )
 	// pgp pubkey
 	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
 
-	// banner ad
-	// turns out these guys are Scammers.
-	// no more banners
-	
-//	.'<div class="center"><a href="http://answerstedhctbek.onion"><img style="border:0;margin-top:10px" src="./img/banner.gif" alt="hidden answers" /></a></div>'
 .'</td>';
 	return processOutput( $out, $print_on );
 }
@@ -786,7 +781,7 @@ function RMLdisplayabout( $print_on = true )
 <b>'.$readers.'</b> Radical Militant Readers have borrowed
 <b>'.$total.'</b> Books.</small></div>
 <img src="./img/about.jpg" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
-	.RMLdisplay( "We are the Radical Militant Librarians, these are our books. We will accept no barriers between readers and our books. We will never register who borrows what and when. All books are welcome in our library (bring your own books).", 8, false )
+	.RMLdisplay( "How are you gentlemen, All Your Books Are Belong to Us. You are on the way to destruction. You have no chance to survive, make your time. We are the Radical Militant Librarians, these are our books. We will accept no barriers between readers and our books. We will never register who borrows what and when. All books are welcome in our library (bring your own books, take off every DRM ... for great justice).", 8, false )
 	.RMLdisplay( "We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can send a message to the librarian in charge of the book. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.", 5, false )
 	.RMLdisplay( "This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation. Readers can define a different layout for each book, author or subject. Or just make their own \"default\" and completely change the layout of all the books they borrow.", 4, false )
 	.RMLdisplay( "If you want to chat, we hang out in the #readingclub channel on <a href=\"http://www.oftc.net/\">OFTC</a>. Or you can try to reach jotunbane@<a href=\"http://cloak.dk\">cloak.dk</a> on jabber (OTR required), at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:i4oltgzz53xy7aqm, or <a href=\"https://en.wikipedia.org/wiki/Bitmessage\">Bitmessage</a> BM-2cV7JNNkafKxDbJiNeLfSK8q6uPJNDQ8gj.", 4, false )
@@ -802,20 +797,18 @@ function RMLdisplaymanual( $print_on = true )
 {
 	setTimeZone();
 	$out = ''
-	.RMLdisplay( 'A helpful documentation for all of you that are willing to rise from ordinary Reader to Librarian or are eager to know sligtly more about this place and how it works.', 5, false )
+	.RMLdisplay( 'A helpful documentation for all of you that are willing to rise from ordinary Reader to Librarian or are eager to know sligtly more about this place and how it works.', 8, false )
 /*	.RMLdisplay( '<i>kittyhawk</i>&#39;s original draft ... --> <a href="./manual.odt">HERE</a> <--', 5, false ) */
-	.RMLdisplay( 'The <a href="https://github.com/RadicalMilitantLibrary/manual/blob/master/README.markdown" target="_blank">RML communities continuous manual</a> hosted on the <a href="https://github.com/RadicalMilitantLibrary/" target="_blank">GitHub-Organization</a> for mor collaboration and user input…<br>
-	also you can build yourself or dowload the available files (built on ' .date( "d. M Y H:i:s.", filemtime( './readingclub-man.pdf' ) ).') here: <ul>
-	<li><a href="./readingclub-man.md">Markdown</a>,</li>
-	<li><a href="./readingclub-man.epub">EPUB</a> and</li>
-	<li><a href="./readingclub-man.pdf">PDF</a></li>
-	</ul>', 5, false )
-	.'<h2>Resources</h2>'
-	.RMLdisplay( 'You will need at the very least:
-	<ul>
-	<li>most important, the <a href="http://c3jemx2ube5v5zpg.onion/reading_club.odt">template for ODT</a></li>
-	<li><a href="https://www.libreoffice.org/download/">Libre Office</a> for editing the ODT</li>
-	</ul> More is described in the manual obove.', 5, false );
+	.RMLdisplay( 'The <a href="https://github.com/RadicalMilitantLibrary/manual/blob/master/README.markdown">RML communities continuous manual</a> hosted on the <a href="https://github.com/RadicalMilitantLibrary/">GitHub-Organization</a> for mor collaboration and user input, also you can build yourself or dowload the available files (built on ' .date( "d. M Y H:i:s.", filemtime( './readingclub-man.pdf' ) ).') here as :',5,false)
+	.RMLdisplay('<a href="./readingclub-man.md">Markdown</a>',25,false)
+	.RMLdisplay('<a href="./readingclub-man.epub">EPUB</a>',26,false)
+	.RMLdisplay('<a href="./readingclub-man.pdf">PDF</a>',27,false)
+	
+	.RMLdisplay('Resources',1,false)
+	.RMLdisplay( 'You will need at the very least:',8,false)
+	.RMLdisplay('most important, the <a href="http://c3jemx2ube5v5zpg.onion/reading_club.odt">template for ODT</a>',25,false)
+	.RMLdisplay('<a href="https://www.libreoffice.org/download/">Libre Office</a> for editing the ODT',27,false)
+	.RMLdisplay('More is described in the manual obove.', 5, false );
 	return processOutput( $out, $print_on );
 }
 

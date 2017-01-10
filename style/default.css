@@ -246,6 +246,7 @@ td.right {
 p.pagetitle {
 	padding			: 0;
 	margin			: 0;
+	padding-left 	: 140px;
 	padding-top		: 55px;
 	font-size		: 24pt;
 	color			: #222;
