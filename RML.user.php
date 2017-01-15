@@ -468,7 +468,8 @@ function RMLdisplaymessage( $id, $print_on = true ) {
 From : <b>' .$sender.'</b><br/>Sent : <b>' .$posted.'</b>
 <div class="inlineclear"></div>'
 		.RMLdisplay( $body, 5, false )
-		."\n".'<div class="bottom"><a class="button add" href="?message=reply&amp;id=' .$id.'">Reply</a>&nbsp;<a class="button delete" href="?message=delete&amp;id=' .$id.'">Delete</a></div>';
+		."\n".'<div class="bottom"><a class="button add" href="?message=
+		&amp;id=' .$id.'">Reply</a>&nbsp;<a class="button delete" href="?message=delete&amp;id=' .$id.'">Delete</a></div>';
 	} else {
 		$out = "ERROR: Display Message : Cookiii baaaaaadddd...";
 	}
@@ -498,7 +499,7 @@ function RMLreplymessage( $id, $print_on = true ) {
 		$thisrow = pg_Fetch_Object( $result, 0 );
 		$thishandle = $thisrow->handle;
 		$thissender = $thisrow->sender_handle;
-		$thisbody = $thisrow->body;
+		$thisbody = htmlspecialchars($thisrow->body);
 		$thissubject = $thisrow->subject;
 		
 		if( $thishandle <> $user ) {
@@ -518,13 +519,15 @@ function RMLreplymessage( $id, $print_on = true ) {
 				}
 			}
 
-			$out = "\n<form method=\"post\" action=\"?message=send\"><table class=\"form\">
-<tr><td><b>To : </b></td><td><select class=\"norm\" name=\"messageto\">"
+			$out = "\n".'<form method="post" action="?message=send">
+<table class="form">
+<tr><td><b>To : </b></td><td><select class="norm" name="messageto">'
 			.$options
-			."\n</select></td></tr>
-<tr><td valign=\"top\"><b>Subject : </b></td><td><input class=\"norm\" type=\"text\" name=\"messagesubject\" value=\"Re: $thissubject\"></td></tr>
-<tr><td valign=\"top\"><b>Message : </b></td><td><textarea class=\"norm\" rows=\"20\" cols=\"41\" wrap=\"none\" name=\"body\">&gt;$thisbody</textarea>
-</td></tr><tr><td></td><td><input type=\"submit\" value=\"Send Reply\"></td></tr></table></form>";
+			.'
+			</select></td></tr>
+<tr><td valign="top"><b>Subject : </b></td><td><input class="norm" type="text" name="messagesubject" value="Re: $thissubject"></td></tr>
+<tr><td valign="top"><b>Message : </b></td><td><textarea class="norm" rows="20" cols="41" wrap="none" name="body">'.$thisbody.'</textarea>
+</td></tr><tr><td></td><td><input type="submit" value="Send Reply"></td></tr></table></form>";
 		}
 	}
 	return processOutput( $out, $print_on );
