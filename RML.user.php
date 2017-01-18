@@ -594,18 +594,19 @@ function hasRights( $action = '', $arr = array() )
 		}
 	}
 	switch ( $action ) {
-		case 'adddocument':
-		case 'addauthor' :
-		case 'editauthor' :
-		case 'addnews':
-		case 'delnews':
-		case 'editnews':
-		case 'test':
-		case 'selfpublish':
+		case 'adddocument':	return true;//for now everyone; maybe later after creating a comment/post
+			break;
+		case 'addauthor' :	//after (5?) books
+		case 'editauthor' :	//after (5?) book
+		case 'addnews':		//after (10?) books
+		case 'delnews':		//after (150?) books
+		case 'editnews':	//on own books
+		case 'test':		//
+		case 'selfpublish':	//three main librarians for now, later after 50(?) books
 			if ( in_array( $user, array_merge( $arr, $admaccs, $modaccs ) ) ) {
 				return true;
 			}
-		break;
+			break;
 		case 'addsubject':
 		case 'editsubject':
 		case 'delmsg':
