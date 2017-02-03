@@ -794,12 +794,26 @@ function RMLdisplayabout( $print_on = true )
 }
 
 // ewa: prepare for random image
-function getAboutImage( $filename='about', $path='./img/' ) {
-	//todo:
-	//list all files in directory
-	//count files in path that match on /^filename/
+function getAboutImage( $filename='about', $path='./img/', $method = 'day' ) {
+	// todo:
+	// list all files in directory
+	$count = 10; //count files in path that match on /^filename/
+	$min = 0;
+	$max = $count - 1
 	//return e.g. a random one of those
-	return $path.$filename.'.jpg';//int rand ( int $min , int $max )
+	switch( $method ) {
+		case 'last':
+			$number = $max;
+		case 'static':
+			$number = '';
+		case 'random':
+			$number = rand ( int $min , int $max );
+			break;
+		case 'day':
+			$number = date( "%s", time() ) / 86400 %  ;
+			break;
+	}
+	return $path.$filename.$number.'.jpg';//int rand ( int $min , int $max )
 }
 
 // ============================================================================
