@@ -793,11 +793,22 @@ function RMLdisplayabout( $print_on = true )
 	return processOutput( $out, $print_on );
 }
 
-// ewa: prepare for random image
+// ewa: prepare about image to be selected by a method like random
 function getAboutImage( $filename='about', $path='./img/', $method = 'day' ) {
-	// todo:
+	$pattern = "/^".$filename."[0-9]*\..*$/i";
 	// list all files in directory
-	$count = 10; //count files in path that match on /^filename/
+	if ($handle = opendir($path)) {
+    		while (false !== ($entry = readdir($handle))) {
+			$image="";
+			if( preg_match( $pattern, $entry, $image ) ) {
+				$files[] = $image[0];
+			}
+    		}
+    		closedir($handle);
+	}
+	sort($files);
+	// get the numbers
+	$count = sizeof( $files ); //count of files in path that match on pattern
 	$min = 0;
 	$max = $count - 1
 	//return e.g. a random one of those
@@ -810,10 +821,10 @@ function getAboutImage( $filename='about', $path='./img/', $method = 'day' ) {
 			$number = rand ( int $min , int $max );
 			break;
 		case 'day':
-			$number = date( "%s", time() ) / 86400 %  ;
+			$number = date( "%s", time() ) / 86400 % $max ;
 			break;
 	}
-	return $path.$filename.$number.'.jpg';//int rand ( int $min , int $max )
+	return $path.$files[$number];
 }
 
 // ============================================================================
