@@ -519,15 +519,14 @@ function RMLreplymessage( $id, $print_on = true ) {
 				}
 			}
 
-			$out = "\n".'<form method="post" action="?message=send">
-<table class="form">
-<tr><td><b>To : </b></td><td><select class="norm" name="messageto">'
+			$out = "\n<form method=\"post\" action=\"?message=send\">
+<table class=\"form\">
+<tr><td><b>To : </b></td><td><select class=\"norm\" name=\"messageto\">"
 			.$options
-			.'
-			</select></td></tr>
-<tr><td valign="top"><b>Subject : </b></td><td><input class="norm" type="text" name="messagesubject" value="Re: $thissubject"></td></tr>
-<tr><td valign="top"><b>Message : </b></td><td><textarea class="norm" rows="20" cols="41" wrap="none" name="body">'.$thisbody.'</textarea>
-</td></tr><tr><td></td><td><input type="submit" value="Send Reply"></td></tr></table></form>";
+			."</select></td></tr>
+<tr><td valign=\"top\"><b>Subject : </b></td><td><input class=\"norm\" type=\"text\" name=\"messagesubject\" value=\"Re: $thissubject\"></td></tr>
+<tr><td valign=\"top\"><b>Message : </b></td><td><textarea class=\"norm\" rows=\"20\" cols=\"41\" wrap=\"none\" name=\"body\">".$thisbody."</textarea>
+</td></tr><tr><td></td><td><input type=\"submit\" value=\"Send Reply\"></td></tr></table></form>";
 		}
 	}
 	return processOutput( $out, $print_on );
