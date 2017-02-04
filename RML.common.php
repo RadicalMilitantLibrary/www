@@ -821,7 +821,7 @@ function getAboutImage( $filename='about', $path='./img/', $method = 'day' ) {
 			$number = rand ( int $min , int $max );
 			break;
 		case 'day':
-			$number = date( "%s", time() ) / 86400 % $max ;
+			$number = date( "%s", time() ) / 86400 % $count ;
 			break;
 	}
 	return $path.$files[$number];
