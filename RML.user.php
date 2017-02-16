@@ -15,6 +15,30 @@
 //  GNU General Public License for more details.
 // ============================================================================
 
+/* users ID should be used for identifying connected resources */
+function RMLgetcurrentuserID()
+{
+	return RMLgetuserID( RMLgetcurrentuser() );
+}
+// todo:
+// return ID of a user named, use pq_prepare (http://php.net/manual/en/function.pg-prepare.php)
+// sanetize RMLfiresql to use prepared statements, for now just aside each other
+/*/ 
+function RMLgetuserID( $handle = '' )
+{
+	//needs $conn for db connection handle, so better do that in a db function
+	if ( $handle == '' ) {
+		return false;
+	} else {
+		$u_query = 'SELECT id FROM "user" where handle = $1;'
+		$p_query_args = array( $handle );
+		$p_query = pq_prepare( $conn, $u_query );
+		$result = pg_execute( $conn, $p_query, $p_query_args );
+	}
+}
+/**/
+
+/* handle should not be used for any comparison, part of filenames without proper validation */
 function RMLgetcurrentuser()
 {
 	global $cookie;
