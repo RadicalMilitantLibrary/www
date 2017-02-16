@@ -223,8 +223,8 @@ function RMLcreateauthor( $author )
 
 function RMLpreparestring( $string )
 {
-	$search = array ( "/'/", '@&#(\d+);@e' );
-	$replace = array ( "''", 'chr(\1)' );
+	$search = array ( "/'/", '@&#(\d+);@e', "\/\/", "\.\." );
+	$replace = array ( "''", 'chr(\1)', "\/", "\." );
 
 	$result = preg_replace( $search, $replace, $string );
 	$result = strip_tags( $result, "<b><i><emph><a><br><img><sup><sub><ol><ul><li>" );
