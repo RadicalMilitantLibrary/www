@@ -18,7 +18,17 @@
 /* users ID should be used for identifying connected resources */
 function RMLgetcurrentuserID()
 {
-	return RMLgetuserID( RMLgetcurrentuser() );
+	$username = RMLgetcurrentuser();
+	$result = RMLfiresql( "SELECT id FROM \"user\" WHERE handle='$username'" );
+	$thisrow = pg_Fetch_Object( $result, 0 );
+
+	if ( is_numeric( $thisrow->id ) ) {
+		return $thisrow->id;
+	} else {
+		return false;
+	}
+// should be:
+//	return RMLgetuserID( RMLgetcurrentuser() );
 }
 // todo:
 // return ID of a user named, use pq_prepare (http://php.net/manual/en/function.pg-prepare.php)
@@ -458,15 +468,17 @@ function RMLgetreviewhandle( $thisid )
 
 function RMLdisplayavatar( $print_on = true )
 {
-	$user = RMLgetcurrentuser();
+	$id = RMLgetcurrentuserID();//No more username plz
 
-	if( !file_exists( './users/' .$user .'.png' ) ) {
-		$image = 'Anonymous';
+	$image = './users/';
+	if( !file_exists( './users/' .$id .'.png' ) ) {//system call => do not use input from users side here
+		$image .= 'Anonymous';
 	} else {
-		$image = $user;
+		$image .= $id;
 	}
+	$image .= '.png';
 
-	$out = "\n" .'<div class="boxtext"><img style="float : left;margin: 0 1ex 1ex 0;border-style : solid; border-color : black; border-width : 1px" src="./users/' .$image .'.png">&nbsp;&nbsp;Please, no larger than a 96 x 96 PNG file.</div>
+	$out = "\n" .'<div class="boxtext"><img style="float : left;margin: 0 1ex 1ex 0;border-style : solid; border-color : black; border-width : 1px" src="' .$image .'">&nbsp;&nbsp;Please, no larger than a 96 x 96 PNG file.</div>
 <div class="boxtext"><form enctype="multipart/form-data" method="post" action="?document=avatar">&nbsp;&nbsp;<input type="file" size="25" name="picture"><br/>&nbsp;&nbsp;<input type="submit" value="Change Avatar"><input type="hidden" name="document" value="avatar"></form></div>
 <div class="clear"></div>';
 
@@ -476,7 +488,7 @@ function RMLdisplayavatar( $print_on = true )
 // ============================================================================
 
 function RMLuploadavatar() {
-	$handle = RMLgetcurrentuser();
+	$handle = RMLgetcurrentuserID();//do not use input from user when making system calls!
 	$target_path = "./users/" . "$handle" . ".png";
 	move_uploaded_file($_FILES['picture']['tmp_name'], $target_path);
 }
