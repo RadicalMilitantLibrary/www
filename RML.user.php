@@ -490,21 +490,21 @@ function RMLdisplayavatar( $print_on = true )
 function RMLuploadavatar() {
 	$id = RMLgetcurrentuserID();//do not use input from user when making system calls!
 	$target_path = './users/' . $id . '.png';
-	move_uploaded_file($_FILES['picture']['tmp_name'], $target_path);
+	move_uploaded_file( $_FILES['picture']['tmp_name'], $target_path );
 // todo: resize avatars to accepted size for less client size requirements
 // needs some more functionality in class RMLimage
 /*/
 	$myimage = new RMLimage();
-	$myimage->load($target_path);
-	//$w=$myimage->getWidth();
-	//$h=$myimage->getHeight();
-	//if( $w > $h ) {
-	//	$myimage->resizeToWidth(96);
-	//} else {
-	//	$myimage->resizeToHeight(96);
-	//}
-	//$myimage->cropSquare();
-	$myimage->save($target_path);
+	$myimage->load( $target_path );
+	$w=$myimage->getWidth();
+	$h=$myimage->getHeight();
+	if( $w > $h ) {
+		$myimage->resizeToWidth( 96 );
+	} else {
+		$myimage->resizeToHeight( 96 );
+	}
+	//$myimage->cropSquare( array(0,0), array(96,96) );
+	$myimage->save( $target_path );
 /**/
 }
 
