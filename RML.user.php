@@ -142,7 +142,13 @@ function RMLcreatenewuser()
 		$result = RMLfiresql("SELECT email FROM \"user\" WHERE email='$mail'");
 	}
 
-	if( !isset( $username ) || sizeof( $username )  > 15 || sizeof( $mail ) > 30 || pg_numrows( $result ) > 0 || $password !== $password2 ) {
+	if(
+		!isset( $username )
+		|| strlen( $username )  > 15
+		|| strlen( $mail ) > 30
+		|| pg_numrows( $result ) > 0
+		|| $password !== $password2
+	) {
 		header( 'Location: ?function=login' .( ( $id !== 0 ) ? '&id='.$id : '' ) );
 	}
 
