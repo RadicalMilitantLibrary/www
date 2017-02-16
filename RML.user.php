@@ -116,8 +116,8 @@ function RMLdisplaysignup( $print_on = true ) {
 <div class="box"><div class="boxheader"><b>Sign Up</b></div>
 <div class="boxtext">'."Thank You for your interest in Radical Militant Library.<br/> This page is very temporary, and as such may not be all that user friendly.<br/>Handle' must be unique.<br/>'E-mail' can be anything. Your email is ONLY used on the books that you upload, if you don't want your email show here then please leave this field blank.".'<br/><br/><b><big>I CAN NOT RETRIEVE LOST PASSWORDS</big></b>
 <table><form method="post" action="?function=newuser"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
-<tr><td>Handle </td><td>: <input type="text" size="30" name="username"/></td></tr>
-<tr><td>E-mail </td><td>: <input type="text" size="30" name="mail"/></td></tr>
+<tr><td>Handle </td><td>: <input type="text" size="30" maxlength="15" name="username"/></td></tr>
+<tr><td>E-mail </td><td>: <input type="text" size="30" maxlength="30" name="mail"/></td></tr>
 <tr><td>Password </td><td>: <input type="password" size="30" name="password"/></td></tr>
 <tr><td>Password&nbsp;again </td><td>: <input type="password" size="30" name="password2"/></td></tr>
 <tr><td></td><td><input class="formbutton" type="submit" value="Sign Up"/></td></tr>
@@ -142,7 +142,7 @@ function RMLcreatenewuser()
 		$result = RMLfiresql("SELECT email FROM \"user\" WHERE email='$mail'");
 	}
 
-	if( !isset( $username ) || pg_numrows( $result ) > 0 || $password !== $password2 ) {
+	if( !isset( $username ) || sizeof( $username )  > 15 || sizeof( $mail ) > 30 || pg_numrows( $result ) > 0 || $password !== $password2 ) {
 		header( 'Location: ?function=login' .( ( $id !== 0 ) ? '&id='.$id : '' ) );
 	}
 
