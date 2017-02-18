@@ -1173,12 +1173,9 @@ function RMLexportepub( $id ) {
 	$thistitle = preg_replace("@—@","-",$thistitle); // ndash
 	$thistitle = preg_replace("@–@","-",$thistitle); // mdash
 	$thistitle = preg_replace("@\?@","",$thistitle);
-	// replace path delimiters and special chars
-	$thistitle = preg_replace("@\$@","",$thistitle);
-	$thistitle = preg_replace("@{@","",$thistitle);
-	$thistitle = preg_replace("@}@","",$thistitle);
-	$thistitle = preg_replace("@/@","",$thistitle);
-	$thistitle = preg_replace("@0x@","",$thistitle);
+	// replace without regex
+	$thistitle = str_replace(array('$','"','{','}'),'',$thistitle);
+	$thistitle = str_replace(array('/','%'),'-',$thistitle);
 
 	$filename = "./output/$thistitle.epub";
 
