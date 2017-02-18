@@ -1159,6 +1159,8 @@ function RMLexportepub( $id ) {
 		$tmptitle = $title;
 	}
 
+	// todo: improve
+	// also: http://stackoverflow.com/questions/19245205/replace-deprecated-preg-replace-e-with-preg-replace-callback 
 	$thistitle = preg_replace("@ @","_",$tmptitle);
 	$thistitle = preg_replace("@&@","",$thistitle);
 	$thistitle = preg_replace("@&nbsp;@","_",$thistitle);
@@ -1167,9 +1169,18 @@ function RMLexportepub( $id ) {
 	$thistitle = preg_replace("@—@","-",$thistitle); // ndash
 	$thistitle = preg_replace("@–@","-",$thistitle); // mdash
 	$thistitle = preg_replace("@\?@","",$thistitle);
+	// replace path delimiters and special chars
+	$thistitle = preg_replace("@\$@","",$thistitle);
+	$thistitle = preg_replace("@{@","",$thistitle);
+	$thistitle = preg_replace("@}@","",$thistitle);
+	$thistitle = preg_replace("@/@","",$thistitle);
+	$thistitle = preg_replace("@0x@","",$thistitle);
 
 	$filename = "./output/$thistitle.epub";
 
+	// the source need to be write protected
+	// todo: check if it was write-proteted still, halt if not
+	//print_r( substr(sprintf('%o', fileperms($filename)), -4) );
 	exec("cp ./template.epub $filename"); // MIMETYPE HACK
 
 	$epub = new ZipArchive();
