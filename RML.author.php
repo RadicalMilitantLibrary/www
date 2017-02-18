@@ -187,12 +187,21 @@ function RMLaddauthor( $print_on = true )
 			} else {
 				$thisrow = pg_Fetch_Object( $sql, 0 );
 				$thisid = $thisrow->id;
-				$filename = "author" .$thisid;
-				$target_path = "./authors/" . "author" .$thisid;
+				$filename = 'author' .$thisid;
+				$target_path = './authors/' .$filename;
 
 				// use default.jpg if no picture given
+				// todo: check if default image is write protected before
 				if( !move_uploaded_file( $_FILES['picture']['tmp_name'], $target_path ) ) {
-					exec( 'cp ./authors/default.jpg '.$target_path );
+					exec( 'cp ./authors/default.jpg '.$target_path );// todo: user copy('./authors/default.jpg', $target_path) http://de2.php.net/manual/de/function.copy.php
+				} else {
+					// limit author image to width of 300
+					$myimage = new RMLimage();
+					$myimage->load( $target_path );
+					if ( $myimage->getWidth() >  300 ) {
+						$myimage->resizeToWidth( 300 );
+					}
+					$myimage->save( $target_path );
 				}
 
 				RMLfiresql( "CREATE TABLE $filename (doc_id integer NOT NULL,paragraphtype integer NOT NULL,body text,id integer NOT NULL,parent_id integer NOT NULL) WITH (OIDS=FALSE)" );

@@ -106,5 +106,39 @@ class RMLimage {
       $new_image = imagecreatetruecolor($width, $height);
       imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
       $this->image = $new_image;   
-   }      
+   }
+
+function cropSquare( $p1, $a ) {
+    $this->cropRect( $p1, array( $a, $a ) );
 }
+
+function cropRect( $p1, $p2 ) {
+    return false;//todo
+}
+
+function cropCircle( $m, $r) {
+    return false;//todo
+}
+
+function getMime() {
+    return false;//todo
+}
+
+function dropEXIF() {
+    $this->setEXIF( false );
+}
+
+function getEXIF() {
+    return false;//todo
+}
+
+function setEXIF($e) {
+    return false;//todo
+    if ( $e === false ) {
+				    //empty
+				} else {
+				    //real data, maybe needs encoding
+				}
+}
+
+}//end class
