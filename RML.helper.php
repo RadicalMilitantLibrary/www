@@ -227,6 +227,10 @@ function RMLpreparestring( $string )
 	$replace = array ( "''", 'chr(\1)' );
 
 	$result = preg_replace( $search, $replace, $string );
+	// replace without regex
+	//$result = str_replace(array('$','"','{','}'),'',$result);
+	//$result = str_replace(array('/','%'),'-',$result);
+
 	$result = strip_tags( $result, "<b><i><emph><a><br><img><sup><sub><ol><ul><li>" );
 	return $result;
 }
@@ -1159,6 +1163,8 @@ function RMLexportepub( $id ) {
 		$tmptitle = $title;
 	}
 
+	// todo: improve
+	// also: http://stackoverflow.com/questions/19245205/replace-deprecated-preg-replace-e-with-preg-replace-callback 
 	$thistitle = preg_replace("@ @","_",$tmptitle);
 	$thistitle = preg_replace("@&@","",$thistitle);
 	$thistitle = preg_replace("@&nbsp;@","_",$thistitle);
@@ -1167,9 +1173,15 @@ function RMLexportepub( $id ) {
 	$thistitle = preg_replace("@—@","-",$thistitle); // ndash
 	$thistitle = preg_replace("@–@","-",$thistitle); // mdash
 	$thistitle = preg_replace("@\?@","",$thistitle);
+	// replace without regex
+	$thistitle = str_replace(array('$','"','{','}'),'',$thistitle);
+	$thistitle = str_replace(array('/','%'),'-',$thistitle);
 
 	$filename = "./output/$thistitle.epub";
 
+	// the source need to be write protected
+	// todo: check if it was write-proteted still, halt if not
+	//print_r( substr(sprintf('%o', fileperms($filename)), -4) );
 	exec("cp ./template.epub $filename"); // MIMETYPE HACK
 
 	$epub = new ZipArchive();

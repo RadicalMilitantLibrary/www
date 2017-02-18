@@ -15,6 +15,40 @@
 //  GNU General Public License for more details.
 // ============================================================================
 
+/* users ID should be used for identifying connected resources */
+function RMLgetcurrentuserID()
+{
+	$username = RMLgetcurrentuser();
+	$result = RMLfiresql( "SELECT id FROM \"user\" WHERE handle='$username'" );
+	$thisrow = pg_Fetch_Object( $result, 0 );
+
+	if ( is_numeric( $thisrow->id ) ) {
+		return $thisrow->id;
+	} else {
+		return false;
+	}
+// should be:
+//	return RMLgetuserID( RMLgetcurrentuser() );
+}
+// todo:
+// return ID of a user named, use pq_prepare (http://php.net/manual/en/function.pg-prepare.php)
+// sanetize RMLfiresql to use prepared statements, for now just aside each other
+/*/ 
+function RMLgetuserID( $handle = '' )
+{
+	//needs $conn for db connection handle, so better do that in a db function
+	if ( $handle == '' ) {
+		return false;
+	} else {
+		$u_query = 'SELECT id FROM "user" where handle = $1;'
+		$p_query_args = array( $handle );
+		$p_query = pq_prepare( $conn, $u_query );
+		$result = pg_execute( $conn, $p_query, $p_query_args );
+	}
+}
+/**/
+
+/* handle should not be used for any comparison, part of filenames without proper validation */
 function RMLgetcurrentuser()
 {
 	global $cookie;
@@ -92,8 +126,8 @@ function RMLdisplaysignup( $print_on = true ) {
 <div class="box"><div class="boxheader"><b>Sign Up</b></div>
 <div class="boxtext">'."Thank You for your interest in Radical Militant Library.<br/> This page is very temporary, and as such may not be all that user friendly.<br/>Handle' must be unique.<br/>'E-mail' can be anything. Your email is ONLY used on the books that you upload, if you don't want your email show here then please leave this field blank.".'<br/><br/><b><big>I CAN NOT RETRIEVE LOST PASSWORDS</big></b>
 <table><form method="post" action="?function=newuser"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
-<tr><td>Handle </td><td>: <input type="text" size="30" name="username"/></td></tr>
-<tr><td>E-mail </td><td>: <input type="text" size="30" name="mail"/></td></tr>
+<tr><td>Handle </td><td>: <input type="text" size="30" maxlength="15" name="username"/></td></tr>
+<tr><td>E-mail </td><td>: <input type="text" size="30" maxlength="30" name="mail"/></td></tr>
 <tr><td>Password </td><td>: <input type="password" size="30" name="password"/></td></tr>
 <tr><td>Password&nbsp;again </td><td>: <input type="password" size="30" name="password2"/></td></tr>
 <tr><td></td><td><input class="formbutton" type="submit" value="Sign Up"/></td></tr>
@@ -118,7 +152,13 @@ function RMLcreatenewuser()
 		$result = RMLfiresql("SELECT email FROM \"user\" WHERE email='$mail'");
 	}
 
-	if( !isset( $username ) || pg_numrows( $result ) > 0 || $password !== $password2 ) {
+	if(
+		!isset( $username )
+		|| strlen( $username )  > 15
+		|| strlen( $mail ) > 30
+		|| pg_numrows( $result ) > 0
+		|| $password !== $password2
+	) {
 		header( 'Location: ?function=login' .( ( $id !== 0 ) ? '&id='.$id : '' ) );
 	}
 
@@ -428,15 +468,17 @@ function RMLgetreviewhandle( $thisid )
 
 function RMLdisplayavatar( $print_on = true )
 {
-	$user = RMLgetcurrentuser();
+	$id = RMLgetcurrentuserID();//No more username plz
 
-	if( !file_exists( './users/' .$user .'.png' ) ) {
-		$image = 'Anonymous';
+	$image = './users/';
+	if( !file_exists( './users/' .$id .'.png' ) ) {//system call => do not use input from users side here
+		$image .= 'Anonymous';
 	} else {
-		$image = $user;
+		$image .= $id;
 	}
+	$image .= '.png';
 
-	$out = "\n" .'<div class="boxtext"><img style="float : left;margin: 0 1ex 1ex 0;border-style : solid; border-color : black; border-width : 1px" src="./users/' .$image .'.png">&nbsp;&nbsp;Please, no larger than a 96 x 96 PNG file.</div>
+	$out = "\n" .'<div class="boxtext"><img style="float : left;margin: 0 1ex 1ex 0;border-style : solid; border-color : black; border-width : 1px" src="' .$image .'">&nbsp;&nbsp;Please, no larger than a 96 x 96 PNG file.</div>
 <div class="boxtext"><form enctype="multipart/form-data" method="post" action="?document=avatar">&nbsp;&nbsp;<input type="file" size="25" name="picture"><br/>&nbsp;&nbsp;<input type="submit" value="Change Avatar"><input type="hidden" name="document" value="avatar"></form></div>
 <div class="clear"></div>';
 
@@ -446,9 +488,24 @@ function RMLdisplayavatar( $print_on = true )
 // ============================================================================
 
 function RMLuploadavatar() {
-	$handle = RMLgetcurrentuser();
-	$target_path = "./users/" . "$handle" . ".png";
-	move_uploaded_file($_FILES['picture']['tmp_name'], $target_path);
+	$id = RMLgetcurrentuserID();//do not use input from user when making system calls!
+	$target_path = './users/' . $id . '.png';
+	move_uploaded_file( $_FILES['picture']['tmp_name'], $target_path );
+// todo: resize avatars to accepted size for less client size requirements
+// needs some more functionality in class RMLimage
+/*/
+	$myimage = new RMLimage();
+	$myimage->load( $target_path );
+	$w=$myimage->getWidth();
+	$h=$myimage->getHeight();
+	if( $w > $h ) {
+		$myimage->resizeToWidth( 96 );
+	} else {
+		$myimage->resizeToHeight( 96 );
+	}
+	//$myimage->cropSquare( array(0,0), array(96,96) );
+	$myimage->save( $target_path );
+/**/
 }
 
 // ============================================================================
