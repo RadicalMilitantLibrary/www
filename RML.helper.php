@@ -227,6 +227,10 @@ function RMLpreparestring( $string )
 	$replace = array ( "''", 'chr(\1)' );
 
 	$result = preg_replace( $search, $replace, $string );
+	// replace without regex
+	//$result = str_replace(array('$','"','{','}'),'',$result);
+	//$result = str_replace(array('/','%'),'-',$result);
+
 	$result = strip_tags( $result, "<b><i><emph><a><br><img><sup><sub><ol><ul><li>" );
 	return $result;
 }
