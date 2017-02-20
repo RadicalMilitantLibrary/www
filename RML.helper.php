@@ -605,34 +605,37 @@ function RMLgettexttype( $typename, $reverse = false )
 	//$a[10] = '';
 	$a[11] = 'Part';
 	$a[12] = 'Book';
-	$a[13] = '';
-	$a[14] = '';
-	$a[15] = '';
-	$a[16] = '';
-	$a[17] = '';
-	$a[18] = '';
-	$a[19] = '';
-	$a[20] = '';
-	$a[21] = '';
-	$a[22] = '';
-	$a[23] = '';
-	$a[24] = '';
-	$a[25] = '';
-	$a[26] = '';
-	$a[27] = '';
-	$a[28] = '';
-	$a[29] = '';
-	$a[30] = '';
-	$a[31] = '';
-	$a[32] = '';
-	$a[33] = '';
-	$a[34] = '';
-	$a[35] = '';
-	$a[36] = '';/ **/
-	//$a[7] = '';
+	$a[13] = 'Chapter';
+	$a[14] = 'PartNoTOC';
+	$a[15] = 'BookNoTOC';
+	$a[16] = 'ChapterNoTOC';
+	$a[17] = 'ParaPreBlankOver';
+	$a[18] = 'ParaPreNoIndent';
+	$a[19] = 'Footnote';
+	$a[20] = 'Picture';
+	$a[21] = 'TableStart';
+	$a[22] = 'TableCell';
+	$a[23] = 'TableRow';
+	$a[24] = 'TableEnd';
+	$a[25] = 'ListStart';
+	$a[26] = 'ListItem';
+	$a[27] = 'ListEnd';
+	$a[28] = 'OrderListStart';
+	$a[29] = 'OrderListItem';
+	$a[30] = 'OrderListEnd';
+	$a[31] = 'HangingBlankOver';
+	$a[32] = 'HangingIndent';
+	$a[33] = 'ParaVignet';
+	$a[34] = 'BoxStart';
+	$a[35] = 'BoxEnd';
+	$a[36] = 'BoxHead';/ ** /
+	//$a[37] = '';
 	//if ( !$reverse ) $a = array_flip( $a );
 	//return $a[$typename];
-	
+	$p[11] = array('navpoint');
+	$p[12] = array('navpoint');
+	$p[13] = array('navpoint');
+	/**/
 	//old style
 	switch( $typename ) {
 	case 'Head1':		$result = 1;	break;
@@ -1262,15 +1265,10 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 		$thispicture = preg_replace("@<img.*? src=\"./pictures/.*?/(.*?)\">@","\\1",$thisbody);
 
-		$info = getimagesize("./pictures/$id/$thispicture");
-		$type = $info[2];
-		if( $type == IMAGETYPE_JPEG ) {
-			$mediatype = "image/jpeg";
-		} elseif( $type == IMAGETYPE_GIF ) {
-			$mediatype = "image/gif";
-		} elseif( $type == IMAGETYPE_PNG ) {
-			$mediatype = "image/png";
-		}
+		$theimage = new RMLimage();
+		$theimage->load( "./pictures/$id/$thispicture" ); // todo: include in constructor
+		$mediatype = $theimage->getMimeType();
+		unset( $theimage ); // destroy object to free memory
 
 		$manifest = $manifest . "\n\t<item id=\"picture$pictureid\" href=\"$thispicture\" media-type=\"$mediatype\" />";
 		$epub->addFile("./pictures/$id/$thispicture", "$thispicture");

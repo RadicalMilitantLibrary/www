@@ -120,8 +120,20 @@ function cropCircle( $m, $r) {
     return false;//todo
 }
 
-function getMime() {
-    return false;//todo
+function getMimeType() { // return MimeType
+	switch( $this->image_type ) {
+		case IMAGETYPE_JPEG:
+			$mt = 'image/jpeg';
+			break;
+		case IMAGETYPE_GIF:
+			$mt = 'image/gif';
+			break;
+		case IMAGETYPE_PNG:
+			$mt = 'image/png';
+			break;
+		// todo: add more if they are supported, e.g. SVG, WEBM, TIFF
+	}
+	return $mt;
 }
 
 function dropEXIF() {
@@ -133,12 +145,12 @@ function getEXIF() {
 }
 
 function setEXIF($e) {
-    return false;//todo
-    if ( $e === false ) {
-				    //empty
-				} else {
-				    //real data, maybe needs encoding
-				}
+	return false;//todo
+	if ( $e === false ) {
+	    //empty
+	} else {
+		//real data, maybe needs encoding
+	}
 }
 
 }//end class
