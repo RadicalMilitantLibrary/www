@@ -621,7 +621,7 @@ function RMLgetlatestcomment( $print_on = true ) {
 	$result = RMLfiresql("SELECT author,body,level,thread_id,posted_on FROM forum WHERE level > 0 ORDER BY posted_on DESC LIMIT 1");
 	$thisrow = pg_Fetch_Object($result,0);
 	$thishandle = $thisrow->author;
-	$thisuserID = RMLgetcurrentuserID();
+	$thisuserID = RMLgetuserID( $thishandle );
 	$thisbody = nl2br($thisrow->body);
 	$thisrating = $thisrow->level;
 	$thisdocument = $thisrow->thread_id;
@@ -822,7 +822,7 @@ function RMLdisplayreaders( $print_on = true )
 	for( $row=0; $row < pg_numrows( $sql ); $row++ ) {
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->users;
-		$thisuserID = RMLgetcurrentuserID();
+		$thisuserID = RMLgetuserID( $thisuser );
 		$avgrating = round($thisrow->avgrating,2);
 		$numcomments = RMLgetrating( $thisrow->comments );
 
@@ -848,7 +848,7 @@ function RMLdisplaylibrarians( $print_on = true )
 	for( $row=0; $row < pg_numrows( $sql ); $row++ ) {
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->owner;
-		$thisuserID = RMLgetcurrentuserID();
+		$thisuserID = RMLgetuserID( $thisuser );
 		$numdocs = RMLgetrating( $thisrow->docs );
 		$daysactive = abs((strtotime($thisrow->last) - strtotime($thisrow->first)) / (60*60*24)) + 1;
 		// +1 because from today to today is 1 day and not 0

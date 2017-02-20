@@ -16,9 +16,9 @@
 // ============================================================================
 
 /* users ID should be used for identifying connected resources */
-function RMLgetcurrentuserID()
+function RMLgetuserID( $username )
 {
-	$username = RMLgetcurrentuser();
+	//$username = RMLgetcurrentuser();
 	$result = RMLfiresql( "SELECT id FROM \"user\" WHERE handle='$username'" );
 	$thisrow = pg_Fetch_Object( $result, 0 );
 
@@ -468,7 +468,7 @@ function RMLgetreviewhandle( $thisid )
 
 function RMLdisplayavatar( $print_on = true )
 {
-	$id = RMLgetcurrentuserID();//No more username plz
+	$id = RMLgetuserID( RMLgetcurrentuser() );//No more username plz
 
 	$image = './users/';
 	if( !file_exists( './users/' .$id .'.png' ) ) {//system call => do not use input from users side here
