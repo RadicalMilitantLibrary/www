@@ -1265,15 +1265,10 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 		$thispicture = preg_replace("@<img.*? src=\"./pictures/.*?/(.*?)\">@","\\1",$thisbody);
 
-		$info = getimagesize("./pictures/$id/$thispicture");
-		$type = $info[2];
-		if( $type == IMAGETYPE_JPEG ) {
-			$mediatype = "image/jpeg";
-		} elseif( $type == IMAGETYPE_GIF ) {
-			$mediatype = "image/gif";
-		} elseif( $type == IMAGETYPE_PNG ) {
-			$mediatype = "image/png";
-		}
+		$theimage = new RMLimage();
+		$theimage->load( "./pictures/$id/$thispicture" ); // todo: include in constructor
+		$mediatype = $theimage->getMimeType();
+		unset( $theimage ); // destroy object to free memory
 
 		$manifest = $manifest . "\n\t<item id=\"picture$pictureid\" href=\"$thispicture\" media-type=\"$mediatype\" />";
 		$epub->addFile("./pictures/$id/$thispicture", "$thispicture");
