@@ -229,16 +229,17 @@ function RMLdisplaycomments( $id, $print_on = true )
 	for($row=0;$row<pg_numrows($sql);$row++) {
 		$thisrow = pg_Fetch_Object($sql,$row);
 		$thisauthor = $thisrow->author;
+		$thisauthorID = RMLgetuserID( $thisauthor );
 		$thisbody = $thisrow->body;
 		$thisposted = $thisrow->posted_on;
 		$thisposted = RMLfixdate($thisposted);
 		$thislevel = $thisrow->level;
 		$thisbody = nl2br($thisbody);
 
-		if ( !file_exists( './users/' .$thisauthor .'.png' ) ) {
+		if ( !file_exists( './users/' .$thisauthorID .'.png' ) ) {
 			$image = 'Anonymous';
 		} else {
-			$image = $thisauthor;
+			$image = $thisauthorID;
 		}
 
 		$separator = ($row < $numrows) ? '<div class="inlineclear"><hr class="forumseperator" /></div>' : '';
