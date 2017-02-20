@@ -125,7 +125,7 @@ function RMLdisplayleft( $print_on = true )
 	.'<div class="center">&nbsp;<br/><a href="bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA"><img style="border:0" src="./img/qrcode.png" alt="I can haz bitcoinz" /></a></div>'
 
 	// glider
-	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Glider => Hacker" /></a></div>'
+	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'
 
 	// pgp pubkey
 	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
@@ -621,15 +621,16 @@ function RMLgetlatestcomment( $print_on = true ) {
 	$result = RMLfiresql("SELECT author,body,level,thread_id,posted_on FROM forum WHERE level > 0 ORDER BY posted_on DESC LIMIT 1");
 	$thisrow = pg_Fetch_Object($result,0);
 	$thishandle = $thisrow->author;
+	$thisuserID = RMLgetcurrentuserID();
 	$thisbody = nl2br($thisrow->body);
 	$thisrating = $thisrow->level;
 	$thisdocument = $thisrow->thread_id;
 	$thisdate = RMLfixdate($thisrow->posted_on);
 	
-	if( !file_exists( './users/'.$thishandle.'.png' ) ) {
+	if( !file_exists( './users/'.$thisuserID.'.png' ) ) {
 		$image = 'Anonymous';
 	} else {
-		$image = $thishandle;
+		$image = $thisuserID;
 	}
 	
 	$result = "<div class=\"box\"><div class=\"boxheader\"><a href=\"?document=view&amp;id=$thisdocument\"><img class=\"FrontCover\" style=\"float : right;margin : 0;margin-left : 10px;margin-bottom : 5px\" src=\"./covers/cover$thisdocument\" /></a><img class=\"docicon\" src=\"./users/$image.png\" /> &nbsp;" . getRatingDisplay($thisrating) . "</div><div class=\"boxtext\"><sup>Added by : <b>$thishandle</b> (<i>$thisdate</i>)</sup><br />$thisbody</div><div class=\"inlineclear\"></div></div>";
@@ -821,13 +822,14 @@ function RMLdisplayreaders( $print_on = true )
 	for( $row=0; $row < pg_numrows( $sql ); $row++ ) {
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->users;
+		$thisuserID = RMLgetcurrentuserID();
 		$avgrating = round($thisrow->avgrating,2);
 		$numcomments = RMLgetrating( $thisrow->comments );
 
-		if(!file_exists("./users/$thisuser.png")) {
+		if(!file_exists("./users/$thisuserID.png")) {
 			$image = "Anonymous";
 		} else {
-			$image = $thisuser;
+			$image = $thisuserID;
 		}
 
 		$out .= "\n".'<div class="box">
@@ -846,16 +848,17 @@ function RMLdisplaylibrarians( $print_on = true )
 	for( $row=0; $row < pg_numrows( $sql ); $row++ ) {
 		$thisrow = pg_Fetch_Object( $sql, $row );
 		$thisuser = $thisrow->owner;
+		$thisuserID = RMLgetcurrentuserID();
 		$numdocs = RMLgetrating( $thisrow->docs );
 		$daysactive = abs((strtotime($thisrow->last) - strtotime($thisrow->first)) / (60*60*24)) + 1;
 		// +1 because from today to today is 1 day and not 0
 		// awoids division by zero on users active for just 1 day (Jotunbane)
 		$booksperweek = getNumberFormatted( ($thisrow->docs / $daysactive)*7 ,1);
 
-		if( !file_exists( './users/'.$thisuser.'.png' ) ) {
+		if( !file_exists( './users/'.$thisuserID.'.png' ) ) {
 			$image = 'Anonymous';
 		} else {
-			$image = $thisuser;
+			$image = $thisuserID;
 		}
 
 		$out .= "\n".'<div class="librarian box">

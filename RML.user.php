@@ -646,7 +646,7 @@ function hasRights( $action = '', $arr = array() )
 	if ( ! in_array( 'noadm', $arr ) ) {
 		$admaccs = array( 'admin', 'SYSTEM' );
 		if ( ! in_array( 'nomod', $arr ) ) {
-			$modaccs = array( 'Jotunbane', 'kittyhawk', 'ewa4boeker' );
+			$modaccs = array( 'Jotunbane', 'kittyhawk', 'ewa4boeker', 'Shadilay' );
 		}
 	}
 	switch ( $action ) {
