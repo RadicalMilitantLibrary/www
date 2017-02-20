@@ -610,6 +610,8 @@ function RMLimportdocument( $id, $print_on = true )
 				$myentry = preg_replace( "@&lt;SUP&gt;@", "<sup>", $myentry);
 				$myentry = preg_replace( "@&lt;/SUP&gt;@", "</sup>", $myentry);
 				$myentry = preg_replace( "@&amp;ndash;@", "&ndash;", $myentry );
+				$myentry = preg_replace( "@&amp;mdash;@", "&mdash;", $myentry );
+				// todo: more general on e.g. https://www.cs.tut.fi/~jkorpela/dashes.html
 				RMLfiresql("INSERT INTO footnote (docid,id,section,body) VALUES($id,$footnoteid,$mysection,'$myentry')");
 			}
 
