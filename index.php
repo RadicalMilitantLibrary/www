@@ -21,7 +21,8 @@ $starttime = microtime();
 $Version = "0.5.5";
 $itemprpage = 25;
 
-require 'settings.php';
+require 'settings.php';// todo: check file_exists('./settings.php') and stop with die('configuration in settings.php missing')
+// check on salt etc. set properly, if not die('setting: need salt to be set properly')
 require 'RML.common.php';
 require 'RML.helper.php';
 require 'RML.database.php';
