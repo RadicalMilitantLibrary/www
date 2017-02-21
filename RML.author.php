@@ -193,7 +193,9 @@ function RMLaddauthor( $print_on = true )
 				// use default.jpg if no picture given
 				// todo: check if default image is write protected before
 				if( !move_uploaded_file( $_FILES['picture']['tmp_name'], $target_path ) ) {
-					exec( 'cp ./authors/default.jpg '.$target_path );// todo: user copy('./authors/default.jpg', $target_path) http://de2.php.net/manual/de/function.copy.php
+					if (!copy('./authors/default.jpg', $target_path)) {
+						echo( 'Error: Cannot copy default useravatar to' .$target_path .'!' );
+					}
 				} else {
 					// limit author image to width of 300
 					$myimage = new RMLimage();
