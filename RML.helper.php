@@ -1185,7 +1185,11 @@ function RMLexportepub( $id ) {
 	// the source need to be write protected
 	// todo: check if it was write-proteted still, halt if not
 	//print_r( substr(sprintf('%o', fileperms($filename)), -4) );
-	exec("cp ./template.epub $filename"); // MIMETYPE HACK
+	
+	if (!copy('./template.epub', $filename)) {  // MIMETYPE HACK: solves problem of uncompressed mime file first
+		echo( 'Error cannot copy epubtemplate to ' .$filename .'!' );
+	}
+	// todo: write mime file first (after create new zip) in a way it is not compressed without the need of a template
 
 	$epub = new ZipArchive();
 	if( $epub->open( $filename ) !== true ) {
