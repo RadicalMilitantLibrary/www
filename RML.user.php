@@ -27,8 +27,6 @@ function RMLgetuserID( $username )
 	} else {
 		return false;
 	}
-// should be:
-//	return RMLgetuserID( RMLgetcurrentuser() );
 }
 // todo:
 // return ID of a user named, use pq_prepare (http://php.net/manual/en/function.pg-prepare.php)
@@ -46,9 +44,13 @@ function RMLgetuserID( $handle = '' )
 		$result = pg_execute( $conn, $p_query, $p_query_args );
 	}
 }
-/**/
-
+/* todo: swap with RMLgetcurrentuser when all usage is moved to id only */
+function RMLgetcurrentuserID()
+{
+	return RMLgetuserID( RMLgetcurrentuser() );
+}
 /* handle should not be used for any comparison, part of filenames without proper validation */
+// todo: make use of id for cookie as well
 function RMLgetcurrentuser()
 {
 	global $cookie;
@@ -468,7 +470,7 @@ function RMLgetreviewhandle( $thisid )
 
 function RMLdisplayavatar( $print_on = true )
 {
-	$id = RMLgetuserID( RMLgetcurrentuser() );//No more username plz
+	$id = RMLgetcurrentuserID();//No more username plz
 
 	$image = './users/';
 	if( !file_exists( './users/' .$id .'.png' ) ) {//system call => do not use input from users side here
@@ -521,7 +523,7 @@ function RMLdisplaymessage( $id, $print_on = true ) {
 
 	$out = '';
 	if( hasRights( 'readmsg', array( $handle ) ) ) {
-		$out .= "\n".'<img class="docicon" src="./users/' .$sender .'.png" />
+		$out .= "\n".'<img class="docicon" src="./users/' .RMLgetuserID( $sender ) .'.png" />
 From : <b>' .$sender.'</b><br/>Sent : <b>' .$posted.'</b>
 <div class="inlineclear"></div>'
 		.RMLdisplay( $body, 5, false )
