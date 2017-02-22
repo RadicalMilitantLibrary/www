@@ -525,7 +525,7 @@ function RMLdisplaymessage( $id, $print_on = true ) {
 From : <b>' .$sender.'</b><br/>Sent : <b>' .$posted.'</b>
 <div class="inlineclear"></div>'
 		.RMLdisplay( $body, 5, false )
-		."\n".'<div class="bottom"><a class="button add" href="?message=
+		."\n".'<div class="bottom"><a class="button add" href="?message=reply
 		&amp;id=' .$id.'">Reply</a>&nbsp;<a class="button delete" href="?message=delete&amp;id=' .$id.'">Delete</a></div>';
 	} else {
 		$out = "ERROR: Display Message : Cookiii baaaaaadddd...";
