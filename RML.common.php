@@ -127,8 +127,8 @@ function RMLdisplayleft( $print_on = true )
 	// glider
 	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'
 
-	// pgp pubkey
-	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
+	// pgp pubkey (Sigaint.org is gone, PGP key unusable)
+//	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
 
 .'</td>';
 	return processOutput( $out, $print_on );
@@ -785,7 +785,7 @@ function RMLdisplayabout( $print_on = true )
 	.RMLdisplay( "How are you gentlemen, All Your Books Are Belong to Us. You are on the way to destruction. You have no chance to survive, make your time. We are the Radical Militant Librarians, these are our books. We will accept no barriers between readers and our books. We will never register who borrows what and when. All books are welcome in our library (bring your own books, take off every DRM ... for great justice).", 8, false )
 	.RMLdisplay( "We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can send a message to the librarian in charge of the book. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.", 5, false )
 	.RMLdisplay( "This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation. Readers can define a different layout for each book, author or subject. Or just make their own \"default\" and completely change the layout of all the books they borrow.", 4, false )
-	.RMLdisplay( "If you want to chat, we hang out in the #readingclub channel on <a href=\"http://www.oftc.net/\">OFTC</a>. Or you can try to reach jotunbane@<a href=\"http://cloak.dk\">cloak.dk</a> on jabber (OTR required), at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:i4oltgzz53xy7aqm.", 4, false )
+	.RMLdisplay( "If you want to chat, we hang out in the #readingclub channel on <a href=\"http://www.oftc.net/\">OFTC</a>. Or you can try to reach jotunbane@<a href=\"http://cloak.dk\">cloak.dk</a> on jabber (OTR required), or at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:i4oltgzz53xy7aqm.", 4, false )
 	.RMLdisplay( "<a href=\"?function=login\">Sign up</a> and you too can become a Radical Militant Librarian, or you can start by becoming a Radical Militant Reader by telling us what books you liked (or hated).", 4, false )
 	.RMLdisplay( "The logo is released under a Creative Commons Attribution-ShareAlike license by <a href=\"http://readersbillofrights.info\">Readers Bill of Rights</a>. It is created by cartoonist and <a href=\"http://questioncopyright.org/\">QuestionCopyright.org</a> artist-in-residence <a href=\"http://blog.ninapaley.com/\">Nina Paley</a>. You can support Nina's work and view her amazing and Creative Commons licensed film, <a href=\"http://www.sitasingstheblues.com/\">Sita Sings the Blues</a>, over at her website.", 5, false )
 	;
