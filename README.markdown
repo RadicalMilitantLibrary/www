@@ -28,7 +28,7 @@ Maybe you cannot code and have no time to engage.
 The service is running as one of the oldest publicly known onion (back then called hidden) services.
 It is maintained and mainly funded by Jotunbane, so if you are willing to help, send your bits:
 
-via Bitcoin [1C8KeohKqTaGyv4cCFKkHsnxt7ZjcG9UH2](bitcoin:1C8KeohKqTaGyv4cCFKkHsnxt7ZjcG9UH2)
+via Bitcoin [1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC](bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC)
 
 ## License Terms
 
