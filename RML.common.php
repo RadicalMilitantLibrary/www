@@ -122,7 +122,7 @@ function RMLdisplayleft( $print_on = true )
 	$out .= "\n"
 
 	// bitcoin donation address
-	.'<div class="center">&nbsp;<br/><img style="border:0" src="./img/qrcode.png" alt="I can haz bitcoinz" /></div>'
+	.'<div class="center"><a href="bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC"><img style="border:0" src="./img/qrcode.png" alt="I can haz bitcoinz" /></a></div>'
 
 	// glider
 	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'
