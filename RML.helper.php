@@ -1167,6 +1167,7 @@ function RMLexportepub( $id ) {
 	}
 
 	// todo: improve
+	// TODO : REPAIR ... this doesnt quite work does it.
 	// also: http://stackoverflow.com/questions/19245205/replace-deprecated-preg-replace-e-with-preg-replace-callback 
 	$thistitle = preg_replace("@ @","_",$tmptitle);
 	$thistitle = preg_replace("@&@","",$thistitle);
@@ -1183,6 +1184,9 @@ function RMLexportepub( $id ) {
 	$filename = "./output/$thistitle.epub";
 
 	// the source need to be write protected
+
+	// TODO : WHY ???
+	
 	// todo: check if it was write-proteted still, halt if not
 	//print_r( substr(sprintf('%o', fileperms($filename)), -4) );
 	
@@ -1190,6 +1194,8 @@ function RMLexportepub( $id ) {
 		echo( 'Error cannot copy epubtemplate to ' .$filename .'!' );
 	}
 	// todo: write mime file first (after create new zip) in a way it is not compressed without the need of a template
+	
+	// TODO : PHP will NOT allow you to change compression, so you are either stuck on no compression, or you can try to live with "The MIMETYPE Hack (tm)
 
 	$epub = new ZipArchive();
 	if( $epub->open( $filename ) !== true ) {
@@ -1311,7 +1317,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 	// ************************************** COVERPAGE
 	$epub->addFile("./covers/cover$id.jpg", "cover.jpg");
-	$epub->addFile("./img/logo.png", "logo.png");
+	$epub->addFile("./img/qrcode.png", "logo.png");
 	$epub->addFile("./img/vignet.jpg","vignet.jpg");
 
 	$cover = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n<title>Cover</title>\n<style type=\"text/css\">\n@page { margin: 0pt; padding :0pt } body {margin : 0pt; padding : 0pt}\n</style>\n</head>\n<body>\n<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"100%\" height=\"100%\" viewBox=\"0 0 600 800\" preserveAspectRatio=\"xMidYMid meet\">\n<image width=\"600\" height=\"800\" xlink:href=\"cover.jpg\" />\n</svg>" . $pageend;
