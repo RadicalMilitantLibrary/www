@@ -121,39 +121,8 @@ function RMLdisplayleft( $print_on = true )
 
 	$out .= "\n"
 
-	// bitcoin donation address
-/*	.'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>'
-	.'<script type="text/javascript" src="https://blockchain.info/Resources/js/pay-now-button.js"></script>'
-
-	.'<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
-     data-address="1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC"
-     data-shared="false">
-    <div class="blockchain stage-begin">
-        
-    </div>
-    <div class="blockchain stage-loading" style="text-align:center">
-        <img src="https://blockchain.info/Resources/loading-large.gif"/>
-    </div>
-    <div class="blockchain stage-ready">
-         <p align="center">Please Donate To Bitcoin Address: <b>[[address]]</b></p>
-         <p align="center" class="qr-code"></p>
-    </div>
-    <div class="blockchain stage-paid">
-         Donation of <b>[[value]] BTC</b> Received. Thank You.
-    </div>
-    <div class="blockchain stage-error">
-        <font color="red">[[error]]</font>
-    </div>
-</div>'
-*/	
-	
-	.'<div class="center"><a href="bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC"><img style="border:0" src="./img/qrcode.png" alt="Donate Bitcoin" /></a></div>'
-
 	// glider
-	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'
-
-	// pgp pubkey (Sigaint.org is gone, PGP key unusable)
-//	.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
+	.'<div class="inlineclear"><br/></div><div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'
 
 .'</td>';
 	return processOutput( $out, $print_on );
@@ -385,6 +354,7 @@ function RMLdisplayend( $print_on = true )
 	$out = "\n\n".'<!-- END START -->
 <tr><td colspan="3" class="end">
 <a href="https://blockchainbdgpzk.onion/address/1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC"><img src="https://blockchain.info/Resources/buttons/donate_64.png"/></a>
+<div class="center"><a href="bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC"><img style="border:0" src="./img/qrcode.png" alt="Donate Bitcoin" /></a></div>
 <br />Radical Militant Library <b>'.$Version.'</b><br />
 <small><b>' .getNumberFormatted( $SQLcounter, 0 ) .'</b> statements,
 <b>' .getNumberFormatted( $now - $starttime, -5 ) .'</b> seconds,
