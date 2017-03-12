@@ -71,9 +71,9 @@ function RMLgetpagetitle()
 	case 'add':
 		$title = "Add Radical Militant news";
 	break;
-	case 'edit':
-		$title = "Edit Radical Militant news";
-	break;
+//	case 'edit':
+//		$title = "Edit Radical Militant news";
+//	break;
 	}
 
 	switch( $footnote ) {
@@ -96,14 +96,7 @@ function RMLgetpagetitle()
 }
 
 // ============================================================================
-/*
-function RMLgetsubjecttitle( $id ) {
-	if( $id <> 0 ) {
-		$result = RMLfireSQL( "SELECT subject_name FROM subject WHERE id=$id" );
-		$thisrow = pg_Fetch_Object( $result, 0 );
-		$thissubject = $thisrow->subject_name;
-		return "$thissubject";
-*/
+
 function RMLgetsubjecttitle( $id )
 {
 	if( is_numeric( $id ) && $id != 0 ) {
@@ -227,9 +220,6 @@ function RMLpreparestring( $string )
 	$replace = array ( "''", 'chr(\1)' );
 
 	$result = preg_replace( $search, $replace, $string );
-	// replace without regex
-	//$result = str_replace(array('$','"','{','}'),'',$result);
-	//$result = str_replace(array('/','%'),'-',$result);
 
 	$result = strip_tags( $result, "<b><i><emph><a><br><img><sup><sub><ol><ul><li>" );
 	return $result;
@@ -591,52 +581,6 @@ function RMLsavepicture($docid,$odtfile,$picturepath)
 
 function RMLgettexttype( $typename, $reverse = false )
 {
-	//todo: enable lookup and reverse, then use this in e.g. RMLeditelement
-	/* new style with array
-	$a[1] = 'Head1';
-	$a[2] = 'Head2';
-	$a[3] = 'Head3';
-	$a[4] = 'ParaIndent';
-	$a[5] = 'ParaBlankOver';
-	$a[6] = 'QuoteIndent';
-	$a[7] = 'QuoteBlankOver';
-	$a[8] = 'ParaNoIndent';
-	$a[9] = 'QuoteNoIndent';
-	//$a[10] = '';
-	$a[11] = 'Part';
-	$a[12] = 'Book';
-	$a[13] = 'Chapter';
-	$a[14] = 'PartNoTOC';
-	$a[15] = 'BookNoTOC';
-	$a[16] = 'ChapterNoTOC';
-	$a[17] = 'ParaPreBlankOver';
-	$a[18] = 'ParaPreNoIndent';
-	$a[19] = 'Footnote';
-	$a[20] = 'Picture';
-	$a[21] = 'TableStart';
-	$a[22] = 'TableCell';
-	$a[23] = 'TableRow';
-	$a[24] = 'TableEnd';
-	$a[25] = 'ListStart';
-	$a[26] = 'ListItem';
-	$a[27] = 'ListEnd';
-	$a[28] = 'OrderListStart';
-	$a[29] = 'OrderListItem';
-	$a[30] = 'OrderListEnd';
-	$a[31] = 'HangingBlankOver';
-	$a[32] = 'HangingIndent';
-	$a[33] = 'ParaVignet';
-	$a[34] = 'BoxStart';
-	$a[35] = 'BoxEnd';
-	$a[36] = 'BoxHead';/ ** /
-	//$a[37] = '';
-	//if ( !$reverse ) $a = array_flip( $a );
-	//return $a[$typename];
-	$p[11] = array('navpoint');
-	$p[12] = array('navpoint');
-	$p[13] = array('navpoint');
-	/**/
-	//old style
 	switch( $typename ) {
 	case 'Head1':		$result = 1;	break;
 	case 'Head2':		$result = 2;	break;
@@ -647,7 +591,6 @@ function RMLgettexttype( $typename, $reverse = false )
 	case 'QuoteBlankOver':	$result = 7;	break;
 	case 'ParaNoIndent':	$result = 8;	break;
 	case 'QuoteNoIndent':	$result = 9;	break;
-			//10 missing, fill in new single entry here
 	case 'Part':		$result = 11;	break;
 	case 'Book':		$result = 12;	break;
 	case 'Chapter':		$result = 13;	break;
@@ -1166,9 +1109,6 @@ function RMLexportepub( $id ) {
 		$tmptitle = $title;
 	}
 
-	// todo: improve
-	// TODO : REPAIR ... this doesnt quite work does it.
-	// also: http://stackoverflow.com/questions/19245205/replace-deprecated-preg-replace-e-with-preg-replace-callback 
 	$thistitle = preg_replace("@ @","_",$tmptitle);
 	$thistitle = preg_replace("@&@","",$thistitle);
 	$thistitle = preg_replace("@&nbsp;@","_",$thistitle);
@@ -1177,25 +1117,12 @@ function RMLexportepub( $id ) {
 	$thistitle = preg_replace("@—@","-",$thistitle); // ndash
 	$thistitle = preg_replace("@–@","-",$thistitle); // mdash
 	$thistitle = preg_replace("@\?@","",$thistitle);
-	// replace without regex
 	$thistitle = str_replace(array('$','"','{','}'),'',$thistitle);
 	$thistitle = str_replace(array('/','%'),'-',$thistitle);
 
 	$filename = "./output/$thistitle.epub";
 
-	// the source need to be write protected
-
-	// TODO : WHY ???
-	
-	// todo: check if it was write-proteted still, halt if not
-	//print_r( substr(sprintf('%o', fileperms($filename)), -4) );
-	
-	if (!copy('./template.epub', $filename)) {  // MIMETYPE HACK: solves problem of uncompressed mime file first
-		echo( 'Error cannot copy epubtemplate to ' .$filename .'!' );
-	}
-	// todo: write mime file first (after create new zip) in a way it is not compressed without the need of a template
-	
-	// TODO : PHP will NOT allow you to change compression, so you are either stuck on no compression, or you can try to live with "The MIMETYPE Hack (tm)
+	exec("cp ./template.epub $filename");
 
 	$epub = new ZipArchive();
 	if( $epub->open( $filename ) !== true ) {
@@ -1317,7 +1244,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 	// ************************************** COVERPAGE
 	$epub->addFile("./covers/cover$id.jpg", "cover.jpg");
-	$epub->addFile("./img/qrcode.png", "qrcode.png");
+	$epub->addFile("./img/qr.png", "qrcode.png");
 	$epub->addFile("./img/vignet.jpg","vignet.jpg");
 
 	$cover = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n<title>Cover</title>\n<style type=\"text/css\">\n@page { margin: 0pt; padding :0pt } body {margin : 0pt; padding : 0pt}\n</style>\n</head>\n<body>\n<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"100%\" height=\"100%\" viewBox=\"0 0 600 800\" preserveAspectRatio=\"xMidYMid meet\">\n<image width=\"600\" height=\"800\" xlink:href=\"cover.jpg\" />\n</svg>" . $pageend;
@@ -1327,7 +1254,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	$title = preg_replace("@&@","&amp;",$title);
 	$subtitle = preg_replace("@&@","&amp;",$subtitle);
 
-	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"QRCode\" src=\"qrcode.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
+	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"QRCode\" src=\"qr.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
 
 	$epub->addFromString('title.html', $thistitle);
 	// ************************************** COPYRIGHT
