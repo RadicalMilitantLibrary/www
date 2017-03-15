@@ -71,9 +71,9 @@ function RMLgetpagetitle()
 	case 'add':
 		$title = "Add Radical Militant news";
 	break;
-//	case 'edit':
-//		$title = "Edit Radical Militant news";
-//	break;
+	case 'edit':
+		$title = "Edit Radical Militant news";
+	break;
 	}
 
 	switch( $footnote ) {
@@ -96,7 +96,14 @@ function RMLgetpagetitle()
 }
 
 // ============================================================================
-
+/*
+function RMLgetsubjecttitle( $id ) {
+	if( $id <> 0 ) {
+		$result = RMLfireSQL( "SELECT subject_name FROM subject WHERE id=$id" );
+		$thisrow = pg_Fetch_Object( $result, 0 );
+		$thissubject = $thisrow->subject_name;
+		return "$thissubject";
+*/
 function RMLgetsubjecttitle( $id )
 {
 	if( is_numeric( $id ) && $id != 0 ) {
@@ -220,6 +227,9 @@ function RMLpreparestring( $string )
 	$replace = array ( "''", 'chr(\1)' );
 
 	$result = preg_replace( $search, $replace, $string );
+	// replace without regex
+	//$result = str_replace(array('$','"','{','}'),'',$result);
+	//$result = str_replace(array('/','%'),'-',$result);
 
 	$result = strip_tags( $result, "<b><i><emph><a><br><img><sup><sub><ol><ul><li>" );
 	return $result;
@@ -581,6 +591,52 @@ function RMLsavepicture($docid,$odtfile,$picturepath)
 
 function RMLgettexttype( $typename, $reverse = false )
 {
+	//todo: enable lookup and reverse, then use this in e.g. RMLeditelement
+	/* new style with array
+	$a[1] = 'Head1';
+	$a[2] = 'Head2';
+	$a[3] = 'Head3';
+	$a[4] = 'ParaIndent';
+	$a[5] = 'ParaBlankOver';
+	$a[6] = 'QuoteIndent';
+	$a[7] = 'QuoteBlankOver';
+	$a[8] = 'ParaNoIndent';
+	$a[9] = 'QuoteNoIndent';
+	//$a[10] = '';
+	$a[11] = 'Part';
+	$a[12] = 'Book';
+	$a[13] = 'Chapter';
+	$a[14] = 'PartNoTOC';
+	$a[15] = 'BookNoTOC';
+	$a[16] = 'ChapterNoTOC';
+	$a[17] = 'ParaPreBlankOver';
+	$a[18] = 'ParaPreNoIndent';
+	$a[19] = 'Footnote';
+	$a[20] = 'Picture';
+	$a[21] = 'TableStart';
+	$a[22] = 'TableCell';
+	$a[23] = 'TableRow';
+	$a[24] = 'TableEnd';
+	$a[25] = 'ListStart';
+	$a[26] = 'ListItem';
+	$a[27] = 'ListEnd';
+	$a[28] = 'OrderListStart';
+	$a[29] = 'OrderListItem';
+	$a[30] = 'OrderListEnd';
+	$a[31] = 'HangingBlankOver';
+	$a[32] = 'HangingIndent';
+	$a[33] = 'ParaVignet';
+	$a[34] = 'BoxStart';
+	$a[35] = 'BoxEnd';
+	$a[36] = 'BoxHead';/ ** /
+	//$a[37] = '';
+	//if ( !$reverse ) $a = array_flip( $a );
+	//return $a[$typename];
+	$p[11] = array('navpoint');
+	$p[12] = array('navpoint');
+	$p[13] = array('navpoint');
+	/**/
+	//old style
 	switch( $typename ) {
 	case 'Head1':		$result = 1;	break;
 	case 'Head2':		$result = 2;	break;
@@ -591,6 +647,7 @@ function RMLgettexttype( $typename, $reverse = false )
 	case 'QuoteBlankOver':	$result = 7;	break;
 	case 'ParaNoIndent':	$result = 8;	break;
 	case 'QuoteNoIndent':	$result = 9;	break;
+			//10 missing, fill in new single entry here
 	case 'Part':		$result = 11;	break;
 	case 'Book':		$result = 12;	break;
 	case 'Chapter':		$result = 13;	break;
@@ -1123,7 +1180,7 @@ function RMLexportepub( $id ) {
 	$filename = "./output/$thistitle.epub";
 
 	copy('./template.epub', $filename);
-
+	
 	$epub = new ZipArchive();
 	if( $epub->open( $filename ) !== true ) {
 		exit("FATAL : cannot open <$filename>\n");
@@ -1161,6 +1218,7 @@ function RMLexportepub( $id ) {
 \t<item id=\"stylesheet\" href=\"stylesheet.css\" media-type=\"text/css\" />
 \t<item id=\"coverimage\" href=\"cover.jpg\" media-type=\"image/jpeg\" />
 \t<item id=\"logo\" href=\"logo.png\" media-type=\"image/png\" />
+\t<item id=\"qrcode\" href=\"qrcode.png\" media-type=\"image/png\" />
 \t<item id=\"vignet\" href=\"vignet.jpg\" media-type=\"image/jpeg\" />
 \t<item id=\"cover\" href=\"cover.html\" media-type=\"application/xhtml+xml\" />
 \t<item id=\"titlepage\" href=\"title.html\" media-type=\"application/xhtml+xml\" />
@@ -1244,7 +1302,8 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 	// ************************************** COVERPAGE
 	$epub->addFile("./covers/cover$id.jpg", "cover.jpg");
-	$epub->addFile("./img/qr.png", "qrcode.png");
+	$epub->addFile("./img/logo.png", "logo.png");
+	$epub->addFile("./img/qrcode.png", "qrcode.png");
 	$epub->addFile("./img/vignet.jpg","vignet.jpg");
 
 	$cover = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n<title>Cover</title>\n<style type=\"text/css\">\n@page { margin: 0pt; padding :0pt } body {margin : 0pt; padding : 0pt}\n</style>\n</head>\n<body>\n<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"100%\" height=\"100%\" viewBox=\"0 0 600 800\" preserveAspectRatio=\"xMidYMid meet\">\n<image width=\"600\" height=\"800\" xlink:href=\"cover.jpg\" />\n</svg>" . $pageend;
@@ -1254,13 +1313,13 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	$title = preg_replace("@&@","&amp;",$title);
 	$subtitle = preg_replace("@&@","&amp;",$subtitle);
 
-	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"QRCode\" src=\"qr.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
+	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
 
 	$epub->addFromString('title.html', $thistitle);
 	// ************************************** COPYRIGHT
 	if($subtitle <> "") { $subtitle = "<br/>" . $subtitle;}
 
-	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle <br/><br/>Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div>";
+	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle <br/><br/>Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div><div class=\"copyright\">Borrowed from<br/><b><big>~ <a href=\"http://c3jemx2ube5v5zpg.onion\">Radical Militant Library</a> ~</big></b><br/>Support Your local librarian. <br/><br/><a href=\"bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC\"><img alt=\"qrcode\" src=\"qrcode.png\"/></a></div>";
 
 	$copy = $copy . "\n<div class=\"teaser\">&nbsp;<br/>$teaser</div>" . $pageend;
 	$epub->addFromString('copyright.html', $copy);
