@@ -1122,7 +1122,7 @@ function RMLexportepub( $id ) {
 
 	$filename = "./output/$thistitle.epub";
 
-	exec("cp ./template.epub $filename");
+	copy('./template.epub', $filename);
 
 	$epub = new ZipArchive();
 	if( $epub->open( $filename ) !== true ) {
