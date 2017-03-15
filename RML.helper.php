@@ -1319,7 +1319,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	// ************************************** COPYRIGHT
 	if($subtitle <> "") { $subtitle = "<br/>" . $subtitle;}
 
-	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle <br/><br/>Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div><div class=\"copyright\">Borrowed from<br/><b>~ <a href=\"http://c3jemx2ube5v5zpg.onion\">Radical Militant Library</a> ~</b><br/>Support Your Librarian. <br/><br/><a href=\"bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC\"><img alt=\"qrcode\" src=\"qrcode.png\"/></a></div>";
+	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle<br/>Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div><div class=\"copyright\">Borrowed from<br/><b>~ <a href=\"http://c3jemx2ube5v5zpg.onion\">Radical Militant Library</a> ~</b><br/>Support Your Librarian. <br/><br/><a href=\"bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC\"><img alt=\"qrcode\" src=\"qrcode.png\"/></a></div>";
 
 	$copy = $copy . "\n<div class=\"teaser\">&nbsp;<br/>$teaser</div>" . $pageend;
 	$epub->addFromString('copyright.html', $copy);
