@@ -38,13 +38,22 @@ function getSubjectOptions( $subject ) {
 	return $a;
 }
 
+function getLanguageOptions( $language ) {
+	$a = '';
+	$languages = array("Unknown","English","French","German","Dutch","Swedish","Norwegian","Polish","Italian","Danish");
+	foreach ($languages as $current_language) {
+		$a .= '<option value="'.$current_language.'"'.( ($current_language == $language) ? ' selected="yes"' : '').'>'.$current_language.'</option>';
+	}
+	return $a;
+}
+
 // ============================================================================
 
 
 function RMLnewdocument( $print_on = true )
 {
 	global $author, $subject, $title, $subtitle, $year, $keywords,
-		$copyright, $teaser;
+		$copyright, $teaser, $language;
 
 	//todo: move to createdocument is that is less error prone
 	$ISBN = RMLgetuniqueid();
@@ -53,6 +62,7 @@ function RMLnewdocument( $print_on = true )
 	$out = '';
 	$options_auth = getAuthorOptions( $author );
 	$options_subj = getSubjectOptions( $subject );
+	$options_lang = getLanguageOptions( $language );
 
 	$out .= "\n".'<form enctype="multipart/form-data" method="post" action="?document=create"><table class="form">
 <tr><td>Author</td><td><select class="norm" name="author">' .$options_auth .'</select>
@@ -63,6 +73,8 @@ function RMLnewdocument( $print_on = true )
 <select class="norm" name="subject">' .$options_subj .'</select></td></tr>';
 //todo: put add-subject-button here (only for those who have the rights..)
 //todo: wish for new subject with data
+	$out .= '<tr><td>Language</td><td>
+	<select class="norm" name="language">'.$options_lang.'</select></td></tr>';
 	$out .= "\n".'<tr><td>Title</td><td><input class="norm" type="text" name="title" value="'.$title.'"></td></tr>
 <tr><td>(Sub-title)</td><td><input class="norm" type="text" name="subtitle" value="'.$subtitle.'"></td></tr>
 <tr><td>(Year)</td><td><input class="norm" type="text" name="year" value="'.$year.'"></td></tr>
@@ -79,7 +91,7 @@ function RMLnewdocument( $print_on = true )
 // ============================================================================
 
 function RMLeditdocument( $id ) {
-	$result = RMLfiresql("SELECT id,title,subtitle,year,\"unique\",keywords,copyright,teaser,subject_id,author_id,handle FROM document WHERE id=$id");
+	$result = RMLfiresql("SELECT id,title,subtitle,year,\"unique\",keywords,copyright,teaser,subject_id,author_id,handle,language FROM document WHERE id=$id");
 	$thisres = pg_Fetch_Object($result,0);
 	$title = $thisres->title;
 	$subtitle = $thisres->subtitle;
@@ -91,30 +103,21 @@ function RMLeditdocument( $id ) {
 	$subid = $thisres->subject_id;
 	$autid = $thisres->author_id;
 	$thisid = $thisres->id;
+	$language = $thisres->language;
 
 	if( ! hasRights( 'editdocument', array( $thisres->handle ) ) ) {
 		$out = "ERROR: Document Update : Cookie baaaaaaaad...";
 	} else {
-
-		$options_auth = '';
-		$result = RMLfiresql("SELECT name,id FROM author ORDER BY sort_name");
-		for($row=0;$row<pg_numrows($result);$row++) {
-			$thisrow = pg_Fetch_Object($result,$row);
-			$thisname = $thisrow->name;
-			$options_auth .= "\n".'<option value="'.$thisname.'"' .( ( $thisrow->id == $autid ) ? ' selected="yes"' : '' ).'>'.$thisname.'</option>';
-		}
-
-		$options_subj = '';
-		$result = RMLfiresql("SELECT subject_name,id FROM subject ORDER BY subject_name");
-		for($row=0;$row<pg_numrows($result);$row++) {
-			$thisrow = pg_Fetch_Object($result,$row);
-			$thisname = $thisrow->subject_name;
-			$options_subj .= "\n".'<option value="'.$thisname.'"' .( ( $thisrow->id == $subid ) ? ' selected="yes"' : '' ).'>'.$thisname.'</option>';
-		}
+	
+		//Shadilay made this same as in the createdocument function, made little sense not to.
+		$options_auth = getAuthorOptions( $author );
+		$options_subj = getSubjectOptions( $subject );
+		$options_lang = getLanguageOptions( $language );
 
 		$out = "\n".'<form enctype="multipart/form-data" method="post" action="?document=update&amp;id='.$thisid.'"><table class="form">
 <tr><td>Author</td><td><select class="norm" name="author">'.$options_auth.'</select></td></tr>
 <tr><td>Subject</td><td><select class="norm" name="subject">'.$options_subj.'</select></td></tr>
+<tr><td>Language</td><td><select class="norm" name="language">'.$options_lang.'</select></td></tr>
 <tr><td>Title</td><td><input class="norm" type="text" name="title" value="'.$title.'"></td></tr>
 <tr><td>(Sub-title)</td><td><input class="norm" type="text" name="subtitle" value="'.$subtitle.'"></td></tr>
 <tr><td>(Year)</td><td><input class="norm" type="text" name="year" value="'.$year.'"></td></tr>
@@ -133,7 +136,7 @@ function RMLeditdocument( $id ) {
 
 function RMLupdatedocument( $id, $print_on = true ) {
 	global $subject, $author, $title, $subtitle, $year, $ISBN,
-		$keywords, $copyright, $teaser;
+		$keywords, $copyright, $teaser, $language;
 
 	$result = RMLfiresql("SELECT handle FROM document WHERE id=$id");
 	$thisrow = pg_Fetch_Object( $result, 0 );
@@ -145,7 +148,7 @@ function RMLupdatedocument( $id, $print_on = true ) {
 
 		$subject_id = RMLgetsubjectid($subject);
 		$author_id = RMLgetauthorid($author);
-		RMLfiresql("UPDATE document SET subject_id=$subject_id,author_id=$author_id,title='$title',subtitle='$subtitle',year='$year',\"unique\"='$ISBN',teaser='$teaser',keywords='$keywords',copyright='$copyright' WHERE id=$id");
+		RMLfiresql("UPDATE document SET subject_id=$subject_id,author_id=$author_id,title='$title',subtitle='$subtitle',year='$year',\"unique\"='$ISBN',teaser='$teaser',keywords='$keywords',copyright='$copyright',language='$language' WHERE id=$id");
 		$target_path = "./covers/" . "cover" . "$id";
 
 		if(is_uploaded_file($_FILES['picture']['tmp_name'])) {
@@ -169,7 +172,7 @@ function RMLupdatedocument( $id, $print_on = true ) {
 function RMLcreatedocument( $print_on = true )
 {
 	global $subject, $author, $title, $subtitle, $year, $ISBN,
-		$keywords, $copyright, $teaser;
+		$keywords, $copyright, $teaser,$language;
 
 	$out = '';
 	$handle = RMLgetcurrentuser();
@@ -183,7 +186,7 @@ function RMLcreatedocument( $print_on = true )
 		$subject_id = RMLgetsubjectid( $subject );
 		$author_id = RMLgetauthorid( $author );
 
-		if( ! RMLfiresql( "INSERT INTO document VALUES(DEFAULT,DEFAULT,'$handle',$subject_id,$author_id,'$title','$subtitle','$year','$ISBN','$teaser','$keywords','$copyright',DEFAULT,DEFAULT)" ) ) {
+		if( ! RMLfiresql( "INSERT INTO document VALUES(DEFAULT,DEFAULT,'$handle',$subject_id,$author_id,'$title','$subtitle','$year','$ISBN','$teaser','$keywords','$copyright',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'$language')" ) ) {
 			$out = "ERROR: Document Create failed: maybe you missed some details in the form.";
 		}
 
@@ -214,7 +217,8 @@ function RMLcreatedocument( $print_on = true )
 function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 {
 	$out = '';
-	$sql = RMLfiresql( "SELECT name,bio,born,dead,(SELECT COUNT(id) FROM document WHERE author_id = author.id AND status=3) AS numdoc FROM author where id=$id" );
+	$sql = RMLfiresql( "SELECT name,bio,born,dead,(SELECT COUNT(id) FROM document WHERE author_id = author.id AND status=3)+(SELECT COUNT(doc_id) FROM coauthor WHERE author_id = author.id) AS numdoc FROM author where id=$id" );
+	//TODO check status of coauthored book = 3
 	if ( ! ( $thisrow = pg_Fetch_Object( $sql, 0 ) ) ) {
 		$out = 'ERROR: This Author is not used yet, read how to add a book yourself <a href="?function=manual">in the manual</a>.';
 	} else {
@@ -241,7 +245,8 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			$born = 'Unknown';
 			$age = '';
 		}
-
+		
+		//TODO: make it add the size&numofpar of coauthored books
 		$sql = RMLfireSQL( "SELECT sum(length(body)) as bodylength,count(body) as elementcount FROM author$id" );
 		$thisrow = pg_Fetch_Object( $sql, 0 );
 		$kilobyte = sizeFormat( $thisrow->bodylength );
@@ -269,7 +274,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 
 		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
 
-		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT AVG(level) FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
+		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser, (SELECT AVG(level) FROM forum WHERE thread_id=document.id AND level > 0) AS score, (SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle FROM document WHERE (author_id=$id OR id IN (SELECT doc_id FROM coauthor WHERE author_id=$id) AND status=3) ORDER BY title" );
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$thisid = $thisrow->id;
@@ -349,7 +354,7 @@ function RMLgetBibTeX( $data )	//get all data in this named list, e.g. via itera
 
 function RMLviewdocument( $id, $print_on = true )
 {
-	$result = RMLfiresql( "SELECT handle,status,posted_on,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,downloads,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail FROM document WHERE id=".$id );
+	$result = RMLfiresql( "SELECT handle,status,posted_on,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,downloads,language,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail FROM document WHERE id=".$id );
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$thishandle = $thisrow->handle;
 	$thissubjectid = $thisrow->subject_id;
@@ -364,12 +369,42 @@ function RMLviewdocument( $id, $print_on = true )
 	$downloads = $thisrow->downloads;
 	$thisauthor = $thisrow->authorname;
 	$thissubject = $thisrow->subjecttitle;
+	$language = $thisrow->language;
 	$letter = $thisrow->sort_name;
 	$letter = $letter[0];
 	$avgscore = round( $thisrow->score,2 );
 	$reviewer = $thisrow->owner;
 	$mail = $thisrow->mail;
 	$posted = RMLfixdate( $thisrow->posted_on );
+	
+	//Get coauthors:
+	$result = RMLfiresql( "SELECT name, id FROM author WHERE id IN (SELECT author_id FROM coauthor WHERE doc_id=$id)");
+	$thiscoauthors = '';
+	if(pg_numrows($result)!=0) {
+		for($row=0;$row<pg_numrows($result);$row++) {
+			$thisrow = pg_Fetch_Object($result,$row);
+			$thiscoauthorname = $thisrow->name;
+			$thiscoauthorid = $thisrow->id;
+			$thiscoauthors .= ", <a href=\"?author=view&amp;id=$thiscoauthorid\">$thiscoauthorname</a>";
+		}
+	}
+	
+	$result = RMLfiresql( "SELECT name, id FROM lists WHERE id IN (SELECT list_id FROM listitems WHERE doc_id = $id)");
+	$thislists = '';
+	if(pg_numrows($result)!=0) {
+		$thislists .= '<tr valign="middle" style="height:20px"><td align="right">included in :</td><td style="padding-left:10px">';
+		for($row=0;$row<pg_numrows($result);$row++) {
+			if($row>0){
+				$thislists .=', ';
+			}
+			$thisrow = pg_Fetch_Object( $result, $row);
+			$thislistname = $thisrow->name;
+			$thislistid = $thisrow->id;
+			$thislists .='<a href="?lists=view&amp;id='.$thislistid.'">'.$thislistname.'</a>';
+		}
+		$thislists .='</td></tr>';
+	}
+	
 
 	$out = '';
 	if($thissubtitle) {
@@ -384,16 +419,20 @@ function RMLviewdocument( $id, $print_on = true )
 		.'<table style="width:100%;font-size:12pt" cellspacing="0" cellpadding="0">
 <tr valign="top" style="height:20px">
 	<td style="width:150px" rowspan="20"><a href="./covers/cover'.$id.'.jpg"><img style="margin:0;width:150px;border-width:1px;border-style:solid" alt="Cover" src="./covers/cover'.$id.'"/></a></td>
-	<td align="right">by : </td><td style="padding-left:10px"><b><a href="?author=view&amp;id='.$thisauthorid.( ( !isset($thisauthorid) || $thisauthorid=='' || $thisauthorid==0) ? '&amp;letter='.$letter : '' ).'"><big>'.$thisauthor.'</big></a></b></td>
+	<td align="right" style="width:100px">by : </td><td style="padding-left:10px"><b><big><a href="?author=view&amp;id='.$thisauthorid.( ( !isset($thisauthorid) || $thisauthorid=='' || $thisauthorid==0) ? '&amp;letter='.$letter : '' ).'">'.$thisauthor.'</a>'.$thiscoauthors.'</big></a></b></td>
 </tr><tr valign="middle" style="height:20px">
 	<td align="right">&nbsp; &nbsp; published :</td><td style="padding-left:10px"><b>'.$thisyear.'</b></td>
 </tr><tr valign="middle" style="height:20px">
 	<td align="right">subject :</td><td style="padding-left:10px"><b><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a></b></td>
 </tr>';
 //.'<tr valign="top"><td align="right">BiBTeX :</td><td><div class="bibtex"><textarea id="bibtext" name="bibtext" rows="13" cols="40" readonly="readonly">' .getBibTeX( $id ) .'</textarea></div></td></tr>';
+	$out .= '<tr valign="middle" style="height:20px"><td align="right">language :</td><td style="padding-left:10px"><b>'.$language.'</b></td></tr>';
 
 	if( $thiskeywords ) {
 		$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">keywords :</td><td style="padding-left:10px"><b>'.$thiskeywords.'</b></td></tr>';
+	}
+		$out .= $thislists;
+	if( $thislists ) {
 	}
 
 	$tablename = RMLgetactivetable( $id );
@@ -459,8 +498,10 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 		 * */
 		
 		$out .= '<div class="center"><a class="button save" href="./?function=download&amp;id='.$id.'">Borrow Book</a></div>';
-	} else if ( $user === null ) { // Anonymous downloads re enabled (jotunbane)
+	} else if ( $thisstatus > 2 && $user === null ) { // Anonymous downloads re enabled (jotunbane)
 		$out .= '<div class="center"><a class="button star" href="./?function=download&amp;id='.$id.'">Borrow Book</a></div>';
+	}	else if ( $thisstatus < 3 ) {
+		$out .= '<div class="center"><p class="buttondisabled wrench">Unpublished</p>';
 	}
 
 	$out .= '<div class="center">';
@@ -488,7 +529,7 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 		}
 	}
 
-	if( ( ( $thishandle == RMLgetcurrentuser() ) || ( RMLgetcurrentuser() == 'admin') ) && ( $thisstatus == 3) ) {
+	if( ( ( $thishandle == RMLgetcurrentuser() ) || ( RMLgetcurrentuser() == 'admin') || (RMLgetcurrentuser() == 'Shadilay' ) ) && ( $thisstatus == 3) ) {
 		$out .= "\n".'<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>'
 			."\n".'<a class="button delete" href="?function=withdraw&amp;id='.$id.'">Un-Publish</a>';
 	}
@@ -697,7 +738,7 @@ function RMLgetsectiontitle( $id, $section )
 	$thisowner = pg_Fetch_Object( $result, 0 );
 	$owner = $thisowner->handle;
 
-	if( ( RMLgetcurrentuser() == 'admin' ) || ( RMLgetcurrentuser() == $owner ) ) {
+	if( ( RMLgetcurrentuser() == 'admin' ) || ( RMLgetcurrentuser() == 'Shadilay' ) || ( RMLgetcurrentuser() == $owner ) ) {
 		return $title.' <small>[<a href="?function=edit&amp;id='.$id.'&amp;section='.$section.'&amp;sequence=s'.$sequence.'">Edit</a>]</small>';
 	} else {
 		return $title;

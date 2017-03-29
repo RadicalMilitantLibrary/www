@@ -40,8 +40,7 @@ function RMLdisplaysubject( $id, $print_on = true )
 				} elseif ( strlen( $description ) > 300 ) {
 					$description = substr( $description, 0, 300 ) .'...';
 				}
-				$userid = RMLgetuserID( $maintainer );
-				$pic = './users/' .$userid .'.png';
+				$pic = './users/'.$maintainer.'.png';
 				$pic = ( $maintainer != '' && file_exists( $pic ) ? $pic : './users/Anonymous.png' ); 
 				$out .= "\n".'<div class="box">
 <div class="boxheader"><a href="?subject=view&amp;id='.$thisid.'"><img style="float:left;margin-right:10px;margin-bottom : 5px" src="'.$pic.'"/><b>'.$thisname.'</a></b></div><div style="text-align:right;padding-right:15px;padding-bottom:5px;"><small>Maintained by : <b>'.$maintainer.'</b> (<b>' .getNumberFormatted( $doccount, 0 ) .'</b> documents)</small></div>
@@ -94,9 +93,8 @@ function RMLdisplaysubject( $id, $print_on = true )
 			}
 			// PAGINATION END.
 			$out .= $pagination;
-// todo: needs fix for correct subject image (its asked for when creating a new one), could default on maintainer image if not available
-			$userid = RMLgetuserID( $maintainer );
-			$pic = './users/' .$userid .'.png';
+//ewa: needs fix for correct subject image (its asked for when creating a new one), could default on maintainer image if not available
+			$pic = './users/'.$maintainer.'.png';
 			$pic = ( $maintainer != '' && file_exists( $pic ) ? $pic : './users/Anonymous.png' );
 			$out .= "\n".'<div class="box">
 <div class="boxheader"><img style="float:left;margin-right:10px;margin-bottom : 5px" src="' .$pic .'"/></div><div style="text-align:right;padding-right:15px;padding-bottom:5px;"><small>Maintained by : <b>' .$thisrow->owner .'</b> (<b>' .getNumberFormatted( $doccount, 0 ) .'</b> documents)</small></div>

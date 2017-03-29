@@ -21,8 +21,7 @@ $starttime = microtime();
 $Version = "0.5.5";
 $itemprpage = 25;
 
-require 'settings.php';// todo: check file_exists('./settings.php') and stop with die('configuration in settings.php missing')
-// check on salt etc. set properly, if not die('setting: need salt to be set properly')
+require 'settings.php';
 require 'RML.common.php';
 require 'RML.helper.php';
 require 'RML.database.php';
@@ -33,6 +32,7 @@ require 'RML.author.php';
 require 'RML.image.php';
 require 'RML.lists.php';
 require 'RML.subject.php';
+require 'RML.search.php';
 
 $id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
 if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
@@ -82,6 +82,7 @@ $messagesubject = RMLpreparestring($_REQUEST['messagesubject']);
 $style = RMLpreparestring($_REQUEST['style']);
 $lists = RMLpreparestring($_REQUEST['lists']);
 $docid = RMLpreparestring($_REQUEST['docid']);
+$search = RMLpreparestring(preg_replace( ['/"/'], [''], strip_tags($_REQUEST['search'])));
 
 switch( $para ) {
 	case 'delete':
@@ -109,6 +110,10 @@ switch($lists) {
 	break;
 	case 'add':
 		RMLaddtolist($id, false);
+		header("Location: ?lists=view&id=$id");
+	break;
+	case 'visible':
+		RMLtogglelistvisibility($id);
 		header("Location: ?lists=view&id=$id");
 	break;
 }
@@ -158,10 +163,10 @@ switch( $function ) {
 		if ( !in_array( $format, array( 'epub','html','markdown','text' ) ) ) {
 			$format = 'epub';
 		}
-//		if(!RMLgetcurrentuser()) {
-//			header( 'Location: ?function=login' );
-//			break;
-//		}
+		/*if(!RMLgetcurrentuser()) {
+			header( 'Location: ?function=login' );
+			break;
+		}*/
 		RMLdownloaddocument( $id, $format );
 		header( 'Location: ?document=view&id='.$id );
 	break;

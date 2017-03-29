@@ -22,8 +22,13 @@ function RMLdisplayauthor( $id, $print_on = true )
 	$out = '';
 	if( !isset( $id ) || $id == 0 ) {
 		$out .= RMLdisplayauthororder( false );
+		
+		//Shadilay: Moved Add button to top, makes little sense to scroll down every time.
+		if( hasRights( 'addauthor'/** /, array( $maintainer )/**/ ) ) {//maintainer not in query!
+			$out .= "\n".'<a href="?author=new" class="button add">Add</a>';
+		}
 
-		$result = RMLfiresql("SELECT id,name,sort_name,born,dead,bio,(SELECT COUNT(author_id) FROM document WHERE author_id = author.id AND status=3) AS counter FROM author WHERE letter='$letter' GROUP BY counter,sort_name,author.id,author.name,author.born,author.dead,author.bio ORDER BY sort_name");
+		$result = RMLfiresql("SELECT id,name,sort_name,born,dead,bio,(SELECT COUNT(author_id) FROM document WHERE author_id = author.id AND status=3)+(SELECT COUNT(doc_id) FROM coauthor WHERE author_id = author.id) AS counter FROM author WHERE letter='$letter' GROUP BY counter,sort_name,author.id,author.name,author.born,author.dead,author.bio ORDER BY sort_name");
 		$displaycount = 0;
 		setTimeZone();
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
@@ -86,10 +91,6 @@ Books online <b>'. getNumberFormatted( $counter, 0 ) .'</b></small></p>';
 					$displaycount++;
 				}
 			}
-		}
-
-		if( hasRights( 'addauthor'/** /, array( $maintainer )/**/ ) ) {//maintainer not in query!
-			$out .= "\n".'<a href="?author=new" class="button add">Add</a>';
 		}
 	} else {
 		$out = RMLdisplaydocumentsbyauthor( $id, false );
@@ -187,23 +188,12 @@ function RMLaddauthor( $print_on = true )
 			} else {
 				$thisrow = pg_Fetch_Object( $sql, 0 );
 				$thisid = $thisrow->id;
-				$filename = 'author' .$thisid;
-				$target_path = './authors/' .$filename;
+				$filename = "author" .$thisid;
+				$target_path = "./authors/" . "author" .$thisid;
 
 				// use default.jpg if no picture given
-				// todo: check if default image is write protected before
 				if( !move_uploaded_file( $_FILES['picture']['tmp_name'], $target_path ) ) {
-					if (!copy('./authors/default.jpg', $target_path)) {
-						echo( 'Error: Cannot copy default useravatar to' .$target_path .'!' );
-					}
-				} else {
-					// limit author image to width of 300
-					$myimage = new RMLimage();
-					$myimage->load( $target_path );
-					if ( $myimage->getWidth() >  300 ) {
-						$myimage->resizeToWidth( 300 );
-					}
-					$myimage->save( $target_path );
+					exec( 'cp ./authors/default.jpg '.$target_path );
 				}
 
 				RMLfiresql( "CREATE TABLE $filename (doc_id integer NOT NULL,paragraphtype integer NOT NULL,body text,id integer NOT NULL,parent_id integer NOT NULL) WITH (OIDS=FALSE)" );

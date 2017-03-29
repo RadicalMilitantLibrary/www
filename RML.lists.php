@@ -20,45 +20,78 @@ function RMLdisplaylists($print_on = true) {
 	$user = RMLgetcurrentuser();
 
 	if($id == 0) {
-		$result = RMLfiresql("SELECT id,name,owner FROM lists ORDER BY name");
+		$result = RMLfiresql("SELECT id,name,owner,visible, (SELECT COUNT(doc_id) FROM listitems WHERE (list_id = id AND listitems.doc_id IN (SELECT id FROM document WHERE status > 2))) AS count FROM lists ORDER BY name");
 		for($row=0;$row<pg_numrows($result);$row++) {
 			$thisrow = pg_Fetch_Object($result,$row);
 			$thisid = $thisrow->id;
 			$thisname = $thisrow->name;
 			$thisowner = $thisrow->owner;
-		
-			$out .= "\n<div class=\"box\"><div class=\"boxheader\"><a href=\"?lists=view&amp;id=$thisid\"><b>$thisname</b></a></div></div>";
+			$thisvisible = $thisrow->visible;
+			$thiscount = $thisrow->count;
+			
+			if($thisvisible == 't') { //implemented this way so an option to show all lists can be added
+				$out .= "\n<div class=\"box\"><div class=\"boxheader\"><table width=\"100%\"><tr><td><a href=\"?lists=view&amp;id=$thisid\"><b>$thisname</b></a></td><td align=\"right\"><b>$thiscount</b> books</td></tr></table></div></div>";
+			}
 		}
 		if($user) {
 			$out .= '<a class="button star" href="?lists=create">New List</a>';
 		}
 	} else {
-		$result = RMLfiresql("SELECT description,owner FROM lists WHERE id=$id");
+		$result = RMLfiresql("SELECT description,owner,visible FROM lists WHERE id=$id");
 		$thisrow = pg_Fetch_Object($result,0);
 		$thisdescription = nl2br($thisrow->description);
 		$thisowner = $thisrow->owner;
+		$thisvisible = $thisrow->visible;
 		
-		if($thisowner == $user) {
-			$out .= "<form method=\"post\" action=\"?lists=add&id=$id\">
+		if($thisowner == $user || $user == "admin" || $user == "Shadilay") {
+			$out .= "<table width=\"100%\"><tr><td><form method=\"post\" action=\"?lists=add&id=$id\">
   Document ID:
   <input type=\"number\" name=\"docid\" min=\"1\">
   <input type=\"submit\" value=\"Add to list\">
-</form>";
+</form></td>"."<td align=\"right\"><form method=\"post\" action=\"?lists=visible&id=$id\">
+				Visible ($thisvisible) - <input type=\"submit\" class=\"button\" value=\"Toggle visibility\">
+			</form></td></tr></table>";
 		}
 		
 		$out .= RMLdisplay($thisdescription,5,false);
 		$out .= "<div class=\"inlineclear\"> &nbsp; </div>";
 		
-		$result = RMLfiresql("SELECT list_id,doc_id,(SELECT title FROM document WHERE id=listitems.doc_id) AS title,(SELECT name FROM author where id=(SELECT author_id FROM document WHERE id=listitems.doc_id)) as authorname,(SELECT year FROM document WHERE id=listitems.doc_id) as year,(SELECT teaser FROM document WHERE id=listitems.doc_id) as description FROM listitems WHERE list_id=$id ORDER BY year");
+		$result = RMLfiresql("SELECT list_id,doc_id,(SELECT AVG(level) FROM forum WHERE thread_id=listitems.doc_id AND level > 0) AS score,(SELECT title FROM document WHERE id=listitems.doc_id) AS title,(SELECT status FROM document WHERE id=listitems.doc_id) AS status,(SELECT name FROM author where id=(SELECT author_id FROM document WHERE id=listitems.doc_id)) as authorname,(SELECT year FROM document WHERE id=listitems.doc_id) as year,(SELECT teaser FROM document WHERE id=listitems.doc_id) as description FROM listitems WHERE list_id=$id ORDER BY year");
 		for($row=0;$row<pg_numrows($result);$row++) {
 			$thisrow = pg_Fetch_Object($result,$row);
 			$thisid = $thisrow->doc_id;
 			$thisname = $thisrow->title;
 			$thisauthor = $thisrow->authorname;
 			$thisyear = $thisrow->year;
+			$thisscore = $thisrow->score;
+			$thisstatus = $thisrow->status;
 			$thisdescription = $thisrow->description;
+
+			if( strlen( $thisdescription ) > 400) {
+				$thisdescription = substr( $thisdescription, 0, 400 ) .' ...';
+				$thisdescription = strip_tags( $thisdescription );
+			}
 		
-			$out .= "\n<div class=\"box\"><div class=\"boxheader\"><a href=\"?document=view&amp;id=$thisid\"><img class=\"Cover\" alt=\"Cover\" src=\"./covers/cover$thisid\"/><b>$thisname</b></a></div><div class=\"boxtext\"><small>by <b>$thisauthor</b>, $thisyear</small></div><div class=\"inlineclear\"></div></div>";
+			$out .= "\n<div class=\"box\">";
+			if($thisstatus<3) {
+				$thisdescription = 'Not yet published.';
+				$out .= "<div class=\"boxheader wrench\" style=\"color: #ff0000\"> ";
+			} else {
+				$out .= "<div class=\"boxheader\">";
+			}
+			
+			$out .= "<a href=\"?document=view&amp;id=$thisid\">";
+			if($thisstatus>2){
+				$out .= "<img class=\"Cover\" alt=\"Cover\" src=\"./covers/cover$thisid\"/>";
+			}
+			else {
+				//$out .= "<img class=\"Cover\" alt=\"Cover\" src=\"./covers/cover$thisid\"/>";
+			}
+			$out .= "<b>$thisname</b></a></div>
+			<div class=\"boxtext\"><small>by <b>$thisauthor</b>, $thisyear</small>"
+			.'<span class="right-float">' .getRatingDisplay( $avgscore ) .'</span></div>'
+			.'<p class="boxtext">'.$thisdescription.'</p>'
+			."<div class=\"inlineclear\"></div></div>";
 		}
 	}
 	
@@ -102,7 +135,22 @@ function RMLaddtolist($listid , $print_on = true) {
 	$thisrow = pg_Fetch_Object($result,0);
 	$thisowner = $thisrow->owner;
 	
-	if($thisuser == $thisowner) {
+	if($thisuser == $thisowner || $thisuser == "admin" || $thisuser == "Shadilay") {
 		RMLfiresql("INSERT into listitems (list_id,doc_id) VALUES($listid,$docid)");
+	}
+}
+function RMLtogglelistvisibility($listid) {
+	$thisuser = RMLgetcurrentuser();
+	$result = RMLfiresql("SELECT owner, visible FROM lists WHERE id=$listid");
+	$thisrow = pg_Fetch_Object($result,0);
+	$thisowner = $thisrow->owner;
+	$thisvisibility = $thisrow->visible;
+	$visibility = "TRUE";
+	if($thisvisibility=='t'){
+		$visibility = "FALSE";
+	}
+	
+	if($thisuser == $thisowner || $thisuser == "admin" || $thisuser == "Shadilay") {
+		$result = RMLfiresql("UPDATE lists SET visible = $visibility WHERE id = $listid;");
 	}
 }
