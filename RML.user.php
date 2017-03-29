@@ -647,9 +647,9 @@ function hasRights( $action = '', $arr = array() )
 		return false;
 	}
 	if ( ! in_array( 'noadm', $arr ) ) {
-		$admaccs = array( 'admin', 'SYSTEM', 'Shadilay' );
+		$admaccs = array( 'admin', 'SYSTEM' );
 		if ( ! in_array( 'nomod', $arr ) ) {
-			$modaccs = array('Shadilay' );
+			$modaccs = array( 'Shadilay' );
 		}
 	}
 	switch ( $action ) {
