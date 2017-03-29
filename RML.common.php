@@ -51,79 +51,109 @@ function RMLMenuButton( $btntile, $href = "", $class = "", $decoration = 'star' 
 
 function RMLdisplayleft( $print_on = true )
 {
-	global $author, $subject, $news, $document, $function, $message, $style, $lists;
+	global $author, $subject, $news, $document, $function, $message, $style, $lists, $lang;
 	$currentuser = RMLgetcurrentuser();
+	
+	//$lang = getLanguage($lang);
+	$langurl = "";
+	if($lang!="") {
+		$langurl = "&lang=$lang";
+	}
 
 	$out = "\n\n".'<!-- LEFT START -->
 <tr><td class="left">';
 
 	if($function == 'about') {
-		$out .= "\n<a class=\"activebutton about\" href=\"?function=about\">About</a>";
+		$out .= "\n<a class=\"activebutton about\" href=\"?function=about$langurl\">About</a>";
 	} else {
-		$out .= "\n<a class=\"button about\" href=\"?function=about\">About</a>";
+		$out .= "\n<a class=\"button about\" href=\"?function=about$langurl\">About</a>";
 	}
 
 	if($news) {
-		$out .= "\n<a class=\"activebutton email\" href=\"?news=view\">News</a>";
+		$out .= "\n<a class=\"activebutton news\" href=\"?news=view$langurl\">News</a>";
 	} else {
-		$out .= "\n<a class=\"button email\" href=\"?news=view\">News</a>";
+		$out .= "\n<a class=\"button news\" href=\"?news=view$langurl\">News</a>";
 	}
 
 	if(($author == 'view') || ($document == 'view')) {
-		$out .= "\n<a class=\"activebutton like\" href=\"?author=view&amp;letter=A\">Authors</a>";
+		$out .= "\n<a class=\"activebutton pen\" href=\"?author=view$langurl&amp;letter=A\">Authors</a>";
 	} else {
-		$out .= "\n<a class=\"button like\" href=\"?author=view&amp;letter=A\">Authors</a>";
+		$out .= "\n<a class=\"button pen\" href=\"?author=view$langurl&amp;letter=A\">Authors</a>";
 	}
 
 	if($subject == 'view') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
+		$out .= "\n<a class=\"activebutton like\" href=\"?subject=view$langurl&amp;letter=All&amp;id=0\">Subjects</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
+		$out .= "\n<a class=\"button like\" href=\"?subject=view$langurl&amp;letter=All&amp;id=0\">Subjects</a>";
 	}
 
 	if(($lists == 'view') || ($lists == 'add')){
-		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&ampid=0\">Reading Lists</a>";
+		$out .= "\n<a class=\"activebutton collection\" href=\"?lists=view$langurl&ampid=0\">Collections</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?lists=view&amp;id=0\">Reading Lists</a>";
+		$out .= "\n<a class=\"button collection\" href=\"?lists=view$langurl&amp;id=0\">Collections</a>";
 	}
 
 	if($function == 'librarians') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=librarians\">Librarians</a>";
+		$out .= "\n<a class=\"activebutton anon\" href=\"?function=librarians$langurl\">Librarians</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?function=librarians\">Librarians</a>";
+		$out .= "\n<a class=\"button anon\" href=\"?function=librarians$langurl\">Librarians</a>";
 	}
 
 	if($function == 'readers') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=readers\">Readers</a>";
+		$out .= "\n<a class=\"activebutton star\" href=\"?function=readers$langurl\">Readers</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?function=readers\">Readers</a>";
+		$out .= "\n<a class=\"button star\" href=\"?function=readers$langurl\">Readers</a>";
 	}
 
 	if($function == 'manual') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=manual\">Manual</a>";
+		$out .= "\n<a class=\"activebutton star\" href=\"?function=manual$langurl\">Manual</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?function=manual\">Manual</a>";
+		$out .= "\n<a class=\"button star\" href=\"?function=manual$langurl\">Manual</a>";
+	}
+
+	if($function == 'search') {
+		$out .= "\n<a class=\"activebutton search\" href=\"?function=search$langurl\">Search</a>";
+	} else {
+		$out .= "\n<a class=\"button search\" href=\"?function=search$langurl\">Search</a>";
 	}
 
 	if( ( !$currentuser ) && ( $function <> 'login' ) ) {
-		$out .= "\n<a class=\"button star\" href=\"?function=login\">Login</a>";
+		$out .= "\n<a class=\"button star\" href=\"?function=login$langurl\">Login</a>";
 	}
 	if( ( !$currentuser ) && ( $function == 'login' ) ) {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=login\">Login</a>";
+		$out .= "\n<a class=\"activebutton star\" href=\"?function=login$langurl\">Login</a>";
 	}
 
 	if(($currentuser) && ($function <> 'user') && ($message <> 'new') && ($style <> 'new') && ($document <> 'new')) {
-		$out .= "\n<a class=\"button like\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"button like\" href=\"?function=user$langurl\">My Page</a>";
 	}
 	if(($function == 'user') || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
-		$out .= "\n<a class=\"activebutton like\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"activebutton like\" href=\"?function=user$langurl\">My Page</a>";
 	}
 
 	$out .= "\n"
 
-	// glider
-	.'<div class="inlineclear"><br/></div><div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'
+	// bitcoin donation address
+	/*.'<div class="center">&nbsp;<br/><a href="bitcoin:1MjAY5FZ9To6M1VHvgWa95WzsVtD3X9NaA"><img style="border:0" src="./img/qrcode.png" alt="Jotunbane can haz bitcoinz" /></a></div>'*/
 
+	// glider
+	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Glider => Hacker" /></a></div>'
+
+	// pgp pubkey
+	//disabled until I have a pgp key
+	//.'<div class="center"><a href="./jotunbane.asc"><img src="./img/pgp.png" alt="PGP Public Key" /></a></div>'
+	
+	.'</br><div class="center">Books in:</div>'
+	.'<div class="center"><a href="?lang=en">English</a></div>'	
+	.'<div class="center"><a href="?lang=de">German</a></div>'
+	.'<div class="center"><a href="?lang=nl">Dutch</a></div>'
+	.'<div class="center"><a href="?lang=fr">French</a></div>'
+	.'<div class="center"><a href="?lang=sv">Swedish</a></div>'
+	.'<div class="center"><a href="?lang=no">Norwegian</a></div>'
+	.'<div class="center"><a href="?lang=pl">Polish</a></div>'
+	.'<div class="center"><a href="?lang=it">Italian</a></div>'
+	.'<div class="center"><a href="?lang=da">Danish</a></div>'
+	
 .'</td>';
 	return processOutput( $out, $print_on );
 }
@@ -175,6 +205,10 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	break;
 	case 'librarians':
 		$out .= RMLdisplaylibrarians( false );
+		$frontpage = false;
+	break;
+	case 'search':
+		$out .= RMLdisplaysearch(false);
 		$frontpage = false;
 	break;
 	}
@@ -353,9 +387,7 @@ function RMLdisplayend( $print_on = true )
 
 	$out = "\n\n".'<!-- END START -->
 <tr><td colspan="3" class="end">
-<a href="https://blockchainbdgpzk.onion/address/1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC"><img src="https://blockchain.info/Resources/buttons/donate_64.png"/></a>
-<div class="center"><a href="bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC"><img style="border:0" src="./img/qrcode.png" alt="Donate Bitcoin" /></a></div>
-<br />Radical Militant Library <b>'.$Version.'</b><br />
+Radical Militant Library <b>'.$Version.'</b><br />
 <small><b>' .getNumberFormatted( $SQLcounter, 0 ) .'</b> statements,
 <b>' .getNumberFormatted( $now - $starttime, -5 ) .'</b> seconds,
 <b>' .sizeFormat( $SQLsize, -3 ) .'</b></small>
@@ -390,7 +422,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists;
 
 	//default
-	$title = '~ Radical Militant Library ~';
+	$title = '~ The Incorrect Library ~';
 
 	$out = '<p class="pagetitle">';
 
@@ -409,7 +441,7 @@ function RMLdisplaytitle( $print_on = true ) {
 
 	switch($comment) {
 	case 'view':
-		$title = "~ Radical Militant Comments ~";
+		$title = "~ Incorrect Comments ~";
 	break;
 	case 'new':
 		$title = RMLgetdocumenttitle( $id );
@@ -438,10 +470,10 @@ function RMLdisplaytitle( $print_on = true ) {
 
 	switch($function) {
 	case 'login':
-		$title = 'Radical Militant Sign-Up';
+		$title = 'Sign-Up';
 	break;
 	case 'user':
-		$title = "Radical Militant User Page";
+		$title = "User Page";
 	break;
 	case 'upload':
 		$docname = RMLgetdocumenttitle( $id );
@@ -455,16 +487,19 @@ function RMLdisplaytitle( $print_on = true ) {
 		$title = "Edit Element";
 	break;
 	case 'about':
-		$title = "~ All Your Books Are Belong to Us !!! ~";
+		$title = "~ Let There Be Words !!! ~";
 	break;
 	case 'manual':
 		$title = "~ Radical Militant Manual ~";
 	break;
 	case 'readers':
-		$title = "Radical Militant Readers";
+		$title = "Militant Readers";
 	break;
 	case 'librarians':
-		$title = "Radical Militant Librarians";
+		$title = "Militant Librarians";
+	break;
+	case 'search':
+		$title = "Search";
 	break;
 	}
 
@@ -486,20 +521,20 @@ function RMLdisplaytitle( $print_on = true ) {
 		if($id > 0) {
 			$title = RMLgetlistname($id);
 		} else {
-			$title = '~ Radical Militant Reading Lists ~';
+			$title = '~ Our Reading Lists ~';
 		}			
 	break;
 	case 'create' :
-		$title = "~ New Radical Militant Reading List ~";
+		$title = "~ New Reading List ~";
 	break;
 	}
 
 	switch($news) {
 	case 'view':
-		$title = "~ Radical Militant News ~";
+		$title = "~ Incorrect News ~";
 	break;
 	case 'add':
-		$title = "~ Add Radical Militant News ~";
+		$title = "~ Add Incorrect News ~";
 	break;
 	case 'edit':
 		$title = "~ Edit News ~";
@@ -556,14 +591,39 @@ function RMLdisplaytitle( $print_on = true ) {
 // ============================================================================
 
 function RMLdisplayfrontpage( $print_on = true ) {
-
-	$out = "\n".'<div class="order" style="text-align:center">Protecting your <a href="http://www.ala.org/advocacy/intfreedom/statementspols/freedomreadstatement">Freedom to Read</a> since 2010</div>';
+	global $lang;
 	
-	$out .= RMLgetlatestcomment( false );
+	$langcondition = "";
+	$lang = getLanguage($lang);
+	if($lang!=""){
+		$langcondition = "AND language='$lang'";
+	}
 
-	$out .= '<div class="box"><div class="boxheader"><b>New Books</b></div>
+	//$out = "\n".'<div class="order" style="text-align:center">Protecting your <a href="http://www.ala.org/advocacy/intfreedom/statementspols/freedomreadstatement">Freedom to Read</a> since 2010</div>';
+	$out = "\n".'<div class="order" style="text-align:center">Check out the official Radical Militant Library at <a href="http://c3jemx2ube5v5zpg.onion">http://c3jemx2ube5v5zpg.onion</a></div>';
+	
+	//uncomment next line to show latest review/comment:
+	//$out .= RMLgetlatestcomment( false );
+
+	$out .= '<div class="box"><div class="boxheader"><b>Recently Added Books</b></div>
 <p class="boxtext" style="text-align:center">';
-	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 15");
+	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 $langcondition ORDER BY posted_on DESC LIMIT 10");
+	for($row=0;$row<pg_numrows($result);$row++) {
+		$thisrow = pg_Fetch_Object($result,$row);
+		$thisid = $thisrow->id;
+		$thistitle = $thisrow->title;
+		$out .= "\n<a href=\"?document=view&amp;id=$thisid\">
+<img class=\"FrontCover\" alt=\"$thistitle Cover\" src=\"./covers/cover$thisid\" /></a>";
+		if(($row == 4) || ($row == 9)) {
+			$out .= "\n<br/>";
+		}
+	}
+	$out .= "\n</p></div>";
+	
+		$out .= "\n".'<div class="box"><div class="boxheader"><b>Recently Downloaded Books</b></div>
+<p class="boxtext" style="text-align:center">';
+
+	$result = RMLfiresql("SELECT id,title FROM document WHERE status=3 AND id NOT IN (SELECT id FROM document WHERE status=3 ORDER BY posted_on DESC LIMIT 10) $langcondition ORDER BY last_downloaded DESC LIMIT 5");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;
@@ -750,7 +810,7 @@ function RMLdisplayfootnote( $docid, $noteid, $print_on = true )
 
 function RMLdisplayabout( $print_on = true )
 {
-	$text_size = sizeFormat( filesize( '/home/jotunbane/workspace/backup.sql' ) );
+	$text_size = sizeFormat( filesize( '/home/shadilay/inclib/backup.sql' ) );
 
 	$cover_size = getDirectorySize( './covers' );
 	$cover_size = sizeFormat( $cover_size['size'] );
@@ -769,21 +829,44 @@ function RMLdisplayabout( $print_on = true )
 	$thiscount = pg_Fetch_Object( $sql, 0 );
 	$readers = getNumberFormatted( $thiscount->usercount, 0 );
 
-	$out = "\n".'<div class="order" style="text-align:center"><small><b>'.$users.'</b> Radical Militant Librarians manage
+	$out = "\n".'<div class="order" style="text-align:center"><small><b>'.$users.'</b> Militant Librarians manage
 <b>'.$doccount.'</b> books from
 <b>'.$authorcount.'</b> authors.<br />Database :
 <b>'.$text_size.'</b> text,
 <b>'.$cover_size.'</b> covers,
 <b>'.$picture_size.'</b> pictures.<br />
-<b>'.$readers.'</b> Radical Militant Readers have borrowed
-<b>'.$total.'</b> Books.</small></div>
-<img src="./img/about.jpg" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
-	.RMLdisplay( "How are you gentlemen, All Your Books Are Belong to Us. You are on the way to destruction. You have no chance to survive, make your time. We are the Radical Militant Librarians, these are our books. We will accept no barriers between readers and our books. We will never register who borrows what and when. All books are welcome in our library (bring your own books, take off every DRM ... for great justice).", 8, false )
+<b>'.$readers.'</b> Militant Readers have borrowed
+<b>'.$total.'</b> Books.<br/></small><small style="font-size:12px">';
+
+	$result = RMLfiresql( "SELECT language, COUNT(id) AS count FROM document WHERE status=3 GROUP BY language ORDER BY count DESC");
+	for($row=0;$row<pg_numrows($result);$row++) {
+		if($row>0){
+			$out .= ', ';
+			if($row%5==0){
+				$out.= '<br />';
+			}
+		}
+		$thisrow = pg_Fetch_Object($result,$row);
+		$thislang = $thisrow->language;
+		$thiscount = getNumberFormatted( $thisrow->count, 0 );
+		
+		$out .= "$thislang : <b>$thiscount</b>";
+	}
+	
+	$out .= '<p style="font-size:10px">(Unknown means "<i>probably English</i>.")</p></small></div>';
+
+	$out .= '<img src="./img/about3.jpg" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
+		.RMLdisplay( "This Radical Militant Library, \"The Incorrect Library\" is hosted by Shadilay. The original Radical Militant Library, founded by Jotunbane in 2010 as \"Jotunbane's Reading Club For Men\", is at <a href=\"http://c3jemx2ube5v5zpg.onion\">c3jemx2ube5v5zpg.onion</a>.", 5, false )
+	.RMLdisplay( "I am dedicated to giving all books a platform, no matter their cover, their maker or their typeface (except for Comic Sans). Alas I am but a mortal man, and there are many books. There is not enough time for one librarian to publish them all. It will take an army. An army of Radical Militant Librarians!", 4, false )
 	.RMLdisplay( "We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can send a message to the librarian in charge of the book. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.", 5, false )
 	.RMLdisplay( "This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation. Readers can define a different layout for each book, author or subject. Or just make their own \"default\" and completely change the layout of all the books they borrow.", 4, false )
-	.RMLdisplay( "If you want to chat, we hang out in the #readingclub channel on <a href=\"http://www.oftc.net/\">OFTC</a>. Or you can try to reach jotunbane@<a href=\"http://cloak.dk\">cloak.dk</a> on jabber (OTR required), or at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:i4oltgzz53xy7aqm.", 4, false )
-	.RMLdisplay( "<a href=\"?function=login\">Sign up</a> and you too can become a Radical Militant Librarian, or you can start by becoming a Radical Militant Reader by telling us what books you liked (or hated).", 4, false )
-	.RMLdisplay( "The logo is released under a Creative Commons Attribution-ShareAlike license by <a href=\"http://readersbillofrights.info\">Readers Bill of Rights</a>. It is created by cartoonist and <a href=\"http://questioncopyright.org/\">QuestionCopyright.org</a> artist-in-residence <a href=\"http://blog.ninapaley.com/\">Nina Paley</a>. You can support Nina's work and view her amazing and Creative Commons licensed film, <a href=\"http://www.sitasingstheblues.com/\">Sita Sings the Blues</a>, over at her website.", 5, false )
+	.RMLdisplay( "If you want to get into contact with Shadilay, you can do so at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:hl3lumcjr5boasli.", 5, false )
+	.RMLdisplay( "Want to join?", 1, false )
+	.RMLdisplay( "<a href=\"?function=login\">Sign up</a> and you too can become a Radical Militant Librarian, or you can start by becoming a Radical Militant Reader by telling us what books you liked (or hated).", 8, false )
+	.RMLdisplay( "What are the rules?", 1, false )
+	.RMLdisplay( "Respect our servers, don't download everything in one go. Not so much a rule as a plea.", 25, false )
+	.RMLdisplay( "When uploading a new book, follow the guidelines.", 26, false )
+	.RMLdisplay( "Nothing is off-topic, as long as it is written (i.e. no comics).", 27, false )
 	;
 	return processOutput( $out, $print_on );
 }
@@ -803,7 +886,7 @@ function RMLdisplaymanual( $print_on = true )
 	
 	.RMLdisplay('Resources',1,false)
 	.RMLdisplay( 'You will need at the very least:',8,false)
-	.RMLdisplay('most important, the <a href="http://c3jemx2ube5v5zpg.onion/reading_club.odt">template for ODT</a>',25,false)
+	.RMLdisplay('most important, the <a href="http://inclibuql666c5c4.onion/reading_club.odt">template for ODT</a>',25,false)
 	.RMLdisplay('<a href="https://www.libreoffice.org/download/">Libre Office</a> for editing the ODT',27,false)
 	.RMLdisplay('More is described in the manual obove.', 5, false );
 	return processOutput( $out, $print_on );
@@ -879,7 +962,7 @@ function RMLdisplaylibrarians( $print_on = true )
  * */
 function getRMLURL()
 {
-	return 'http://c3jemx2ube5v5zpg.onion/';
+	return 'http://inclibuql666c5c4.onion/';
 }
 
 /* ewa: single place to influence how a number looks like,

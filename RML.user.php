@@ -117,7 +117,8 @@ function RMLdisplaysignup( $print_on = true ) {
 <div class="boxtext"><strong>Take care, where you login!</strong>'
 
 /* at least visual hint at login */
-.'<div style="margin-top: 1ex;"><img src="./img/proxypic.png" alt="do not use fake onions: c3jembnkdnbcdniu !" ></div>'
+.'<div style="margin-top: 1ex; margin-bottom: 1ex;">make sure the url is http://inclibuql666c5c4.onion</div>'
+.'<strong>Do not use the same password as on the official Radical Militant Library!</strong>'
 
 .'<table><form method="post" action="?function=login"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
 <tr><td>Handle </td><td>: <input type="text" size="40" name="username" /></td></tr>
@@ -573,7 +574,7 @@ function RMLreplymessage( $id, $print_on = true ) {
 
 				if( $thisname == $thissender ) {
 					$options .= "\n<option value=\"$thisname\" selected=\"yes\">$thisname</option>";
-				} else if( in_array( $thisname, array( 'admin', 'SYSTEM'/** /, 'Anonymous'/**/ ) ) ) {
+				} else if( in_array( $thisname, array( 'admin', 'SYSTEM', 'Shadilay'/** /, 'Anonymous'/**/ ) ) ) {
 					$options .= "\n<option value=\"$thisname\">$thisname</option>";
 				}
 			}
@@ -648,7 +649,7 @@ function hasRights( $action = '', $arr = array() )
 	if ( ! in_array( 'noadm', $arr ) ) {
 		$admaccs = array( 'admin', 'SYSTEM' );
 		if ( ! in_array( 'nomod', $arr ) ) {
-			$modaccs = array( 'Jotunbane', 'kittyhawk', 'ewa4boeker', 'Shadilay' );
+			$modaccs = array( 'Shadilay' );
 		}
 	}
 	switch ( $action ) {

@@ -19,7 +19,7 @@ function RMLgetpagetitle()
 	global $function, $subject, $static, $message, $document, $author,
 		$id, $section, $sequence, $news, $footnote, $note, $style;
 
-	$title = "Radical Militant Library";
+	$title = "The Incorrect Library";
 
 	switch( $author ) {
 	case 'view':
@@ -50,10 +50,10 @@ function RMLgetpagetitle()
 		$title = "Edit Element";
 	break;
 	case 'readers':
-		$title = "Radical Militant Readers";
+		$title = "Militant Readers";
 	break;
 	case 'librarians':
-		$title = "Radical Militant Librarians";
+		$title = "Militant Librarians";
 	break;
 	}
 
@@ -66,13 +66,13 @@ function RMLgetpagetitle()
 
 	switch( $news ) {
 	case 'view':
-		$title = "Radical Militant News";
+		$title = "Incorrect News";
 	break;
 	case 'add':
-		$title = "Add Radical Militant news";
+		$title = "Add Incorrect news";
 	break;
 	case 'edit':
-		$title = "Edit Radical Militant news";
+		$title = "Edit Incorrect news";
 	break;
 	}
 
@@ -113,7 +113,7 @@ function RMLgetsubjecttitle( $id )
 			return $thissubject;
 		}
 	} else {
-		return 'Radical Militant Subjects';
+		return 'Our Subjects';
 	}
 }
 
@@ -122,7 +122,7 @@ function RMLgetsubjecttitle( $id )
 function RMLgetauthorname( $id )
 {
 	if( $id == 0 ) {
-		return "Radical Militant Authors";
+		return "Our Authors";
 	}
 	if ( $result = RMLfireSQL( "SELECT name FROM author WHERE id=$id" ) ) {
 		$thisrow = pg_Fetch_Object( $result, 0 );
@@ -220,19 +220,65 @@ function RMLcreateauthor( $author )
 }
 
 // ============================================================================
-
+/*
+\e deprecated in PHP7
 function RMLpreparestring( $string )
 {
 	$search = array ( "/'/", '@&#(\d+);@e' );
 	$replace = array ( "''", 'chr(\1)' );
 
 	$result = preg_replace( $search, $replace, $string );
-	// replace without regex
-	//$result = str_replace(array('$','"','{','}'),'',$result);
-	//$result = str_replace(array('/','%'),'-',$result);
-
 	$result = strip_tags( $result, "<b><i><emph><a><br><img><sup><sub><ol><ul><li>" );
 	return $result;
+}
+*/
+function RMLpreparestring( $string )
+{
+	$result = preg_replace( "/'/", "''", $string );
+	$result = preg_replace_callback( '@&#(\d+);@',
+		function($matches){
+			return chr($matches[1]);
+		}, $result );
+	$result = strip_tags( $result, "<b><i><emph><a><br><img><sup><sub><ol><ul><li>" );
+	return $result;
+}
+
+// ============================================================================
+
+function getLanguage($lang) {
+		if($lang=="English" || $lang=="en"){
+			return "English";
+		}
+		else if($lang=="French" || $lang=="fr"){
+			return "French";
+		}
+		else if($lang=="German" || $lang=="de"){
+			return "German";
+		}
+		else if($lang=="Dutch" || $lang=="nl"){
+			return "Dutch";
+		}
+		else if($lang=="Swedish" || $lang=="sv"){
+			return "Swedish";
+		}
+		else if($lang=="Norwegian" || $lang=="no"){
+			return "Norwegian";
+		}
+		else if($lang=="Polish" || $lang=="pl"){
+			return "Polish";
+		}
+		else if($lang=="Italian" || $lang=="it"){
+			return "Italian";
+		}
+		else if($lang=="Danish" || $lang=="da"){
+			return "Danish";
+		}
+		else if($lang=="Unknown"){
+			return "Unknown";
+		}
+		else{
+			return "";
+		}
 }
 
 // ============================================================================
@@ -266,13 +312,14 @@ function RMLpreparexml( $string )
 {
 	global $id;
 
-	$search = array ('@<text:span text:style-name=".*?">@',
+	$search = array ('@<text:span text:style-name="Strong.*?Emphasis">(.*?(<.*?>.*?</.*?>)*.*?)</text:span>@',
+					 '@<text:span text:style-name=".*?">@',
 					 '@</text:span>@',
 					 "@\\n@",
 					 "@--@",
 					 '@<text:bookmark.*?>@',
 					 "@<text:line-break/>@",
-					 '@<text:a xlink:type="simple" xlink:href="(.*?)">@',
+					 '@<text:a xlink:type="simple" xlink:href="(.*?)".*?>@',
 					 "@</text:a>@",
 					 '@<text:p.*?>@',
 					 '@</text:p>@',
@@ -285,7 +332,8 @@ function RMLpreparexml( $string )
 					 "@</draw:frame>@",
 					 "@<draw:image xlink:href=\"(.*?)\".*?>@");
 
-	$replace = array('<i>',
+	$replace = array('<b>\\1</b>',
+					 '<i>',
 					 '</i>',
 					 '',
 					 '&ndash;',
@@ -841,7 +889,7 @@ function RMLexporttxt( $id, $print_on = true )
 		$now = time();
 		$now = strftime('%d %b %Y %H:%M',$now);
 
-		$style = "\n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version (https://c3jemx2ube5v5zpg.onion/)\n\n\n";
+		$style = "\n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version (http://inclibuql666c5c4.onion/)\n\n\n";
 		$style = $style . "\n\n\n==========================================================\n" . $copyright . "\n==========================================================\n\n\n";
 
 		gzwrite($file,"$style");
@@ -898,11 +946,12 @@ function RMLexporthtml( $id )
 	global $SQLsize, $Version, $Version;
 
 	$tablename = RMLgetactivetable($id);
-	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright FROM document WHERE id=$id");
+	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright,flair FROM document WHERE id=$id");
 	$thistmp = pg_Fetch_Object($result,0);
 	$title = $thistmp->title;
 	$subtitle = $thistmp->subtitle;
 	$year = $thistmp->year;
+	$flair = $thistmp->flair;
 	$authorid = $thistmp->author_id;
 	$copyright = $thistmp->copyright;
 	$author = RMLgetauthorname($authorid);
@@ -918,7 +967,7 @@ function RMLexporthtml( $id )
 	$now = time();
 	$now = strftime('%d %b %Y %H:%M',$now);
 
-	$style = "\n\n<!-- \n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version (https://c3jemx2ube5v5zpg.onion/)\n\n-->\n";
+	$style = "\n\n<!-- \n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version (http://inclibuql666c5c4.onion/)\n\n-->\n";
 	$style = $style . "\n\n<!--\n" . $copyright . "\n-->\n";
 	$style = $style . "\n<meta name=\"author\" content=\"$author\" />";
 	$style = $style . "\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
@@ -961,7 +1010,7 @@ function RMLexporthtml( $id )
 	$copyright = nl2br($copyright);
 	$copyright = RMLpreparehtml($copyright);
 
-	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version<br/>http://c3jemx2ube5v5zpg.onion/</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
+	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version<br/>http://inclibuql666c5c4.onion/</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
 
 	gzwrite($file,"\n$InfoCOM");
 
@@ -1032,11 +1081,12 @@ function RMLexportmd( $id )
 	global $SQLsize, $Version, $Version;
 
 	$tablename = RMLgetactivetable($id);
-	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright FROM document WHERE id=$id");
+	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright,flair FROM document WHERE id=$id");
 	$thistmp = pg_Fetch_Object($result,0);
 	$title = $thistmp->title;
 	$subtitle = $thistmp->subtitle;
 	$year = $thistmp->year;
+	$flair = $thistmp->flair;
 	$authorid = $thistmp->author_id;
 	$copyright = $thistmp->copyright;
 	$author = RMLgetauthorname( $authorid );
@@ -1051,7 +1101,7 @@ function RMLexportmd( $id )
 	$text
 		="\n"
 		."\n* Generated : $now CET"
-		."\n* Version   : $Version (https://c3jemx2ube5v5zpg.onion/)"
+		."\n* Version   : $Version (https://inclibuql666c5c4.onion/)"
 		."\n* Title     : $title" .( ( $subtitle != '' ) ? ' – ' .$subtitle : '' )
 		."\n* Author    : $author"
 		."\n\n## Colophon"
@@ -1065,7 +1115,7 @@ function RMLexportmd( $id )
 // ewa: continue ...
 	$copyright = RMLpreparemd( $copyright );
 
-	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version<br/>http://c3jemx2ube5v5zpg.onion/</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
+	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version<br/>http://inclibuql666c5c4.onion/</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
 
 	gzwrite($file,"\n$InfoCOM");
 
@@ -1138,12 +1188,13 @@ function RMLexportepub( $id ) {
 	$pagestart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml; charset=utf-8\"/>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\"/>\n<title></title>\n</head>\n<body>";
 	$pageend = "\n</body>\n</html>";
 
-	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright,teaser,subject_id,status FROM document WHERE id=$id");
+	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright,teaser,subject_id,status,flair FROM document WHERE id=$id");
 	$thistmp = pg_Fetch_Object($result,0);
 	$title = $thistmp->title;
 
 	$subtitle = $thistmp->subtitle;
 	$year = $thistmp->year;
+	$flair = $thistmp->flair;
 	$authorid = $thistmp->author_id;
 	$copyright = nl2br($thistmp->copyright);
 	$copyright = preg_replace( "@ & @", " &amp; ", $copyright );
@@ -1166,6 +1217,8 @@ function RMLexportepub( $id ) {
 		$tmptitle = $title;
 	}
 
+	// todo: improve
+	// also: http://stackoverflow.com/questions/19245205/replace-deprecated-preg-replace-e-with-preg-replace-callback 
 	$thistitle = preg_replace("@ @","_",$tmptitle);
 	$thistitle = preg_replace("@&@","",$thistitle);
 	$thistitle = preg_replace("@&nbsp;@","_",$thistitle);
@@ -1174,13 +1227,21 @@ function RMLexportepub( $id ) {
 	$thistitle = preg_replace("@—@","-",$thistitle); // ndash
 	$thistitle = preg_replace("@–@","-",$thistitle); // mdash
 	$thistitle = preg_replace("@\?@","",$thistitle);
+	// replace without regex
 	$thistitle = str_replace(array('$','"','{','}'),'',$thistitle);
 	$thistitle = str_replace(array('/','%'),'-',$thistitle);
 
 	$filename = "./output/$thistitle.epub";
 
-	copy('./template.epub', $filename);
+	// the source need to be write protected
+	// todo: check if it was write-proteted still, halt if not
+	//print_r( substr(sprintf('%o', fileperms($filename)), -4) );
 	
+	if (!copy('./template.epub', $filename)) {  // MIMETYPE HACK: solves problem of uncompressed mime file first
+		echo( 'Error cannot copy epubtemplate to ' .$filename .'!' );
+	}
+	// todo: write mime file first (after create new zip) in a way it is not compressed without the need of a template
+
 	$epub = new ZipArchive();
 	if( $epub->open( $filename ) !== true ) {
 		exit("FATAL : cannot open <$filename>\n");
@@ -1206,10 +1267,10 @@ function RMLexportepub( $id ) {
 \t<dc:creator opf:role=\"aut\" opf:file-as=\"$fileas\">$author</dc:creator>
 \t<dc:language xsi:type=\"dcterms:RFC3066\">en</dc:language>
 \t<dc:identifier id=\"uid\" opf:scheme=\"URI\">
-\t\thttps://c3jemx2ube5v5zpg.onion/?function=download&amp;id=$id
+\t\thttp://inclibuql666c5c4.onion/?function=download&amp;id=$id
 \t</dc:identifier>
 \t<dc:subject>$subject</dc:subject>
-\t<dc:publisher>https://c3jemx2ube5v5zpg.onion</dc:publisher>
+\t<dc:publisher>http://inclibuql666c5c4.onion</dc:publisher>
 \t<dc:date>$year</dc:date>
 </metadata>";
 
@@ -1218,7 +1279,6 @@ function RMLexportepub( $id ) {
 \t<item id=\"stylesheet\" href=\"stylesheet.css\" media-type=\"text/css\" />
 \t<item id=\"coverimage\" href=\"cover.jpg\" media-type=\"image/jpeg\" />
 \t<item id=\"logo\" href=\"logo.png\" media-type=\"image/png\" />
-\t<item id=\"qrcode\" href=\"qrcode.png\" media-type=\"image/png\" />
 \t<item id=\"vignet\" href=\"vignet.jpg\" media-type=\"image/jpeg\" />
 \t<item id=\"cover\" href=\"cover.html\" media-type=\"application/xhtml+xml\" />
 \t<item id=\"titlepage\" href=\"title.html\" media-type=\"application/xhtml+xml\" />
@@ -1302,8 +1362,12 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 	// ************************************** COVERPAGE
 	$epub->addFile("./covers/cover$id.jpg", "cover.jpg");
-	$epub->addFile("./img/logo.png", "logo.png");
-	$epub->addFile("./img/qrcode.png", "qrcode.png");
+	if($flair == 1){
+		$epub->addFile("./img/logo2.png", "logo.png");
+	}
+	else {
+		$epub->addFile("./img/logo.png", "logo.png");
+	}
 	$epub->addFile("./img/vignet.jpg","vignet.jpg");
 
 	$cover = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n<title>Cover</title>\n<style type=\"text/css\">\n@page { margin: 0pt; padding :0pt } body {margin : 0pt; padding : 0pt}\n</style>\n</head>\n<body>\n<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"100%\" height=\"100%\" viewBox=\"0 0 600 800\" preserveAspectRatio=\"xMidYMid meet\">\n<image width=\"600\" height=\"800\" xlink:href=\"cover.jpg\" />\n</svg>" . $pageend;
@@ -1312,14 +1376,24 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 	$title = preg_replace("@&@","&amp;",$title);
 	$subtitle = preg_replace("@&@","&amp;",$subtitle);
+	
+	$thismotto = "";
+	if($flair == 1){
+		$thismotto = "<b>• SATIS MENTIBUS OBVIA •</b>" . $pageend;
+	}
+	else {
+		$thismotto = "<b>~ All Your Books Are Belong to Us !!! ~</b>";
+	
+	}
 
-	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
+	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><div style='padding-top:20px'>".$thismotto."<br/>http://inclibuql666c5c4.onion</div></div>".$pageend;
+	
 
 	$epub->addFromString('title.html', $thistitle);
 	// ************************************** COPYRIGHT
 	if($subtitle <> "") { $subtitle = "<br/>" . $subtitle;}
 
-	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle</div>\n<div class=\"copyright\">Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div><div class=\"copyright\">Borrowed from<br/><b>~ <a href=\"http://c3jemx2ube5v5zpg.onion\">Radical Militant Library</a> ~</b><br/>Support Your Librarian.<br/><a href=\"bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC\"><img alt=\"qrcode\" src=\"qrcode.png\"/></a></div>";
+	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle <br/><br/>Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div>";
 
 	$copy = $copy . "\n<div class=\"teaser\">&nbsp;<br/>$teaser</div>" . $pageend;
 	$epub->addFromString('copyright.html', $copy);
@@ -1358,7 +1432,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 <ncx xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" version=\"2005-1\">
 <head>
 \t<meta name=\"dtb:depth\" content=\"2\"/>
-\t<meta name=\"dtb:uid\" content=\"https://c3jemx2ube5v5zpg.onion/?function=download&amp;id=$id\"/>
+\t<meta name=\"dtb:uid\" content=\"http://inclibuql666c5c4.onion/?function=download&amp;id=$id\"/>
 \t<meta name=\"dtb:totalPageCount\" content=\"0\"/>
 \t<meta name=\"dtb:maxPageNumber\" content=\"0\"/>
 </head>
@@ -1504,7 +1578,7 @@ function RMLcountdownload()
 {
 	global $id;
 
-	RMLfiresql( "UPDATE document SET downloads = downloads + 1 WHERE id=$id" );
+	RMLfiresql( "UPDATE document SET downloads = downloads + 1, last_downloaded = now() WHERE id=$id" );
 }
 
 // ============================================================================
@@ -1966,7 +2040,7 @@ FROM document WHERE id=" .$docID
 .( !isset( $book->edition ) )?'':'	edition =   {' .$book->edition .'},'
 .( !isset( $book->keywords ) )?'':'	keywords = {' .$book->keywords .'},'
 .( !isset( $book->volume ) )?'':'	volume =    {' .$book->volume .'},'
-.'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$docID .'},'
+.'	url =       {http://inclibuql666c5c4.onion/?document=view&id='.$docID .'},'
 //.'	note = {' $book->colophon .'}'//for now just colophon
 .'}';
 }
