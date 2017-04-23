@@ -20,8 +20,9 @@ ini_set('display_errors', '1');
 $starttime = microtime();
 $Version = "0.5.5";
 $itemprpage = 25;
+$settingsFilename = './settings.php';
 
-require 'settings.php';// todo: check file_exists('./settings.php') and stop with die('configuration in settings.php missing')
+require $settingsFilename;// todo: check file_exists('./settings.php') and stop with die('configuration in settings.php missing')
 // check on salt etc. set properly, if not die('setting: need salt to be set properly')
 require 'RML.common.php';
 require 'RML.helper.php';
@@ -33,6 +34,8 @@ require 'RML.author.php';
 require 'RML.image.php';
 require 'RML.lists.php';
 require 'RML.subject.php';
+
+checkSettings($settingsFilename);
 
 $id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
 if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }

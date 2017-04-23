@@ -905,3 +905,9 @@ function getMaxReviewDays()
 {
 	return 14;
 }
+
+function checkSettings($settingsFilename)
+{
+    if (! is_readable($settingsFilename)) { die('ERROR: Configuration in settings.php not readable or missing!'); } // done: check file_exists('./settings.php') and stop with die('configuration in settings.php missing')
+//    if (empty($secret_salt)) { die('ERROR: Setting: need salt to be set properly. Current value:'.$secret_salt); } // todo: check on salt etc. set properly, if not die('setting: need salt to be set properly')
+}
