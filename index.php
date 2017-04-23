@@ -1,5 +1,10 @@
 <?php
-define("CONSTANT", "Hello world."); x
+//mybe better for debugging only
+//error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
+//ini_set('display_errors', '1');
+// ============================================================================
+//  "Frontpage" for Radical Militant Library
+//  Copyright (C) 2009-2016 Jotunbane
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
