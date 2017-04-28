@@ -1,7 +1,7 @@
 <?php
-
-error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
-ini_set('display_errors', '1');
+//mybe better for debugging only
+//error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
+//ini_set('display_errors', '1');
 // ============================================================================
 //  "Frontpage" for Radical Militant Library
 //  Copyright (C) 2009-2016 Jotunbane
@@ -20,9 +20,11 @@ ini_set('display_errors', '1');
 $starttime = microtime();
 $Version = "0.5.5";
 $itemprpage = 25;
+define('SETTINGS_FILENAME', './settings.php');
 
-require 'settings.php';// todo: check file_exists('./settings.php') and stop with die('configuration in settings.php missing')
-// check on salt etc. set properly, if not die('setting: need salt to be set properly')
+require SETTINGS_FILENAME;
+checkSettings( SETTINGS_FILENAME );
+
 require 'RML.common.php';
 require 'RML.helper.php';
 require 'RML.database.php';

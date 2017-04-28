@@ -887,8 +887,7 @@ function getRMLURL()
  *   for the time when we have multilanguage RML, here we can take care of it
  *   negative $decplaces is for vanishing zeroes at the end as positive sets zeroes
  * */
-function getNumberFormatted( $n, $decplaces = 2, $decsep = '.', $tsdsep = ',' )
-{
+function getNumberFormatted( $n, $decplaces = 2, $decsep = '.', $tsdsep = ',' ) {
 	if( $decplaces < 0 ) {
 		$decplaces = abs( $decplaces );
 		$n = ''.round( $n , $decplaces );
@@ -901,7 +900,16 @@ function getNumberFormatted( $n, $decplaces = 2, $decsep = '.', $tsdsep = ',' )
 }
 
 /* ewa: max days for reviewer (subject owners) to review, otherwise submitter of a book can just go on publishing herself */
-function getMaxReviewDays()
-{
+// should maybe move to settings
+function getMaxReviewDays() {
 	return 14;
+}
+
+function checkSettings( $settingsFilename ) {
+  if (! is_readable( $settingsFilename ) ) {
+      die('ERROR: Configuration in settings.php not readable or missing!');
+  }
+// todo: more tests on settings
+// e.g. check if salt is set properly, if not die('settings: need the salt to be set properly')
+// if (empty($secret_salt)) { die('ERROR: Setting: need salt to be set properly. Current value:'.$secret_salt); }
 }
