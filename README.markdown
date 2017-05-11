@@ -29,6 +29,9 @@ The service is running as one of the oldest publicly known onion (back then call
 It is maintained and mainly funded by Jotunbane, so if you are willing to help, send your bits:
 
 via Bitcoin [1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC](bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC)
+Dogecoin [DKx95Z3oTvLafxestbRpBuztGrcXuwXDkS](dogecoin:DKx95Z3oTvLafxestbRpBuztGrcXuwXDkS)
+or Sibcoin [SSSbHLU9SHaxhm95fN1VqMw5uj2oEvMxrZ](sibcoin:SSSbHLU9SHaxhm95fN1VqMw5uj2oEvMxrZ)
+
 
 ## License Terms
 
