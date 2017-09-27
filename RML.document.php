@@ -269,7 +269,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 
 		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
 
-		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT AVG(level) FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
+		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$thisid = $thisrow->id;
@@ -279,7 +279,6 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			$thissubjectid = $thisrow->subject_id;
 			$thissubject = $thisrow->subjecttitle;
 			$thisteaser = $thisrow->teaser;
-			$avgscore = $thisrow->score;
 
 			if( strlen( $thisteaser ) > 400 ) {
 				$thisteaser = substr( $thisteaser, 0, 400 ) .' ...';
@@ -290,8 +289,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></a></p>
 	<p class="boxtext">
 	<small><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a>,
-	<b>' .$thisyear .'</b></small>'
-				. '<span class="right-float">' .getRatingDisplay( $avgscore ) .'</span>' 
+	<b>' .$thisyear .'</b></small>' 
 				.'</p><p class="boxtext">'.$thisteaser.'</p>
 	<div class="inlineclear"></div></div>';
 		}
@@ -444,9 +442,9 @@ function RMLviewdocument( $id, $print_on = true )
 .( ( $mail != '' ) ? '<a href="mailto:'.$mail.'">'.$thishandle.'</a>' : $thishandle )
 .'</b> (<i>'.$posted.'</i>)</td></tr>';
 
-$out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :</td><td style="padding-left:10px">
+/*$out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :</td><td style="padding-left:10px">
 <span class="left-float">' .getRatingDisplay( $avgscore ) .'</span> &nbsp; <b><big>'.$avgscore.'</big></b>
-</td></tr>';
+</td></tr>'; */
 
 	$out .= "\n<tr><td>&nbsp;</td></tr></table>";
 	$user = RMLgetcurrentuser();
@@ -496,7 +494,7 @@ $out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :<
 
 	$out .= "\n".'<div class="inlineclear">&nbsp;</div>
 <p class="ParaNoIndent">'.$thisteaser.'</p>
-<div class="inlineclear">&nbsp;</div>' . RMLdisplaycomments($id, false) . '<div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
+<div class="inlineclear">&nbsp;</div>' . /*RMLdisplaycomments($id, false) .*/ '<div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
 		.RMLdisplaytoc( $id, false );
 	return processOutput( $out, $print_on );
 }

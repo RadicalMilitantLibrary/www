@@ -1,5 +1,4 @@
 <?php
-//mybe better for debugging only
 //error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
 //ini_set('display_errors', '1');
 // ============================================================================
@@ -18,13 +17,13 @@
 // ============================================================================
 
 $starttime = microtime();
-$Version = "0.5.5";
+$Version = "0.5.6";
 $itemprpage = 25;
-define('SETTINGS_FILENAME', './settings.php');
+//define('SETTINGS_FILENAME', './settings.php');
 
-require SETTINGS_FILENAME;
-checkSettings( SETTINGS_FILENAME );
-
+//require SETTINGS_FILENAME;
+//checkSettings( SETTINGS_FILENAME );
+require 'settings.php';
 require 'RML.common.php';
 require 'RML.helper.php';
 require 'RML.database.php';
@@ -160,10 +159,6 @@ switch( $function ) {
 		if ( !in_array( $format, array( 'epub','html','markdown','text' ) ) ) {
 			$format = 'epub';
 		}
-//		if(!RMLgetcurrentuser()) {
-//			header( 'Location: ?function=login' );
-//			break;
-//		}
 		RMLdownloaddocument( $id, $format );
 		header( 'Location: ?document=view&id='.$id );
 	break;

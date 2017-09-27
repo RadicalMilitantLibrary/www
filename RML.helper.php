@@ -19,7 +19,7 @@ function RMLgetpagetitle()
 	global $function, $subject, $static, $message, $document, $author,
 		$id, $section, $sequence, $news, $footnote, $note, $style;
 
-	$title = "Radical Militant Library";
+	$title = "Jotunbane &amp; Friends";
 
 	switch( $author ) {
 	case 'view':
@@ -66,7 +66,7 @@ function RMLgetpagetitle()
 
 	switch( $news ) {
 	case 'view':
-		$title = "Radical Militant News";
+		$title = "Latest News";
 	break;
 	case 'add':
 		$title = "Add Radical Militant news";
@@ -122,7 +122,7 @@ function RMLgetsubjecttitle( $id )
 function RMLgetauthorname( $id )
 {
 	if( $id == 0 ) {
-		return "Radical Militant Authors";
+		return "Authors";
 	}
 	if ( $result = RMLfireSQL( "SELECT name FROM author WHERE id=$id" ) ) {
 		$thisrow = pg_Fetch_Object( $result, 0 );
@@ -1218,7 +1218,6 @@ function RMLexportepub( $id ) {
 \t<item id=\"stylesheet\" href=\"stylesheet.css\" media-type=\"text/css\" />
 \t<item id=\"coverimage\" href=\"cover.jpg\" media-type=\"image/jpeg\" />
 \t<item id=\"logo\" href=\"logo.png\" media-type=\"image/png\" />
-\t<item id=\"qrcode\" href=\"qrcode.png\" media-type=\"image/png\" />
 \t<item id=\"vignet\" href=\"vignet.jpg\" media-type=\"image/jpeg\" />
 \t<item id=\"cover\" href=\"cover.html\" media-type=\"application/xhtml+xml\" />
 \t<item id=\"titlepage\" href=\"title.html\" media-type=\"application/xhtml+xml\" />
@@ -1303,7 +1302,6 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	// ************************************** COVERPAGE
 	$epub->addFile("./covers/cover$id.jpg", "cover.jpg");
 	$epub->addFile("./img/logo.png", "logo.png");
-	$epub->addFile("./img/qrcode.png", "qrcode.png");
 	$epub->addFile("./img/vignet.jpg","vignet.jpg");
 
 	$cover = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n<title>Cover</title>\n<style type=\"text/css\">\n@page { margin: 0pt; padding :0pt } body {margin : 0pt; padding : 0pt}\n</style>\n</head>\n<body>\n<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"100%\" height=\"100%\" viewBox=\"0 0 600 800\" preserveAspectRatio=\"xMidYMid meet\">\n<image width=\"600\" height=\"800\" xlink:href=\"cover.jpg\" />\n</svg>" . $pageend;
@@ -1319,7 +1317,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	// ************************************** COPYRIGHT
 	if($subtitle <> "") { $subtitle = "<br/>" . $subtitle;}
 
-	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle</div>\n<div class=\"copyright\">Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div><div class=\"copyright\">Borrowed from<br/><b>~ <a href=\"http://c3jemx2ube5v5zpg.onion\">Radical Militant Library</a> ~</b><br/>Support Your Librarian.<br/><a href=\"bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC\"><img alt=\"qrcode\" src=\"qrcode.png\"/></a></div>";
+	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle</div>\n<div class=\"copyright\">Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div></div>";
 
 	$copy = $copy . "\n<div class=\"teaser\">&nbsp;<br/>$teaser</div>" . $pageend;
 	$epub->addFromString('copyright.html', $copy);
