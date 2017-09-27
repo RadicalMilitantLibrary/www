@@ -30,10 +30,7 @@ It is maintained and mainly funded by Jotunbane, so if you are willing to help, 
 
 via Bitcoin [1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC](bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC)
 
-Dogecoin [DKx95Z3oTvLafxestbRpBuztGrcXuwXDkS](dogecoin:DKx95Z3oTvLafxestbRpBuztGrcXuwXDkS)
-
-or Sibcoin [SSSbHLU9SHaxhm95fN1VqMw5uj2oEvMxrZ](sibcoin:SSSbHLU9SHaxhm95fN1VqMw5uj2oEvMxrZ)
-
+or Monero [45m2Sb7DcTp3joGFxsHjwEJQmVpp5uGzWHxY73Nu1TjS7iEnPxm6oejXjXYnnZcnz7fuwVxid7nVR7k7Ku8dBANXFwu7AUW](monero:45m2Sb7DcTp3joGFxsHjwEJQmVpp5uGzWHxY73Nu1TjS7iEnPxm6oejXjXYnnZcnz7fuwVxid7nVR7k7Ku8dBANXFwu7AUW)
 
 ## License Terms
 
