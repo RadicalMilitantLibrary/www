@@ -54,18 +54,7 @@ function RMLdisplayauthor( $id, $print_on = true )
 
 					$out .= "\n".'<div class="box"><div class="inlineclear">
 <a href="?author=view&amp;id='.$thisid.'&amp;letter='.$letter.'"><img alt="Author #'.$thisid.'" class="Author" src="./authors/author'.$thisid.'"/></a>
-<div class="boxheader"><a href="?author=view&amp;id='.$thisid.'&amp;letter='.$letter.'"><b>'.$thisname.'</b></a></div>
-<div style="margin:0;margin-top:5px">Born <b>' .$born . '</b>';
-
-					if( is_numeric( $dead ) && $dead != 0 ) {
-						$out .= ', Died <b>'.substr( $dead, 0, 4 ).'</b>';
-					}
-					if( $age != '' ) {
-						$out .= ' (age <b>'.$age.'</b>)';
-					}
-
-					$out .= '<br/>Books online <b>' . getNumberFormatted( $counter, 0 ) .'</b></div>';
-
+<div class="boxheader"><a href="?author=view&amp;id='.$thisid.'&amp;letter='.$letter.'"><b>'.$thisname.'</b></a></div>';
 					$out .= "\n".'<div class="boxtext">'.$bio.'</div></div></div>';
 				}
 			} else {	// ewa: was defunct?! (by if obove)

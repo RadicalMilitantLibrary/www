@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
-//ini_set('display_errors', '1');
+error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
+ini_set('display_errors', '1');
 // ============================================================================
 //  "Frontpage" for Radical Militant Library
 //  Copyright (C) 2009-2016 Jotunbane
@@ -17,8 +17,8 @@
 // ============================================================================
 
 $starttime = microtime();
-$Version = "0.5.6";
-$itemprpage = 25;
+$Version = "0.5.7";
+$itemprpage = 20;
 //define('SETTINGS_FILENAME', './settings.php');
 
 //require SETTINGS_FILENAME;
@@ -74,7 +74,6 @@ $format = RMLpreparestring($_REQUEST['format']);
 $page = RMLpreparestring($_REQUEST['page']);
 $comment = RMLpreparestring($_REQUEST['comment']);
 $score = RMLpreparestring($_REQUEST['score']);
-$comment = RMLpreparestring($_REQUEST['comment']);
 $news = RMLpreparestring($_REQUEST['news']);
 $footnote = RMLpreparestring($_REQUEST['footnote']);
 $note = RMLpreparestring($_REQUEST['note']);
@@ -236,7 +235,7 @@ switch ( $style ) {
 
 $out .= RMLdisplayhead( false )
 	.RMLdisplaytop( false )
-	.RMLdisplayleft( false )
+/*	.RMLdisplayleft( false ) */
 	.RMLdisplaymain( $id, false )
 	.RMLdisplaybottom( false )
 	.RMLdisplayend( false );

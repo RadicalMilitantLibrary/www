@@ -19,7 +19,7 @@ function RMLgetpagetitle()
 	global $function, $subject, $static, $message, $document, $author,
 		$id, $section, $sequence, $news, $footnote, $note, $style;
 
-	$title = "Jotunbane &amp; Friends";
+	$title = "The Library";
 
 	switch( $author ) {
 	case 'view':
@@ -69,10 +69,10 @@ function RMLgetpagetitle()
 		$title = "Latest News";
 	break;
 	case 'add':
-		$title = "Add Radical Militant news";
+		$title = "Add news";
 	break;
 	case 'edit':
-		$title = "Edit Radical Militant news";
+		$title = "Edit news";
 	break;
 	}
 
@@ -1131,6 +1131,9 @@ function RMLexportmd( $id )
 // ============================================================================
 
 function RMLexportepub( $id ) {
+// Jotunbane : Ok, fair enough.... This gets a little convoluted and will probably not make
+// any sense unless you have an intimate knowledge of ePub.
+// Hang in there, it works (and I know why).
 	global $Version, $styleid;
 
 	$tablename = RMLgetactivetable( $id );
@@ -1180,6 +1183,10 @@ function RMLexportepub( $id ) {
 	$filename = "./output/$thistitle.epub";
 
 	copy('./template.epub', $filename);
+	// MimeType Hack(TM)
+	// PHP will not allow you to switch compression level mid stream.
+	// and since the first file NEEDS to be uncompressed we had a problem.
+	// 'template.epub' contains just that first file, uncompressed.
 	
 	$epub = new ZipArchive();
 	if( $epub->open( $filename ) !== true ) {
@@ -1243,7 +1250,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 		$thisid = $thisrow->id;
 		$thissection = $thisrow->section;
 
-		$footnote = "\n<div class=\"footnote\" id=\"note$thisid\">[<a href=\"section$thissection.html#note$thisid\"><b>$thisid</b></a>]<br/>" . $thisbody . "</div>";
+		$footnote = "\n<div class=\"footnote\" id=\"note$thisid\">[<a href=\"section$thissection.html#note$thisid\"><b>BACK</b></a>]<br/>" . $thisbody . "</div>";
 
 		$manifest = $manifest . "\n\t<item id=\"footnote$thisid\" href=\"note$thisid.html\" media-type=\"application/xhtml+xml\" />";
 		$epub->addFromString("note$thisid.html", $pagestart . $footnote . $pageend);
@@ -1301,6 +1308,10 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 	// ************************************** COVERPAGE
 	$epub->addFile("./covers/cover$id.jpg", "cover.jpg");
+	// BUG : Coverimage is hardcoded as jpg???
+	// I just found the reason for those pesky 'image too large' errors
+	// if you add a PNG file to a JPG container the image is indeed 'too large'
+	
 	$epub->addFile("./img/logo.png", "logo.png");
 	$epub->addFile("./img/vignet.jpg","vignet.jpg");
 
@@ -1311,13 +1322,13 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	$title = preg_replace("@&@","&amp;",$title);
 	$subtitle = preg_replace("@&@","&amp;",$subtitle);
 
-	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><small>by</small><br /><br /><b>$author</b></div><div class=\"author\"><small>$year</small></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
+	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><b>$author</b></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
 
 	$epub->addFromString('title.html', $thistitle);
 	// ************************************** COPYRIGHT
 	if($subtitle <> "") { $subtitle = "<br/>" . $subtitle;}
 
-	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle</div>\n<div class=\"copyright\">Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div></div>";
+	$copy = $pagestart . "\n<div class=\"copyright\"><big><b>$title</b></big>$subtitle</div>\n<div class=\"copyright\">Copyright &copy; $year <b>$author</b></div>\n<div class=\"copyright\">$copyright</div>";
 
 	$copy = $copy . "\n<div class=\"teaser\">&nbsp;<br/>$teaser</div>" . $pageend;
 	$epub->addFromString('copyright.html', $copy);
@@ -1366,7 +1377,26 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 	$tablename = RMLgetactivetable($id);
 	$sql = RMLfiresql("SELECT body,paragraphtype FROM $tablename WHERE doc_id=$id AND parent_id=0 ORDER BY id");
-	$navpoint = 0;
+	$navpoint = 1;
+
+	$toc = $toc . "\n<navPoint id=\"navPoint-$navpoint\" playOrder=\"$navpoint\">";
+	$toc = $toc . "\n\t<navLabel><text>Cover page</text></navLabel>";
+	$toc = $toc . "\n\t<content src=\"cover.html\"/>";
+	$toc = $toc . "\n</navPoint>";
+	
+	$navpoint++;
+	
+	$toc = $toc . "\n<navPoint id=\"navPoint-$navpoint\" playOrder=\"$navpoint\">";
+	$toc = $toc . "\n\t<navLabel><text>Title page</text></navLabel>";
+	$toc = $toc . "\n\t<content src=\"title.html\"/>";
+	$toc = $toc . "\n</navPoint>";
+	
+	$navpoint++;
+	
+	$toc = $toc . "\n<navPoint id=\"navPoint-$navpoint\" playOrder=\"$navpoint\">";
+	$toc = $toc . "\n\t<navLabel><text>Colophon</text></navLabel>";
+	$toc = $toc . "\n\t<content src=\"copyright.html\"/>";
+	$toc = $toc . "\n</navPoint>";
 
 	for($row=0;$row<pg_numrows($sql);$row++) {
 		$thisrow = pg_Fetch_Object($sql,$row);
@@ -1474,6 +1504,12 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	$epub->addFromString('stylesheet.css', $style);
 
 	$epub->close();
+	
+	// See, easy.
+	// So why do we go to so much trouble??
+	// Well 2 reasons really.
+	// 1: I hate spelling errors and crappy pesky formatting, by storing the books this way I can fix that shit.
+	// 2: When (not if, when) ePub becomes some old obsolete crap, we can go with flow and never have to be without our books again.
 
 	header('Content-Description: File Transfer');
 	header('Content-Type: application/octet-stream');
@@ -1509,8 +1545,15 @@ function RMLcountdownload()
 
 function RMLgetstylesheet($authorid,$subjectid,$id)
 {
-	$owner = RMLgetcurrentuser();
+	//$owner = RMLgetcurrentuser();
+	global $function;
+	$result = RMLfiresql("SELECT style FROM stylesheet WHERE id=19");
+	$thisrow = pg_Fetch_Object($result,0);
+	$style = $thisrow->style;
 	
+	return $style;
+	
+	/*
 	$result = RMLfiresql("SELECT style FROM stylesheet WHERE owner='$owner' AND name='document$id'");
 	if(pg_numrows($result) > 0) {
 		$thisrow = pg_Fetch_Object($result,0);
@@ -1542,7 +1585,7 @@ function RMLgetstylesheet($authorid,$subjectid,$id)
 	$result = RMLfiresql("SELECT style FROM stylesheet WHERE id=1");
 	$thisrow = pg_Fetch_Object($result,0);
 	$style = $thisrow->style;
-	return $style;
+	return $style;*/
 }
 
 // ============================================================================

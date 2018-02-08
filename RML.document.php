@@ -249,16 +249,9 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 		$bio = nl2br( $bio );
 
 		$out .=
-			"\n".'<img class="authorphoto" alt="Author #'.$id.'" src="./authors/author'.$id.'"/>
-<div class="statusbox">	
-	<p class="boxheader"><b><big>Status</big></b></p><p class="boxtext"><big>
-	born <b>'.$born.'</b>'
-			.( ( $born != 'Unknown' ) ? ' (+' .$would .')' : '' )
+			"\n".'<div class="order" style="text-align:center">Born <b>'.$born.'</b>'
 			.( ( strlen( $dead ) >= 4 ) ? ' died <b>' .$dead .'</b> at' : '' )
-			.' age <b>' .$age .'</b> (+' . getNumberFormatted( $doom, 0 ) .')
-	<br/><br/><b>'. getNumberFormatted( $numdoc, 0 ) .'</b>&nbsp;book'
-			.( ( $numdoc > 1 ) ? 's' : '' )
-			. ' online (<b>' .$kilobyte .'</b> in <b>' .getNumberFormatted( $element, 0 ) .'</b>&nbsp;paragraphs)</big></p></div>'
+			.' age <b>' .$age .'</b></div><img class="authorphoto" alt="Author #'.$id.'" src="./authors/author'.$id.'"/>'	
 			.'<p class="ParaBlankOver">'.$bio.'</p>';
 
 		// ewa: todo: show source links, later ...

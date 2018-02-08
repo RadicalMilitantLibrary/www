@@ -12,8 +12,8 @@ the Free Software Foundation; either version 2 of the License, or
 ===================================================================== */
 
 body {
-	background-image: url(../img/background.jpg);
-	background-attachment: scroll;
+	/*background-image: url(../img/background.jpg);
+	background-attachment: scroll; */
 	font-family		: serif;
 	font-size		: 14pt;
 	margin			: 0;
@@ -28,17 +28,9 @@ table.body {
 
 table.main {
 	margin-top		: 10px;
-	margin-bottom	: 10px;
-	border-width	: 2px;
-	border-style	: solid;
-	border-spacing	: 0
+	margin-bottom	: 10px
 }
 
-table.main td {
-	padding			: 5px;
-	border-width	: 1px;
-	border-style	: solid
-}
 
 table.frontcenter {
 	margin-left 	: auto;
@@ -46,11 +38,9 @@ table.frontcenter {
 }
 
 img.logo {
-	margin			: 0;
-	margin-left : 5px;
-	margin-right : 5px;
+	margin			: 0px;
 	border			: 0;
-	float			: left;
+	float			: right;
 }
 
 img.icon {
@@ -89,20 +79,12 @@ img.Author {
 	display		: inline-block;
 	font-size	: 12pt;
 	margin-bottom	: 10px;
-	padding		: 0px;
-	background	: white;
-	color		: #222;
-	border		: 1px solid #aaa;
-	border-radius	: 5px
+	padding		: 0px
 }
 
 .box {
 	margin-bottom	: 10px;
 	padding		: 0px;
-	background	: white;
-	color		: #222;
-	border		: 1px solid #aaa;
-	border-radius	: 5px;
 }
 
 
@@ -178,28 +160,18 @@ td.end a {
 }
 
 td.main {
-	background		: #fff;
 	vertical-align	: top;
 	padding			: 15px;
 	min-width		: 90px;	/* ewa: now better for online reading in smaller panes, was 730px before */
-	border			: 1px solid #777;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	border-bottom-left-radius: 10px;
-	border-bottom-right-radius: 10px;
 }
 
 td.left {
-	width			: 135px;
 	padding			: 5px;
 	padding-top	: 0;
 	text-align		: left;
 	vertical-align	: top
 }
 
-td.left a {
-	width: 125px
-}
 
 /* vv01f: want to use this for news page to separate SYSTEM messages from actual news
  * maybe later drop this hidden "aside" wit @media on small screens
@@ -246,14 +218,16 @@ td.right {
 p.pagetitle {
 	padding			: 0;
 	margin			: 0;
-	padding-left 	: 140px;
-	padding-top		: 55px;
+	padding-top		: 10px;
+	padding-bottom	: 10px;
 	font-size		: 24pt;
 	color			: #222;
 	font-weight		: bold;
-	color			: black;
 	text-shadow		: -2px -2px 2px #777;
-	text-align		: center
+	text-align		: center;
+	border-bottom-width : 2px;
+	border-bottom-style : dotted;
+	border-bottom-color : black
 }
 
 p.location {
@@ -427,12 +401,8 @@ p.Picture img {
 
 
 .BoxStart {
-	background-color : #dddddd;
 	margin : 1em auto;
-	padding : 0.5em;
-	border-width : 2px;
-	border-style : solid;
-	border-color : black
+	padding : 0.5em
 }
 
 p.BoxHead {
@@ -462,20 +432,9 @@ p.boxtext {
 .boxheader {
 	margin			: 0;
 	padding			: 5px 5px 5px 10px;
-	color			: #333;
-	background		: #ddd;
-	border-width	: 0 0 1px;
-	border-color	: inherit;
-	border-style	: solid;
-	border-bottom-width: 1px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#bbb));
-	background-image: -webkit-linear-gradient(top, #eee, #bbb);
-	background-image: -moz-linear-gradient(top, #eee, #bbb);
-	background-image: -ms-linear-gradient(top, #eee, #bbb);
-	background-image: -o-linear-gradient(top, #eee, #bbb);
-	background-image: linear-gradient(top, #eee, #bbb);
+	border-bottom-width : 1px;
+	border-bottom-style : solid;
+	border-color : black
 }
 
 .boxheader a {
@@ -489,7 +448,6 @@ p.boxtext {
 
 .boxtext {
 	padding			: 5px;
-	padding-right	: 10px;
 	margin			: 5px;
 	text-align		: justify;
 	color			: #333

@@ -34,9 +34,9 @@ function RMLdisplaytop( $print_on = true )
 {
 	$out = "\n\n".'<!-- TOP START -->
 <table class="body">
-<tr><td colspan="3" class="location">
-<a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a href="https://github.com/RadicalMilitantLibrary"><img style="float : right" src="./img/github.png" /></a>'
-	.RMLdisplaylocation( false )
+<tr><td colspan="3" class="location"><div class="inlineclear">'
+	.RMLdisplaymenu( false )
+	.'<a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a></div>'
 	.RMLdisplaytitle( false )
 	."\n".'</td></tr>';
 	return processOutput( $out, $print_on );
@@ -49,13 +49,13 @@ function RMLMenuButton( $btntile, $href = "", $class = "", $decoration = 'star' 
 	return  "\n<a class=\"$class $decoration\" href=\"$href\">$btntitle</a>";
 }
 
-function RMLdisplayleft( $print_on = true )
+function RMLdisplaymenu( $print_on = true )
 {
 	global $author, $subject, $news, $document, $function, $message, $style, $lists;
 	$currentuser = RMLgetcurrentuser();
 
-	$out = "\n\n".'<!-- LEFT START -->
-<tr><td class="left">';
+	$out = "\n\n".'<!-- MENU START --><a class="button home" href=".">Home</a>
+';
 
 	if($function == 'about') {
 		$out .= "\n<a class=\"activebutton about\" href=\"?function=about\">About</a>";
@@ -83,9 +83,9 @@ function RMLdisplayleft( $print_on = true )
 */
 
 	if(($lists == 'view') || ($lists == 'add')){
-		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&ampid=0\">Reading Lists</a>";
+		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&ampid=0\">Lists</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?lists=view&amp;id=0\">Reading Lists</a>";
+		$out .= "\n<a class=\"button star\" href=\"?lists=view&amp;id=0\">Lists</a>";
 	}
 
 	if($function == 'manual') {
@@ -108,16 +108,15 @@ function RMLdisplayleft( $print_on = true )
 		$out .= "\n<a class=\"activebutton like\" href=\"?function=user\">My Page</a>";
 	}
 
-	$out .= "\n"
+	$out .= "\n";
 
-	.'<div class="inlineclear">&nbsp;</div><div class="center"><img src="./img/btc.png" alt="Donate Bitcoin" /></div>'
+/*	.'<div class="inlineclear">&nbsp;</div><div class="center"><img src="./img/btc.png" alt="Donate Bitcoin" /></div>'
 	
 	.'<div class="center"><img src="./img/xmr.png" alt="Donate Monero" /></div>'
 
 	// glider
-	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'
+	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'*/
 
-.'</td>';
 	return processOutput( $out, $print_on );
 }
 
@@ -372,7 +371,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists;
 
 	//default
-	$title = '~ Jotunbane and Friends ~';
+	$title = '~ The Library ~';
 
 	$out = '<p class="pagetitle">';
 
@@ -475,7 +474,7 @@ function RMLdisplaytitle( $print_on = true ) {
 		$title = "~ Latest News ~";
 	break;
 	case 'add':
-		$title = "~ Add Radical Militant News ~";
+		$title = "~ Add News ~";
 	break;
 	case 'edit':
 		$title = "~ Edit News ~";
