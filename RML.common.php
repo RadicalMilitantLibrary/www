@@ -126,7 +126,7 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	global $function, $subject, $static, $message, $document,
 		$author, $section, $comment, $news, $footnote, $note, $style, $lists;
 
-	$out = "\n\n".'<!-- MAIN START -->
+	$out = "\n\n".'<!-- MAIN START --><tr>
 <td class="main">';
 
 	$frontpage = true; // HACK
@@ -305,7 +305,7 @@ function RMLdisplaymain( $id, $print_on = true ) {
 		$out .= RMLdisplayfrontpage( false );
 	}
 
-	$out .= "\n".'</td><td class="right"></td></tr>';
+	$out .= "\n".'</td></tr>';
 	return processOutput( $out, $print_on );
 }
 
@@ -318,7 +318,7 @@ function RMLdisplaybottom( $print_on = true )
 	$uplink = RMLgetuplink();
 
 	$out = "\n\n".'<!-- BOTTOM START -->
-<tr><td></td><td class="bottom">'
+<tr><td class="bottom">'
 .( isset( $prevlink ) ? '<a class="button prev" href="'.$prevlink.'">Prev</a> ' : '' )
 .( isset( $uplink ) ? '<a class="button up" href="'.$uplink.'">Up</a> ' : '' )
 .( isset( $nextlink ) ? '<a class="button next" href="'.$nextlink.'">Next</a> ' : '' )
