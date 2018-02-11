@@ -262,7 +262,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 
 		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
 
-		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT \"639-1\" FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
+		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$thisid = $thisrow->id;
@@ -280,10 +280,10 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			}
 
 			$out .= '<div class="box">
-	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b>('.$thislanguage.')</a></p>
+	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></a></p>
 	<p class="boxtext">
 	<small><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a>,
-	<b>' .$thisyear .'</b></small>' 
+	<b>' .$thisyear .'</b> ('.$thislanguage.')</small>' 
 				.'</p><p class="boxtext">'.$thisteaser.'</p>
 	<div class="inlineclear"></div></div>';
 		}
@@ -341,7 +341,7 @@ function RMLgetBibTeX( $data )	//get all data in this named list, e.g. via itera
 
 function RMLviewdocument( $id, $print_on = true )
 {
-	$result = RMLfiresql( "SELECT handle,status,posted_on,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,downloads,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail,(SELECT \"language_name\" FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
+	$result = RMLfiresql( "SELECT handle,status,posted_on,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,downloads,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$thishandle = $thisrow->handle;
 	$thissubjectid = $thisrow->subject_id;
