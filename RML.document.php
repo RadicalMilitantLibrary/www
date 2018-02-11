@@ -283,7 +283,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></a></p>
 	<p class="boxtext">
 	<small><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a>,
-	<b>' .$thisyear .'</b> ('.$thislanguage.')</small>' 
+	<b>' .$thisyear .'</b> (<b>'.$thislanguage.'</b>)</small>' 
 				.'</p><p class="boxtext">'.$thisteaser.'</p>
 	<div class="inlineclear"></div></div>';
 		}
@@ -380,7 +380,7 @@ function RMLviewdocument( $id, $print_on = true )
 	<td align="right">by : </td><td style="padding-left:10px"><b><a href="?author=view&amp;id='.$thisauthorid.( ( !isset($thisauthorid) || $thisauthorid=='' || $thisauthorid==0) ? '&amp;letter='.$letter : '' ).'"><big>'.$thisauthor.'</big></a></b></td>
 </tr><tr valign="middle" style="height:20px">
 	<td align="right">&nbsp; &nbsp; published :</td><td style="padding-left:10px"><b>'.$thisyear.'</b></td>
-</tr><tr valign="middle" style="height:20px">
+</tr><tr valign="middle" style="height:20px"><td align="right">language :</td><td style="padding-left:10px"><b>'.$language.'</b></td></tr><tr valign="middle" style="height:20px">
 	<td align="right">subject :</td><td style="padding-left:10px"><b><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a></b></td>
 </tr>';
 //.'<tr valign="top"><td align="right">BiBTeX :</td><td><div class="bibtex"><textarea id="bibtext" name="bibtext" rows="13" cols="40" readonly="readonly">' .getBibTeX( $id ) .'</textarea></div></td></tr>';
@@ -388,8 +388,6 @@ function RMLviewdocument( $id, $print_on = true )
 	if( $thiskeywords ) {
 		$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">keywords :</td><td style="padding-left:10px"><b>'.$thiskeywords.'</b></td></tr>';
 	}
-
-	$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">language :</td><td style="padding-left:10px"><b>'.$language.'</b></td></tr>';
 	
 	$tablename = RMLgetactivetable( $id );
 	$sql = RMLfiresql("SELECT sum(length(body)) as docsize,count(id) as doccount FROM $tablename WHERE doc_id=$id");

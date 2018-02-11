@@ -336,7 +336,7 @@ function RMLdisplayend( $print_on = true )
 	$now = microtime();
 
 	$out = "\n\n".'<!-- END START -->
-<tr><td colspan="3" class="end">Radical Militant Library <b>'.$Version.'</b><br />
+<tr><td colspan="3" class="end"><a href="https://github.com/RadicalMilitantLibrary">Radical Militant Library</a> <b>'.$Version.'</b><br />
 <small><b>' .getNumberFormatted( $SQLcounter, 0 ) .'</b> statements,
 <b>' .getNumberFormatted( $now - $starttime, -5 ) .'</b> seconds,
 <b>' .sizeFormat( $SQLsize, -3 ) .'</b></small>
