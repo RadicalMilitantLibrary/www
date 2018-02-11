@@ -262,7 +262,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 
 		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
 
-		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
+		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT \"639-1\" FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$thisid = $thisrow->id;
@@ -272,6 +272,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			$thissubjectid = $thisrow->subject_id;
 			$thissubject = $thisrow->subjecttitle;
 			$thisteaser = $thisrow->teaser;
+			$thislanguage = $thisrow->language;
 
 			if( strlen( $thisteaser ) > 400 ) {
 				$thisteaser = substr( $thisteaser, 0, 400 ) .' ...';
@@ -279,7 +280,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 			}
 
 			$out .= '<div class="box">
-	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></a></p>
+	<p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b>('.$thislanguage.')</a></p>
 	<p class="boxtext">
 	<small><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a>,
 	<b>' .$thisyear .'</b></small>' 
@@ -340,7 +341,7 @@ function RMLgetBibTeX( $data )	//get all data in this named list, e.g. via itera
 
 function RMLviewdocument( $id, $print_on = true )
 {
-	$result = RMLfiresql( "SELECT handle,status,posted_on,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,downloads,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail FROM document WHERE id=".$id );
+	$result = RMLfiresql( "SELECT handle,status,posted_on,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,downloads,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail,(SELECT \"language_name\" FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$thishandle = $thisrow->handle;
 	$thissubjectid = $thisrow->subject_id;
@@ -361,6 +362,7 @@ function RMLviewdocument( $id, $print_on = true )
 	$reviewer = $thisrow->owner;
 	$mail = $thisrow->mail;
 	$posted = RMLfixdate( $thisrow->posted_on );
+	$language = $thisrow->language;
 
 	$out = '';
 	if($thissubtitle) {
@@ -387,6 +389,8 @@ function RMLviewdocument( $id, $print_on = true )
 		$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">keywords :</td><td style="padding-left:10px"><b>'.$thiskeywords.'</b></td></tr>';
 	}
 
+	$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">language :</td><td style="padding-left:10px"><b>'.$language.'</b></td></tr>';
+	
 	$tablename = RMLgetactivetable( $id );
 	$sql = RMLfiresql("SELECT sum(length(body)) as docsize,count(id) as doccount FROM $tablename WHERE doc_id=$id");
 	$thisrow = pg_Fetch_Object( $sql, 0 );

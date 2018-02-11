@@ -1141,7 +1141,7 @@ function RMLexportepub( $id ) {
 	$pagestart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml; charset=utf-8\"/>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\"/>\n<title></title>\n</head>\n<body>";
 	$pageend = "\n</body>\n</html>";
 
-	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright,teaser,subject_id,status FROM document WHERE id=$id");
+	$result = RMLfiresql("SELECT title,subtitle,year,author_id,copyright,teaser,subject_id,status,(SELECT \"639-1\" FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=$id");
 	$thistmp = pg_Fetch_Object($result,0);
 	$title = $thistmp->title;
 
@@ -1154,6 +1154,7 @@ function RMLexportepub( $id ) {
 	$teaser = nl2br($thistmp->teaser);
 	$teaser = preg_replace( "@ & @", " &amp; ", $teaser );
 	$status = $thistmp->status;
+	$language = $thistmp->language;
 
 	$subject = RMLgetsubjecttitle( $subjectid );
 	$author = RMLgetauthorname( $authorid );
@@ -1211,7 +1212,7 @@ function RMLexportepub( $id ) {
 <metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:opf=\"http://www.idpf.org/2007/opf\">
 \t<dc:title>$thistitle</dc:title>
 \t<dc:creator opf:role=\"aut\" opf:file-as=\"$fileas\">$author</dc:creator>
-\t<dc:language xsi:type=\"dcterms:RFC3066\">en</dc:language>
+\t<dc:language xsi:type=\"dcterms:RFC3066\">$language</dc:language>
 \t<dc:identifier id=\"uid\" opf:scheme=\"URI\">
 \t\thttps://c3jemx2ube5v5zpg.onion/?function=download&amp;id=$id
 \t</dc:identifier>
