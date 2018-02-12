@@ -40,6 +40,7 @@ if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
 if(is_numeric($_REQUEST['styleid'])) { $styleid = $_REQUEST['styleid']; }
 if(is_numeric($_REQUEST['section'])) { $section = $_REQUEST['section']; }
 if(is_numeric($_REQUEST['paragraphtype'])) { $paratype = $_REQUEST['paragraphtype']; }
+if(is_numeric($_REQUEST['languageid'])) { $languageid = $_REQUEST['languageid']; }
 
 $para = RMLpreparestring($_REQUEST['para']);
 $function = RMLpreparestring($_REQUEST['function']);

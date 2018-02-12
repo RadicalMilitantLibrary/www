@@ -40,11 +40,24 @@ function getSubjectOptions( $subject ) {
 
 // ============================================================================
 
+function getLanguageOptions($languageid) {
+	$a = '';
+	$result = RMLfiresql("SELECT native_name, id FROM \"ISO639\" ORDER BY native_name");
+	for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+		$thisrow = pg_Fetch_Object( $result, $row );
+		$thisname = $thisrow->native_name;
+		$thisid = $thisrow->id;
+		$a .= '<option value="'.$thisid.'"'.( ( $thisid == $languageid ) ? ' selected="yes"' : '' ).'>'.$thisname.'</option>';
+	}
+	return $a;
+}
+
+// ============================================================================
 
 function RMLnewdocument( $print_on = true )
 {
 	global $author, $subject, $title, $subtitle, $year, $keywords,
-		$copyright, $teaser;
+		$copyright, $teaser, $languageid;
 
 	//todo: move to createdocument is that is less error prone
 	$ISBN = RMLgetuniqueid();
@@ -53,6 +66,7 @@ function RMLnewdocument( $print_on = true )
 	$out = '';
 	$options_auth = getAuthorOptions( $author );
 	$options_subj = getSubjectOptions( $subject );
+	$options_lang = getLanguageOptions( $languageid );
 
 	$out .= "\n".'<form enctype="multipart/form-data" method="post" action="?document=create"><table class="form">
 <tr><td>Author</td><td><select class="norm" name="author">' .$options_auth .'</select>
@@ -63,6 +77,10 @@ function RMLnewdocument( $print_on = true )
 <select class="norm" name="subject">' .$options_subj .'</select></td></tr>';
 //todo: put add-subject-button here (only for those who have the rights..)
 //todo: wish for new subject with data
+
+	$out .= '<tr><td>Language</td><td>
+<select class="norm" name="languageid">' .$options_lang .'</select></td></tr>';
+
 	$out .= "\n".'<tr><td>Title</td><td><input class="norm" type="text" name="title" value="'.$title.'"></td></tr>
 <tr><td>(Sub-title)</td><td><input class="norm" type="text" name="subtitle" value="'.$subtitle.'"></td></tr>
 <tr><td>(Year)</td><td><input class="norm" type="text" name="year" value="'.$year.'"></td></tr>
@@ -79,7 +97,7 @@ function RMLnewdocument( $print_on = true )
 // ============================================================================
 
 function RMLeditdocument( $id ) {
-	$result = RMLfiresql("SELECT id,title,subtitle,year,\"unique\",keywords,copyright,teaser,subject_id,author_id,handle FROM document WHERE id=$id");
+	$result = RMLfiresql("SELECT id,title,subtitle,year,\"unique\",keywords,copyright,teaser,subject_id,author_id,language_id,handle FROM document WHERE id=$id");
 	$thisres = pg_Fetch_Object($result,0);
 	$title = $thisres->title;
 	$subtitle = $thisres->subtitle;
@@ -90,6 +108,7 @@ function RMLeditdocument( $id ) {
 	$teaser = $thisres->teaser;
 	$subid = $thisres->subject_id;
 	$autid = $thisres->author_id;
+	$languageid = $thisres->language_id;
 	$thisid = $thisres->id;
 
 	if( ! hasRights( 'editdocument', array( $thisres->handle ) ) ) {
@@ -112,9 +131,21 @@ function RMLeditdocument( $id ) {
 			$options_subj .= "\n".'<option value="'.$thisname.'"' .( ( $thisrow->id == $subid ) ? ' selected="yes"' : '' ).'>'.$thisname.'</option>';
 		}
 
+		$options_lang = '';
+		$result = RMLfiresql("SELECT native_name,id FROM \"ISO639\" ORDER BY native_name");
+		for($row=0;$row<pg_numrows($result);$row++) {
+			$thisrow = pg_Fetch_Object($result,$row);
+			$thislanguage = $thisrow->native_name;
+			$thislanguageid = $thisrow->id;
+			$options_lang .= "\n".'<option value="'.$thislanguageid.'"' .( ( $thislanguageid == $languageid ) ? ' selected="yes"' : '' ).'>'.$thislanguage.'</option>';
+		}
+
+
+
 		$out = "\n".'<form enctype="multipart/form-data" method="post" action="?document=update&amp;id='.$thisid.'"><table class="form">
 <tr><td>Author</td><td><select class="norm" name="author">'.$options_auth.'</select></td></tr>
 <tr><td>Subject</td><td><select class="norm" name="subject">'.$options_subj.'</select></td></tr>
+<tr><td>Language</td><td><select class="norm" name="languageid">'.$options_lang.'</select></td></tr>
 <tr><td>Title</td><td><input class="norm" type="text" name="title" value="'.$title.'"></td></tr>
 <tr><td>(Sub-title)</td><td><input class="norm" type="text" name="subtitle" value="'.$subtitle.'"></td></tr>
 <tr><td>(Year)</td><td><input class="norm" type="text" name="year" value="'.$year.'"></td></tr>
@@ -133,7 +164,7 @@ function RMLeditdocument( $id ) {
 
 function RMLupdatedocument( $id, $print_on = true ) {
 	global $subject, $author, $title, $subtitle, $year, $ISBN,
-		$keywords, $copyright, $teaser;
+		$keywords, $copyright, $teaser, $languageid;
 
 	$result = RMLfiresql("SELECT handle FROM document WHERE id=$id");
 	$thisrow = pg_Fetch_Object( $result, 0 );
@@ -145,7 +176,7 @@ function RMLupdatedocument( $id, $print_on = true ) {
 
 		$subject_id = RMLgetsubjectid($subject);
 		$author_id = RMLgetauthorid($author);
-		RMLfiresql("UPDATE document SET subject_id=$subject_id,author_id=$author_id,title='$title',subtitle='$subtitle',year='$year',\"unique\"='$ISBN',teaser='$teaser',keywords='$keywords',copyright='$copyright' WHERE id=$id");
+		RMLfiresql("UPDATE document SET subject_id=$subject_id,author_id=$author_id,language_id=$languageid,title='$title',subtitle='$subtitle',year='$year',\"unique\"='$ISBN',teaser='$teaser',keywords='$keywords',copyright='$copyright' WHERE id=$id");
 		$target_path = "./covers/" . "cover" . "$id";
 
 		if(is_uploaded_file($_FILES['picture']['tmp_name'])) {
@@ -169,7 +200,7 @@ function RMLupdatedocument( $id, $print_on = true ) {
 function RMLcreatedocument( $print_on = true )
 {
 	global $subject, $author, $title, $subtitle, $year, $ISBN,
-		$keywords, $copyright, $teaser;
+		$keywords, $copyright, $teaser,$languageid;
 
 	$out = '';
 	$handle = RMLgetcurrentuser();
@@ -183,7 +214,7 @@ function RMLcreatedocument( $print_on = true )
 		$subject_id = RMLgetsubjectid( $subject );
 		$author_id = RMLgetauthorid( $author );
 
-		if( ! RMLfiresql( "INSERT INTO document VALUES(DEFAULT,DEFAULT,'$handle',$subject_id,$author_id,'$title','$subtitle','$year','$ISBN','$teaser','$keywords','$copyright',DEFAULT,DEFAULT)" ) ) {
+		if( ! RMLfiresql( "INSERT INTO document VALUES(DEFAULT,DEFAULT,'$handle',$subject_id,$author_id,'$title','$subtitle','$year','$ISBN','$teaser','$keywords','$copyright',DEFAULT,DEFAULT,$languageid)" ) ) {
 			$out = "ERROR: Document Create failed: maybe you missed some details in the form.";
 		}
 
