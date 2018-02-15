@@ -32,13 +32,13 @@ function RMLdisplayhead( $print_on = true ) {
 
 function RMLdisplaytop( $print_on = true )
 {
-	$out = "\n\n".'<!-- TOP START -->
-<table class="body">
-<tr><td colspan="3" class="location"><div class="inlineclear">'
+	$out = "\n\n".'<!-- TOP START -->'
+/* <table class="body">
+<tr><td colspan="3" class="location"><div class="inlineclear">' */
 	.RMLdisplaymenu( false )
-	.'<a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a></div>'
+	.'<a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><div class="inlineclear"></div>'
 	.RMLdisplaytitle( false )
-	."\n".'</td></tr>';
+	."\n";
 	return processOutput( $out, $print_on );
 }
 
@@ -110,13 +110,6 @@ function RMLdisplaymenu( $print_on = true )
 
 	$out .= "\n";
 
-/*	.'<div class="inlineclear">&nbsp;</div><div class="center"><img src="./img/btc.png" alt="Donate Bitcoin" /></div>'
-	
-	.'<div class="center"><img src="./img/xmr.png" alt="Donate Monero" /></div>'
-
-	// glider
-	.'<div class="center"><a href="http://www.catb.org/hacker-emblem/"><img style="border:0" src="./img/hacker.png" alt="Hackeremblem" /></a></div>'*/
-
 	return processOutput( $out, $print_on );
 }
 
@@ -126,8 +119,7 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	global $function, $subject, $static, $message, $document,
 		$author, $section, $comment, $news, $footnote, $note, $style, $lists;
 
-	$out = "\n\n".'<!-- MAIN START --><tr>
-<td class="main">';
+	$out = "\n\n".'<!-- MAIN START -->'."\n\n".'<div class="main">';
 
 	$frontpage = true; // HACK
 
@@ -305,7 +297,7 @@ function RMLdisplaymain( $id, $print_on = true ) {
 		$out .= RMLdisplayfrontpage( false );
 	}
 
-	$out .= "\n".'</td></tr>';
+	$out .= "\n</div>";
 	return processOutput( $out, $print_on );
 }
 
@@ -317,12 +309,10 @@ function RMLdisplaybottom( $print_on = true )
 	$nextlink = RMLgetnextlink();
 	$uplink = RMLgetuplink();
 
-	$out = "\n\n".'<!-- BOTTOM START -->
-<tr><td class="bottom">'
+	$out = "\n\n".'<!-- BOTTOM START -->'
 .( isset( $prevlink ) ? '<a class="button prev" href="'.$prevlink.'">Prev</a> ' : '' )
 .( isset( $uplink ) ? '<a class="button up" href="'.$uplink.'">Up</a> ' : '' )
-.( isset( $nextlink ) ? '<a class="button next" href="'.$nextlink.'">Next</a> ' : '' )
-.'</td><td></td></tr>';
+.( isset( $nextlink ) ? '<a class="button next" href="'.$nextlink.'">Next</a> ' : '' );
 	return processOutput( $out, $print_on );
 }
 
@@ -336,12 +326,10 @@ function RMLdisplayend( $print_on = true )
 	$now = microtime();
 
 	$out = "\n\n".'<!-- END START -->
-<tr><td colspan="3" class="end"><a href="https://github.com/RadicalMilitantLibrary">Radical Militant Library</a> <b>'.$Version.'</b><br />
+<div class="inlineclear"></div><div class="end"><a href="https://github.com/RadicalMilitantLibrary">Radical Militant Library</a> <b>'.$Version.'</b><br />
 <small><b>' .getNumberFormatted( $SQLcounter, 0 ) .'</b> statements,
 <b>' .getNumberFormatted( $now - $starttime, -5 ) .'</b> seconds,
-<b>' .sizeFormat( $SQLsize, -3 ) .'</b></small>
-</td></tr>
-</table>
+<b>' .sizeFormat( $SQLsize, -3 ) .'</b></small></div>
 </body>
 </html>
 <!-- END OF LINE -->';
@@ -533,40 +521,18 @@ function RMLdisplaytitle( $print_on = true ) {
 function RMLdisplayfrontpage( $print_on = true ) {
 
 	$out = "\n".'<div class="order" style="text-align:center">Protecting your <a href="http://www.ala.org/advocacy/intfreedom/statementspols/freedomreadstatement">Freedom to Read</a> since 2010</div>';
-	
-	// $out .= RMLgetlatestcomment( false );
 
-	$out .= '<div class="box"><div class="boxheader"><b>New Books</b></div>
-<p class="boxtext" style="text-align:center">';
-	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 15");
+	$out .= '<p class="boxtext" style="text-align:center">';
+	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;
 		$thistitle = $thisrow->title;
 		$out .= "\n<a href=\"?document=view&amp;id=$thisid\">
 <img class=\"FrontCover\" alt=\"$thistitle Cover\" src=\"./covers/cover$thisid\" /></a>";
-		if(($row == 4) || ($row == 9)) {
-			$out .= "\n<br/>";
-		}
 	}
-	$out .= "\n</p></div>";
+	$out .= "\n</p>";
 
-	$out .= "\n<div class=\"box\"><div class=\"boxheader\"><b>Most Downloaded Books</b></div>
-<p class=\"boxtext\" style=\"text-align:center\">";
-
-	$result = RMLfiresql("SELECT id,downloads FROM document ORDER BY downloads DESC LIMIT 15");
-	for($row=0;$row<pg_numrows($result);$row++) {
-		$thisrow = pg_Fetch_Object($result,$row);
-		$thisid = $thisrow->id;
-
-		$out .= "\n<a href=\"?document=view&amp;id=$thisid\">
-<img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
-
-		if(($row == 4)|| ($row == 9)) {
-			$out .= "\n<br/>";
-		}
-	}
-	$out .= "\n</p></div>"; 
 	return processOutput( $out, $print_on );
 }
 
@@ -714,8 +680,7 @@ function RMLdisplayabout( $print_on = true )
 	.RMLdisplay( "We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can send a message to the librarian in charge of the book. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.", 5, false )
 	.RMLdisplay( "This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation.", 4, false )
 	.RMLdisplay( "If you want to chat, we hang out in the #readingclub channel on <a href=\"http://www.oftc.net/\">OFTC</a>. Or you can try to reach jotunbane@<a href=\"http://cloak.dk\">cloak.dk</a> on jabber (OTR required), or at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:i4oltgzz53xy7aqm.", 4, false )
-	.RMLdisplay( "The logo is released under a Creative Commons Attribution-ShareAlike license by <a href=\"http://readersbillofrights.info\">Readers Bill of Rights</a>. It is created by cartoonist and <a href=\"http://questioncopyright.org/\">QuestionCopyright.org</a> artist-in-residence <a href=\"http://blog.ninapaley.com/\">Nina Paley</a>. You can support Nina's work and view her amazing and Creative Commons licensed film, <a href=\"http://www.sitasingstheblues.com/\">Sita Sings the Blues</a>, over at her website.", 5, false )
-	;
+	.RMLdisplay( "The logo is released under a Creative Commons Attribution-ShareAlike license by <a href=\"http://readersbillofrights.info\">Readers Bill of Rights</a>. It is created by cartoonist and <a href=\"http://questioncopyright.org/\">QuestionCopyright.org</a> artist-in-residence <a href=\"http://blog.ninapaley.com/\">Nina Paley</a>. You can support Nina's work and view her amazing and Creative Commons licensed film, <a href=\"http://www.sitasingstheblues.com/\">Sita Sings the Blues</a>, over at her website.", 5, false );
 	return processOutput( $out, $print_on );
 }
 

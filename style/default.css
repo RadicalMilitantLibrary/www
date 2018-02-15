@@ -21,21 +21,13 @@ body {
 	padding			: 0
 }
 
-table.body {
-	width			: 100%;
-	border-spacing	: 0
-}
 
-table.main {
-	margin-top		: 10px;
-	margin-bottom	: 10px
+.main {
+	margin		: 10px;
+	vertical-align	: top
 }
 
 
-table.frontcenter {
-	margin-left 	: auto;
-	margin-right 	: auto
-}
 
 img.logo {
 	margin			: 0px;
@@ -136,35 +128,32 @@ img.bottom {
 }
 
 
-td.bottom {
+.bottom {
 	text-align		: left;
 	padding			: 5px;
 	color			: #AAA
 }
 
-td.end {
+.end {
 	padding-top		: 10px;
 	padding-bottom	: 10px;
 	color			: black;
-	text-align		: center
+	text-align		: center;
+	border-top-width : 2px;
+	border-top-style : dotted;
+	border-top-color : black	
 }
 
-td.end b {
+.end b {
 	color			: red
 }
 
-td.end a {
+.end a {
 	color			: red;
 	font-weight		: normal
 }
 
-td.main {
-	vertical-align	: top;
-	padding			: 15px;
-	min-width		: 90px;	/* ewa: now better for online reading in smaller panes, was 730px before */
-}
-
-td.left {
+.left {
 	padding			: 5px;
 	padding-top	: 0;
 	text-align		: left;
@@ -175,7 +164,7 @@ td.left {
 /* vv01f: want to use this for news page to separate SYSTEM messages from actual news
  * maybe later drop this hidden "aside" wit @media on small screens
  * todo: flex layout with html5: https://wiki.selfhtml.org/extensions/Selfhtml/example.php/Beispiel:CSS3_Flexbox-5.html */
-td.right {
+.right {
 	vertical-align	: top;
 	margin			: 0;
 	padding			: 15px 5px;
@@ -217,7 +206,6 @@ td.right {
 p.pagetitle {
 	padding			: 0;
 	margin			: 0;
-	margin-top : -30px;
 	padding-bottom	: 10px;
 	font-size		: 24pt;
 	color			: #222;
@@ -485,8 +473,9 @@ p.boxtext {
 div.order {
 	font-family		: sans-serif;
 	margin			: 0;
-	margin-bottom	: 8px;
-	margin-top		: -8px;
+	margin-bottom	: 15px;
+	margin-top		: 10px;
+	margin-left		: 10px;
 	text-align		: left;
 }
 

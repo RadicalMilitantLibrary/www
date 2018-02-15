@@ -372,9 +372,8 @@ function RMLgetBibTeX( $data )	//get all data in this named list, e.g. via itera
 
 function RMLviewdocument( $id, $print_on = true )
 {
-	$result = RMLfiresql( "SELECT handle,status,posted_on,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,downloads,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
+	$result = RMLfiresql( "SELECT status,posted_on,handle,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
 	$thisrow = pg_Fetch_Object( $result, 0 );
-	$thishandle = $thisrow->handle;
 	$thissubjectid = $thisrow->subject_id;
 	$thisauthorid = $thisrow->author_id;
 	$thissubtitle = $thisrow->subtitle;
@@ -384,7 +383,6 @@ function RMLviewdocument( $id, $print_on = true )
 	$thiskeywords = $thisrow->keywords;
 	$thiscopyright = nl2br( $thisrow->copyright );
 	$thisteaser = nl2br( $thisrow->teaser );
-	$downloads = $thisrow->downloads;
 	$thisauthor = $thisrow->authorname;
 	$thissubject = $thisrow->subjecttitle;
 	$letter = $thisrow->sort_name;
@@ -393,6 +391,7 @@ function RMLviewdocument( $id, $print_on = true )
 	$reviewer = $thisrow->owner;
 	$mail = $thisrow->mail;
 	$posted = RMLfixdate( $thisrow->posted_on );
+	$thishandle = $thisrow->handle;
 	$language = $thisrow->language;
 
 	$out = '';
@@ -421,56 +420,17 @@ function RMLviewdocument( $id, $print_on = true )
 	}
 	
 	$tablename = RMLgetactivetable( $id );
-	$sql = RMLfiresql("SELECT sum(length(body)) as docsize,count(id) as doccount FROM $tablename WHERE doc_id=$id");
+	$sql = RMLfiresql("SELECT sum(length(body)) as docsize FROM $tablename WHERE doc_id=$id");
 	$thisrow = pg_Fetch_Object( $sql, 0 );
 	$docsize = $thisrow->docsize;
-	$elementcount = $thisrow->doccount;
 
-	$confirmed = $docsize;
-	$filename = './covers/cover'.$id.'.jpg';
-	if( file_exists( $filename ) ) {
-		$coversize = sizeFormat( filesize( $filename ) );
-	} else {
-		$coversize = '-';
-	}
 
-	$out.= "\n".'<tr valign="middle" style="height:20px"><td align="right" valign="top">size :</td><td style="padding-left:10px">
-<b>'.$coversize.'</b> in cover<br/>';
+	$out.= "\n".'<tr valign="middle" style="height:20px"><td align="right" valign="top">size :</td><td style="padding-left:10px">';
 
-	$path = './pictures/'.$id;
-	$ar = getDirectorySize( $path );
-
-	if( $ar['count'] ) {
-		$size = sizeFormat( $ar['size'] );
-		$pictures = $ar['count'];
-		$out .= '	<b>'.$size.'</b> in <b>'.$pictures.'</b> pictures<br/>';
-	}
-
-	$sql = RMLfiresql( "SELECT sum(length(body)) as notesize,count(id) as notecount FROM footnote WHERE docid=$id" );
-	$thisrow = pg_Fetch_Object( $sql, 0 );
-	$notesize = $thisrow->notesize;
-	$notecount = $thisrow->notecount;
-
-	if($notecount > 0) {
-		$size = sizeFormat( $notesize );
-		$confirmed += $notesize;
-		$out .= '<b>' .$size .'</b> in <b>' .getNumberFormatted( $notecount, 0 ) .'</b> footnotes<br/>';
-	}
-
-	$pagecount = $confirmed / 2000 + $pictures;
+	$pagecount = $docsize / 2000;
 	$docsize = sizeFormat( $docsize );
 
-	$out .= '<b>'.$docsize.'</b> in <b>' .getNumberFormatted( $elementcount , 0 ).'</b> paragraphs<br/>
-<b>~ ' .getNumberFormatted( $pagecount, 0 ) .'</b> pages<br/>
-<b>' .getNumberFormatted( $downloads, 0 ).'</b> downloads</td></tr>
-<tr valign="middle" style="height:20px"><td align="right">added by :</td><td style="padding-left:10px">
-<b>'
-.( ( $mail != '' ) ? '<a href="mailto:'.$mail.'">'.$thishandle.'</a>' : $thishandle )
-.'</b> (<i>'.$posted.'</i>)</td></tr>';
-
-/*$out .= "\n".'<tr style="height:30px"><td align="right" valign="middle">score :</td><td style="padding-left:10px">
-<span class="left-float">' .getRatingDisplay( $avgscore ) .'</span> &nbsp; <b><big>'.$avgscore.'</big></b>
-</td></tr>'; */
+	$out .= '<b>~ ' .getNumberFormatted( $pagecount, 0 ) .'</b> pages</td></tr>';
 
 	$out .= "\n<tr><td>&nbsp;</td></tr></table>";
 	$user = RMLgetcurrentuser();
