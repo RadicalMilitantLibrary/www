@@ -28,9 +28,9 @@ Maybe you cannot code and have no time to engage.
 The service is running as one of the oldest publicly known onion (back then called hidden) services.
 It is maintained and mainly funded by Jotunbane, so if you are willing to help, send your bits:
 
-via Bitcoin [1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC](bitcoin:1BtogHNY3HFarrAajRANfv2DPpmmy4aEzC)
+via Bitcoin [19czh9hk8v7hMptokenBFZDNGX4aGiyTRN](bitcoin:19czh9hk8v7hMptokenBFZDNGX4aGiyTRN)
 
-or Monero [45m2Sb7DcTp3joGFxsHjwEJQmVpp5uGzWHxY73Nu1TjS7iEnPxm6oejXjXYnnZcnz7fuwVxid7nVR7k7Ku8dBANXFwu7AUW](monero:45m2Sb7DcTp3joGFxsHjwEJQmVpp5uGzWHxY73Nu1TjS7iEnPxm6oejXjXYnnZcnz7fuwVxid7nVR7k7Ku8dBANXFwu7AUW)
+or Monero [49LJ7DffPBeZrBovTh2KzGZumU2N6m7PTQm12tfsKSMAMkAehMHaXoVZcdwmR7g7yNQ91QKopGL4BbGsHBZGTT8LR8kovxL](monero:49LJ7DffPBeZrBovTh2KzGZumU2N6m7PTQm12tfsKSMAMkAehMHaXoVZcdwmR7g7yNQ91QKopGL4BbGsHBZGTT8LR8kovxL)
 
 ## License Terms
 
