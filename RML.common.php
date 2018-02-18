@@ -94,6 +94,8 @@ function RMLdisplaymenu( $print_on = true )
 		$out .= "\n<a class=\"button star\" href=\"?function=manual\">Manual</a>";
 	}
 
+	$out .= "\n<a class=\"button star\" href=\"?function=rss\">RSS</a>";
+
 	if( ( !$currentuser ) && ( $function <> 'login' ) ) {
 		$out .= "\n<a class=\"button star\" href=\"?function=login\">Login</a>";
 	}
