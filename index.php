@@ -173,6 +173,10 @@ switch( $function ) {
 		$user = RMLgetcurrentuser();
 		header( 'Location: ?function=user' );
 	break;
+	case 'rss':
+		RMLgeneraterss(true);
+		die();
+	break;
 }
 
 switch( $message ) {

@@ -1751,6 +1751,46 @@ function RMLgetrating( $number ) {
 	return "dyslexic";
 }
 
+// ============================================================================
+
+function RMLgeneraterss($print_on = true)
+{
+	$out = '<?xml version="1.0" encoding="UTF-8" ?>'."\n";
+	$out .= '<rss version="2.0">'."\n";
+	$out .= '<channel>'."\n";
+	$out .= '<title>Radical Militant Library</title>'."\n";
+	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>'."\n";
+	$out .= '<image>'."\n";
+	$out .= '<url>./img/logo.png</url>';
+	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>';
+	$out .= '</image>';
+	$out .= '<description>All Your Books Are Belong To Us !!!</description>'."\n";
+	
+	$sql = RMLfiresql("SELECT id,title,subtitle,author_id,teaser,posted_on FROM document WHERE status > 2 ORDER BY posted_on DESC LIMIT 20");
+	for($row=0;$row<pg_numrows($sql);$row++) {
+		$thisrow = pg_Fetch_Object($sql,$row);
+		$thisid = $thisrow->id;
+		$thistitle = $thisrow->title;
+		$thissubtitle = $thisrow->subtitle;
+		$thisauthor = RMLgetauthorname($thisrow->author_id);
+		$thisteaser = $thisrow->teaser;
+		$thisdate = $thisrow->posted_on;
+	
+		$out .= '<item>'."\n";
+		$out .= '<title>'.$thistitle.' - '.$thisauthor.'</title>'."\n";
+		$out .= '<link>http://c3jemx2ube5v5zpg.onion/?document=view&amp;id='.$thisid.'</link>'."\n";
+		$out .= '<description>'."\n".$thisteaser.'</description>'."\n";
+		$out .= '<pubDate>'.$thisdate.'</pubDate>'."\n";
+		$out .= '</item>'."\n";
+	}	
+	
+	$out .= '</channel>'."\n";
+	$out .= '</rss>'."\n";
+	return processOutput( $out, $print_on );
+}
+
+// ============================================================================
+
 /* reimplemented
  *
  * suppressing warning for errno 13: 'Permission denied'
