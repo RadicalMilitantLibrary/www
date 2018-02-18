@@ -1756,7 +1756,7 @@ function RMLgetrating( $number ) {
 function RMLgeneraterss($print_on = true)
 {
 	$out = '<?xml version="1.0" encoding="UTF-8" ?>'."\n";
-	$out .= '<rss version="2.0">'."\n";
+	$out .= '<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">'."\n";
 	$out .= '<channel>'."\n";
 	$out .= '<title>Radical Militant Library</title>'."\n";
 	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>'."\n";
@@ -1778,6 +1778,7 @@ function RMLgeneraterss($print_on = true)
 	
 		$out .= '<item>'."\n";
 		$out .= '<title>'.$thistitle.' - '.$thisauthor.'</title>'."\n";
+		$out .= '<enclosure url="http://c3jemx2ube5v5zpg.onion/covers/cover'.$thisid.'" width="150"/>'."\n";
 		$out .= '<link>http://c3jemx2ube5v5zpg.onion/?document=view&amp;id='.$thisid.'</link>'."\n";
 		$out .= '<description>'."\n".$thisteaser.'</description>'."\n";
 		$out .= '<pubDate>'.$thisdate.'</pubDate>'."\n";
