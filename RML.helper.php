@@ -1007,6 +1007,7 @@ function RMLexporthtml( $id )
 	header('Content-Length: ' . filesize($filename));
 	ob_clean();
 	flush();
+	readfile($filename);
 	exit;
 }
 
@@ -1104,6 +1105,7 @@ function RMLexportmd( $id )
 	header('Content-Length: ' . filesize($filename));
 	ob_clean();
 	flush();
+	readfile($filename);
 	exit;
 }
 
@@ -1501,6 +1503,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	header('Content-Length: ' . filesize($filename));
 	ob_clean();
 	flush();
+	readfile($filename);
 	exit;
 }
 
