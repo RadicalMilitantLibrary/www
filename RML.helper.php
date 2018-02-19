@@ -1755,16 +1755,16 @@ function RMLgetrating( $number ) {
 
 function RMLgeneraterss($print_on = true)
 {
-	$out = '<?xml version="1.0" encoding="UTF-8" ?>'."\n";
-	$out .= '<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">'."\n";
-	$out .= '<channel>'."\n";
-	$out .= '<title>Radical Militant Library</title>'."\n";
-	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>'."\n";
-	$out .= '<image>'."\n";
+	$out = '<?xml version="1.0" encoding="UTF-8" ?>';
+	$out .= '<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">';
+	$out .= '<channel>';
+	$out .= '<title>Radical Militant Library</title>';
+	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>';
+	$out .= '<image>';
 	$out .= '<url>./img/logo.png</url>';
 	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>';
 	$out .= '</image>';
-	$out .= '<description>All Your Books Are Belong To Us !!!</description>'."\n";
+	$out .= '<description>All Your Books Are Belong To Us !!!</description>';
 	
 	$sql = RMLfiresql("SELECT id,title,subtitle,author_id,teaser,posted_on FROM document WHERE status > 2 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($sql);$row++) {
@@ -1773,20 +1773,19 @@ function RMLgeneraterss($print_on = true)
 		$thistitle = $thisrow->title;
 		$thissubtitle = $thisrow->subtitle;
 		$thisauthor = RMLgetauthorname($thisrow->author_id);
-		$thisteaser = $thisrow->teaser;
+		$thisteaser = strip_tags($thisrow->teaser);
 		$thisdate = $thisrow->posted_on;
 	
-		$out .= '<item>'."\n";
-		$out .= '<title>'.$thistitle.' - '.$thisauthor.'</title>'."\n";
-		$out .= '<enclosure url="http://c3jemx2ube5v5zpg.onion/covers/cover'.$thisid.'" width="150"/>'."\n";
-		$out .= '<link>http://c3jemx2ube5v5zpg.onion/?document=view&amp;id='.$thisid.'</link>'."\n";
-		$out .= '<description>'."\n".$thisteaser.'</description>'."\n";
-		$out .= '<pubDate>'.$thisdate.'</pubDate>'."\n";
-		$out .= '</item>'."\n";
+		$out .= '<item>';
+		$out .= '<title>'.$thistitle.' - '.$thisauthor.'</title>';
+		$out .= '<link>http://c3jemx2ube5v5zpg.onion/?document=view&amp;id='.$thisid.'</link>';
+		$out .= '<description>'."\n".$thisteaser.'</description>';
+		$out .= '<pubDate>'.$thisdate.'</pubDate>';
+		$out .= '</item>';
 	}	
 	
-	$out .= '</channel>'."\n";
-	$out .= '</rss>'."\n";
+	$out .= '</channel>';
+	$out .= '</rss>';
 	return processOutput( $out, $print_on );
 }
 
