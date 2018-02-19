@@ -34,6 +34,7 @@ function RMLdisplaytop( $print_on = true )
 {
 	$out = "\n\n".'<!-- TOP START -->'
 	.RMLdisplaymenu( false )
+	.RMLdisplaylocation( false )
 	.'<div class="inlineclear"></div>'
 	.RMLdisplaytitle( false )
 	."\n";
@@ -341,7 +342,6 @@ function RMLdisplayend( $print_on = true )
 
 function RMLdisplaylocation( $print_on = true ) {
 	global $author, $subject, $document, $id;
-	$out = '<a class="button home" href="."><b>Home</b></a>';
 	if( $subject ) {
 		$out .= RMLdisplaysubjectlocation( false );
 	}

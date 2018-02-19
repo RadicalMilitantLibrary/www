@@ -283,10 +283,11 @@ function RMLupdateauthor( $id, $print_on = true ) {
 function RMLdisplayauthorlocation( $id, $print_on = true ) {
 	global $letter;
 
-	$out = '';
+	$out = '<div class="order">';
 	if( $id ) {
-		$out = "\n".'<a class="button next" href="?author=view&amp;letter='.$letter.'">Authors</a>';
+		$out .= "\n".'[<a href="?author=view&amp;letter='.$letter.'">Authors</a>]';
 	}
+	$out .= "</div>";
 	return processOutput( $out, $print_on );
 }
 

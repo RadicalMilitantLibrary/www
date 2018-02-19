@@ -491,7 +491,7 @@ function RMLdisplaydocumentlocation( $print_on = true )
 {
 	global $id, $section, $document, $letter;
 
-	$out = '';
+	$out = '<div class="order">';
 	$result = RMLfiresql("SELECT subject_id,author_id,title,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT sort_name FROM author WHERE id=document.author_id) AS sortname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle FROM document WHERE id=$id");
 	if ( ! ( $thisrow = pg_Fetch_Object( $result, 0 ) ) ) {
 		$out = 'ERROR: Document ID not valid in <code>displaydocumentlocation()</code>.';
@@ -505,14 +505,16 @@ function RMLdisplaydocumentlocation( $print_on = true )
 		$doctitle =  $thisrow->title;
 
 		if( $document == 'view' ) {
-			$out .= "\n".'<a class="button next" href="?author=view&amp;letter='.$myletter.'">Authors</a>
-	<a class="button next" href="?author=view&amp;id='.$authorid.'&amp;letter='.$myletter.'">'.$authorname.'</a>';
+			$out .= "\n".'[<a href="?author=view&amp;letter='.$myletter.'">Authors</a>] [<a href="?author=view&amp;id='.$authorid.'&amp;letter='.$myletter.'">'.$authorname.'</a>]';
 		}
 
 		if($section) {
-			$out .= "\n".'<a class="button next" href="?document=view&amp;id='.$id.'">'.$doctitle.'</a>';
+			$out .= "\n".' [<a href="?document=view&amp;id='.$id.'">'.$doctitle.'</a>]';
 		}
 	}
+	
+	$out .= "</div>";
+	
 	return processOutput( $out, $print_on );
 }
 
