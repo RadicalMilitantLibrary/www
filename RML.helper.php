@@ -879,13 +879,6 @@ function RMLexporttxt( $id, $print_on = true )
 		header('Content-Length: ' . filesize( $filename ) );
 		ob_clean();
 		flush();
-		if(
-			readfile($filename)
-			&& !connection_aborted()//try detecting aborted download
-			&& $status > 2
-		) {
-			RMLcountdownload();
-		}
 		exit;
 	}
 	return processOutput( $out, $print_on );
@@ -1014,13 +1007,6 @@ function RMLexporthtml( $id )
 	header('Content-Length: ' . filesize($filename));
 	ob_clean();
 	flush();
-	if(
-		readfile($filename)
-		&& !connection_aborted()//try detecting aborted download
-		&& $status > 2
-	) {
-		RMLcountdownload();
-	}
 	exit;
 }
 
@@ -1118,13 +1104,6 @@ function RMLexportmd( $id )
 	header('Content-Length: ' . filesize($filename));
 	ob_clean();
 	flush();
-	if(
-		readfile($filename)
-		&& !connection_aborted()//try detecting aborted download
-		&& $status > 2
-	) {
-		RMLcountdownload();
-	}
 	exit;
 }
 
@@ -1522,24 +1501,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	header('Content-Length: ' . filesize($filename));
 	ob_clean();
 	flush();
-
-	if(
-		readfile($filename)
-		&& !connection_aborted()//try detecting aborted download
-		&& $status > 2
-	) {	// Only count download if document is live
-		RMLcountdownload();
-	}
 	exit;
-}
-
-// ============================================================================
-
-function RMLcountdownload()
-{
-	global $id;
-
-	RMLfiresql( "UPDATE document SET downloads = downloads + 1 WHERE id=$id" );
 }
 
 // ============================================================================

@@ -12,9 +12,7 @@ the Free Software Foundation; either version 2 of the License, or
 ===================================================================== */
 
 body {
-	/*background-image: url(../img/background.jpg);
-	background-attachment: scroll; */
-	font-family		: serif;
+	font-family	: serif;
 	font-size		: 14pt;
 	margin			: 0;
 	color			: black;
@@ -27,11 +25,15 @@ body {
 	vertical-align	: top
 }
 
-
+.menu {
+	padding-left	: 5px;
+	padding-top	: 5px
+}
 
 img.logo {
 	margin			: 0px;
 	border			: 0;
+	padding-right	: 5px;
 	float			: right;
 }
 

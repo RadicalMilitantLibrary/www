@@ -2,7 +2,7 @@
 
 // ============================================================================
 //  Common functions for Radical Militant Library
-//  Copyright (C) 2009-2016 Jotunbane
+//  Copyright (C) 2009-2018 Jotunbane
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -33,10 +33,8 @@ function RMLdisplayhead( $print_on = true ) {
 function RMLdisplaytop( $print_on = true )
 {
 	$out = "\n\n".'<!-- TOP START -->'
-/* <table class="body">
-<tr><td colspan="3" class="location"><div class="inlineclear">' */
 	.RMLdisplaymenu( false )
-	.'<a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><div class="inlineclear"></div>'
+	.'<div class="inlineclear"></div>'
 	.RMLdisplaytitle( false )
 	."\n";
 	return processOutput( $out, $print_on );
@@ -49,68 +47,69 @@ function RMLMenuButton( $btntile, $href = "", $class = "", $decoration = 'star' 
 	return  "\n<a class=\"$class $decoration\" href=\"$href\">$btntitle</a>";
 }
 
+// ============================================================================
+
 function RMLdisplaymenu( $print_on = true )
 {
 	global $author, $subject, $news, $document, $function, $message, $style, $lists;
 	$currentuser = RMLgetcurrentuser();
 
-	$out = "\n\n".'<!-- MENU START --><a class="button home" href=".">Home</a>
+	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button" href=".">Home</a>
 ';
 
 	if($function == 'about') {
-		$out .= "\n<a class=\"activebutton about\" href=\"?function=about\">About</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?function=about\">About</a>";
 	} else {
-		$out .= "\n<a class=\"button about\" href=\"?function=about\">About</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=about\">About</a>";
 	}
 
 	if($news) {
-		$out .= "\n<a class=\"activebutton email\" href=\"?news=view\">News</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?news=view\">News</a>";
 	} else {
-		$out .= "\n<a class=\"button email\" href=\"?news=view\">News</a>";
+		$out .= "\n<a class=\"button\" href=\"?news=view\">News</a>";
 	}
 
 	if(($author == 'view') || ($document == 'view')) {
-		$out .= "\n<a class=\"activebutton like\" href=\"?author=view&amp;letter=A\">Authors</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?author=view&amp;letter=A\">Authors</a>";
 	} else {
-		$out .= "\n<a class=\"button like\" href=\"?author=view&amp;letter=A\">Authors</a>";
+		$out .= "\n<a class=\"button\" href=\"?author=view&amp;letter=A\">Authors</a>";
 	}
 
-/*	if($subject == 'view') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
+	if($subject == 'view') {
+		$out .= "\n<a class=\"activebutton\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
+		$out .= "\n<a class=\"button\" href=\"?subject=view&amp;letter=All&amp;id=0\">Subjects</a>";
 	}
-*/
 
 	if(($lists == 'view') || ($lists == 'add')){
-		$out .= "\n<a class=\"activebutton star\" href=\"?lists=view&ampid=0\">Lists</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?lists=view&ampid=0\">Lists</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?lists=view&amp;id=0\">Lists</a>";
+		$out .= "\n<a class=\"button\" href=\"?lists=view&amp;id=0\">Lists</a>";
 	}
 
 	if($function == 'manual') {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=manual\">Manual</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?function=manual\">Manual</a>";
 	} else {
-		$out .= "\n<a class=\"button star\" href=\"?function=manual\">Manual</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=manual\">Manual</a>";
 	}
 
-	$out .= "\n<a class=\"button star\" href=\"?function=rss\">RSS</a>";
+	$out .= "\n<a class=\"button\" href=\"?function=rss\">RSS</a>";
 
 	if( ( !$currentuser ) && ( $function <> 'login' ) ) {
-		$out .= "\n<a class=\"button star\" href=\"?function=login\">Login</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=login\">Login</a>";
 	}
 	if( ( !$currentuser ) && ( $function == 'login' ) ) {
-		$out .= "\n<a class=\"activebutton star\" href=\"?function=login\">Login</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?function=login\">Login</a>";
 	}
 
 	if(($currentuser) && ($function <> 'user') && ($message <> 'new') && ($style <> 'new') && ($document <> 'new')) {
-		$out .= "\n<a class=\"button like\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=user\">My Page</a>";
 	}
 	if(($function == 'user') || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
-		$out .= "\n<a class=\"activebutton like\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">My Page</a>";
 	}
 
-	$out .= "\n";
+	$out .= "\n</div>";
 
 	return processOutput( $out, $print_on );
 }
