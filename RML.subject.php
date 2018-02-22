@@ -22,7 +22,11 @@ function RMLdisplaysubject( $id, $print_on = true )
 	if( !isset( $id ) || $id < 1 ) {
 		$out .= RMLdisplaysubjectorder( false );
 
-		$result = RMLfiresql( "SELECT id,subject_name,subject_description,owner,(SELECT count(id) FROM document WHERE subject_id=subject.id AND status=3) AS doccount FROM subject ORDER BY subject_name" );
+		if( hasRights( 'addsubject' ) ) {
+			$out .= "\n".'<a class="button add" href="?subject=add">Add Subject</a>';
+		}
+
+		$result = RMLfiresql( "SELECT id,subject_name,subject_description,(SELECT count(id) FROM document WHERE subject_id=subject.id AND status>3) AS doccount FROM subject ORDER BY subject_name" );
 		if ( ! $result ) {
 			$out = 'ERROR: No elements to list';
 		} else {
@@ -31,32 +35,23 @@ function RMLdisplaysubject( $id, $print_on = true )
 				$thisrow = pg_Fetch_Object( $result, $row );
 				$thisid = $thisrow->id;
 				$thisname = $thisrow->subject_name;
-				$maintainer = $thisrow->owner;
 				$doccount = $thisrow->doccount;
 				$description = nl2br( $thisrow->subject_description );
 
 				if( strlen( $description ) == 0 ) {
-					$description = "<i>$maintainer</i> was too lazy to write anything here ...";
+					$description = "No description...";
 				} elseif ( strlen( $description ) > 300 ) {
 					$description = substr( $description, 0, 300 ) .'...';
 				}
-				$userid = RMLgetuserID( $maintainer );
-				$pic = './users/' .$userid .'.png';
-				$pic = ( $maintainer != '' && file_exists( $pic ) ? $pic : './users/Anonymous.png' ); 
 				$out .= "\n".'<div class="box">
-<div class="boxheader"><a href="?subject=view&amp;id='.$thisid.'"><img style="float:left;margin-right:10px;margin-bottom : 5px" src="'.$pic.'"/><b>'.$thisname.'</a></b></div><div style="text-align:right;padding-right:15px;padding-bottom:5px;"><small>Maintained by : <b>'.$maintainer.'</b> (<b>' .getNumberFormatted( $doccount, 0 ) .'</b> documents)</small></div>
+<div class="boxheader"><a href="?subject=view&amp;id='.$thisid.'"><b>'.$thisname.'</a></b></div>
 <div class="boxtext">'.$description.'</div>
 <div class="inlineclear"></div>
 </div>';
 			}
-		
-			if( hasRights( 'addsubject' ) ) {
-				$out .= "\n".'<a class="button add" href="?subject=add">Add Subject</a>';
-			}
 		}
 	} else {
-		$sql = RMLfiresql( "SELECT id,subject_name,subject_description AS subjdesc,owner,(SELECT COUNT(id) FROM document WHERE subject_id=subject.id AND subject.id=$id AND status=3) AS doccount FROM subject ORDER BY subject_name" );
-		//~ $sql = RMLfiresql( "SELECT COUNT(id) as doccount FROM document WHERE subject_id=$id AND status=3" );
+		$sql = RMLfiresql( "SELECT id,subject_name,subject_description AS subjdesc,(SELECT COUNT(id) FROM document WHERE subject_id=subject.id AND subject.id=$id AND status=3) AS doccount FROM subject ORDER BY subject_name" );
 		if( ! $sql ) {
 			$out = 'ERROR: No elements to list';
 		} else {
@@ -95,14 +90,6 @@ function RMLdisplaysubject( $id, $print_on = true )
 			// PAGINATION END.
 			$out .= $pagination;
 // todo: needs fix for correct subject image (its asked for when creating a new one), could default on maintainer image if not available
-			$userid = RMLgetuserID( $maintainer );
-			$pic = './users/' .$userid .'.png';
-			$pic = ( $maintainer != '' && file_exists( $pic ) ? $pic : './users/Anonymous.png' );
-			$out .= "\n".'<div class="box">
-<div class="boxheader"><img style="float:left;margin-right:10px;margin-bottom : 5px" src="' .$pic .'"/></div><div style="text-align:right;padding-right:15px;padding-bottom:5px;"><small>Maintained by : <b>' .$thisrow->owner .'</b> (<b>' .getNumberFormatted( $doccount, 0 ) .'</b> documents)</small></div>
-<div class="boxtext">' .nl2br( $thisrow->subjdesc ) .'</div>
-<div class="inlineclear"></div>
-</div>';
 
 			$sql = RMLfiresql( "SELECT id,title,status,author_id,year,keywords,teaser,(SELECT name FROM author WHERE id=document.author_id) AS autname,(SELECT AVG(level) FROM forum WHERE thread_id=document.id) AS score FROM document WHERE subject_id=$id AND status=3 ORDER BY title LIMIT $itemprpage OFFSET $firstrow" );
 			if( ! $sql ) {
@@ -279,7 +266,7 @@ function RMLdisplaysubjectlocation( $print_on = true ) {
 
 	$out = '';
 	if( ( $id > 0 ) || ( $subject == 'new' ) ) {
-		$out .= "\n".'<a class="button next" href="?subject=view&amp;id=0&amp;letter=All">Subjects</a>';
+		$out .= "\n".'[<a href="?subject=view&amp;id=0&amp;letter=All">Subjects</a>]';
 	}
 	return processOutput( $out, $print_on );
 }
