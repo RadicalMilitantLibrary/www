@@ -271,4 +271,18 @@ function RMLdisplaysubjectlocation( $print_on = true ) {
 	return processOutput( $out, $print_on );
 }
 
+// ============================================================================
+
+function RMLgetsubjecttitle( $id )
+{
+	if( is_numeric( $id ) && $id != 0 ) {
+		if ( $result = RMLfireSQL( "SELECT subject_name FROM subject WHERE id=$id" ) ) {
+			$thisrow = pg_Fetch_Object( $result, 0 );
+			$thissubject = $thisrow->subject_name;
+			return $thissubject;
+		}
+	} else {
+		return 'Subjects';
+	}
+}
 

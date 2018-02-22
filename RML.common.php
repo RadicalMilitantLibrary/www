@@ -55,7 +55,7 @@ function RMLdisplaymenu( $print_on = true )
 	global $author, $subject, $news, $document, $function, $message, $style, $lists;
 	$currentuser = RMLgetcurrentuser();
 
-	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button" href=".">Home</a>
+	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button home" href=".">Home</a>
 ';
 
 	if($function == 'about') {
@@ -382,7 +382,7 @@ function RMLdisplaytitle( $print_on = true ) {
 
 	switch($comment) {
 	case 'view':
-		$title = "~ Radical Militant Comments ~";
+		$title = "~ Comments ~";
 	break;
 	case 'new':
 		$title = RMLgetdocumenttitle( $id );
