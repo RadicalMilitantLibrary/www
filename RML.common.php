@@ -311,10 +311,13 @@ function RMLdisplaybottom( $print_on = true )
 	$nextlink = RMLgetnextlink();
 	$uplink = RMLgetuplink();
 
-	$out = "\n\n".'<!-- BOTTOM START -->'
+	$out = "\n\n".'<!-- BOTTOM START --><div class="order">'
 .( isset( $prevlink ) ? '<a class="button prev" href="'.$prevlink.'">Prev</a> ' : '' )
 .( isset( $uplink ) ? '<a class="button up" href="'.$uplink.'">Up</a> ' : '' )
 .( isset( $nextlink ) ? '<a class="button next" href="'.$nextlink.'">Next</a> ' : '' );
+
+	$out .= "</div>";	
+	
 	return processOutput( $out, $print_on );
 }
 
