@@ -266,7 +266,7 @@ function RMLdisplaysubjectlocation( $print_on = true ) {
 
 	$out = '';
 	if( ( $id > 0 ) || ( $subject == 'new' ) ) {
-		$out .= "\n".'[<a href="?subject=view&amp;id=0&amp;letter=All">Subjects</a>]';
+		$out .= "\n".'<div class="order">[<a href="?subject=view&amp;id=0&amp;letter=All">Subjects</a>]</div>';
 	}
 	return processOutput( $out, $print_on );
 }
