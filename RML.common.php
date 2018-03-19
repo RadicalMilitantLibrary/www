@@ -337,9 +337,9 @@ function RMLdisplayend( $print_on = true )
 <b>' .getNumberFormatted( $now - $starttime, -5 ) .'</b> seconds,
 <b>' .sizeFormat( $SQLsize, -3 ) .'</b></small>
 <div class="inlineclear"></div>
-<img style="border: 0; margin : 5px;" src="./img/btc.png"/>
+<a href="bitcoin:19czh9hk8v7hMptokenBFZDNGX4aGiyTRN"><img style="border: 0; margin : 5px;" src="./img/btc.png"/></a>
 <div class="inlineclear"></div>
-<img style="border: 0; margin : 5px;" src="./img/hacker.png"/>
+<a href="https://www.catb.org/hacker-emblem/"><img style="border: 0; margin : 5px;" src="./img/hacker.png"/></a>
 </div>
 </body>
 </html>
