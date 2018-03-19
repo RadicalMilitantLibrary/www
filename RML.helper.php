@@ -201,10 +201,19 @@ function RMLcreateauthor( $author )
 
 function RMLpreparestring( $string )
 {
-	$search = array ( "/'/", '@&#(\d+);@e' );
-	$replace = array ( "''", 'chr(\1)' );
+	$result = preg_replace( "/'/", "''", $string );
+	$result = preg_replace_callback( '@&#(\d+);@', function($m){ // using callback variant after e modifier was deprecated
+		// we expect integer
+		if ( $m[1] >= 0 && $m[1] < 32 ) {
+			return chr($m[1]); // supports ascii only
+		} else if ( $m[1] >= 32 ) {
+			// this one would also support hex, orctal etc. numbers
+			return html_entity_decode($m[0], ENT_QUOTES | ENT_XML1, 'UTF-8');
+		} else { // < 0 
+			trigger_error("unexpected match in function RMLpreparestring: ".$m[0], E_USER_WARNING);
+		}
+	}, $string );
 
-	$result = preg_replace( $search, $replace, $string );
 	// replace without regex
 	//$result = str_replace(array('$','"','{','}'),'',$result);
 	//$result = str_replace(array('/','%'),'-',$result);
