@@ -331,10 +331,16 @@ function RMLdisplayend( $print_on = true )
 	$now = microtime();
 
 	$out = "\n\n".'<!-- END START -->
-<div class="inlineclear"></div><div class="end"><a href="https://github.com/RadicalMilitantLibrary">Radical Militant Library</a> <b>'.$Version.'</b><br />
+<div class="inlineclear"></div>
+<div class="end"><a href="https://github.com/RadicalMilitantLibrary">Radical Militant Library</a> <b>'.$Version.'</b><br />
 <small><b>' .getNumberFormatted( $SQLcounter, 0 ) .'</b> statements,
 <b>' .getNumberFormatted( $now - $starttime, -5 ) .'</b> seconds,
-<b>' .sizeFormat( $SQLsize, -3 ) .'</b></small></div>
+<b>' .sizeFormat( $SQLsize, -3 ) .'</b></small>
+<div class="inlineclear"></div>
+<img style="border: 0; margin : 5px;" src="./img/btc.png"/>
+<div class="inlineclear"></div>
+<img style="border: 0; margin : 5px;" src="./img/hacker.png"/>
+</div>
 </body>
 </html>
 <!-- END OF LINE -->';
