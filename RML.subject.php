@@ -51,7 +51,7 @@ function RMLdisplaysubject( $id, $print_on = true )
 			}
 		}
 	} else {
-		$sql = RMLfiresql( "SELECT id,subject_name,subject_description AS subjdesc,(SELECT COUNT(id) FROM document WHERE subject_id=subject.id AND subject.id=$id AND status=3) AS doccount FROM subject ORDER BY subject_name" );
+		$sql = RMLfiresql( "SELECT id,subject_name,subject_description AS subjdesc,(SELECT COUNT(id) FROM document WHERE subject_id=$id AND status=3) AS doccount FROM subject ORDER BY subject_name" );
 		if( ! $sql ) {
 			$out = 'ERROR: No elements to list';
 		} else {
@@ -85,10 +85,11 @@ function RMLdisplaysubject( $id, $print_on = true )
 			$pagination .= '</div>';
 			$tmprow = $firstrow + 1;
 			if( $doccount > $itemprpage ) {
-				$pagination .= '<div style="float:right;margin-top: -30px;">&nbsp;<b>' .getNumberFormatted( $tmprow, 0 ) .'</b> to <b>'. getNumberFormatted( $lastrow, 0 ) .'</b> of <b>'. getNumberFormatted( $doccount, 0 ) .'</b></div>';
+				$pagination .= '<div style="float:right;margin-top: -50px;">&nbsp;<b>' .getNumberFormatted( $tmprow, 0 ) .'</b> to <b>'. getNumberFormatted( $lastrow, 0 ) .'</b> of <b>'. getNumberFormatted( $doccount, 0 ) .'</b></div>';
 			}
 			// PAGINATION END.
 			$out .= $pagination;
+			
 // todo: needs fix for correct subject image (its asked for when creating a new one), could default on maintainer image if not available
 
 			$sql = RMLfiresql( "SELECT id,title,status,author_id,year,keywords,teaser,(SELECT name FROM author WHERE id=document.author_id) AS autname,(SELECT AVG(level) FROM forum WHERE thread_id=document.id) AS score FROM document WHERE subject_id=$id AND status=3 ORDER BY title LIMIT $itemprpage OFFSET $firstrow" );
