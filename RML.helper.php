@@ -1284,7 +1284,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	$epub->addFile("./img/logo.png", "logo.png");
 	$epub->addFile("./img/vignet.jpg","vignet.jpg");
 
-	$cover = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n<title>Cover</title>\n<style type=\"text/css\">\n@page { margin: 0pt; padding :0pt } body {margin : 0pt; padding : 0pt}\n</style>\n</head>\n<body>\n<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"100%\" height=\"100%\" viewBox=\"0 0 600 800\" preserveAspectRatio=\"xMidYMid meet\">\n<image width=\"600\" height=\"800\" xlink:href=\"cover.jpg\" />\n</svg>" . $pageend;
+	$cover = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n<title>Cover</title>\n<style type=\"text/css\">\n@page { margin: 0 } body {margin : 0; background-color : black}\n</style>\n</head>\n<body>\n<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"100%\" height=\"100%\">\n<image xlink:href=\"cover.jpg\" />\n</svg>" . $pageend;
 
 	$epub->addFromString('cover.html', $cover);
 
