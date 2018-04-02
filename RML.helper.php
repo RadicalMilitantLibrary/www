@@ -201,6 +201,8 @@ function RMLcreateauthor( $author )
 
 function RMLpreparestring( $string )
 {
+	// Jotunbane : Whatever this did, it did not do as expected.
+	// broken :(
 	$result = preg_replace( "/'/", "''", $string );
 	$result = preg_replace_callback( '@&#(\d+);@', function($m){ // using callback variant after e modifier was deprecated
 		// we expect integer

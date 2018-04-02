@@ -404,19 +404,15 @@ function RMLviewdocument( $id, $print_on = true )
 	}
 
 	$out .= "\n"
-		.'<table style="width:100%;font-size:12pt" cellspacing="0" cellpadding="0">
-<tr valign="top" style="height:20px">
-	<td style="width:150px" rowspan="20"><a href="./covers/cover'.$id.'.jpg"><img style="margin:0;width:150px;border-width:1px;border-style:solid" alt="Cover" src="./covers/cover'.$id.'"/></a></td>
-	<td align="right">by : </td><td style="padding-left:10px"><b><a href="?author=view&amp;id='.$thisauthorid.( ( !isset($thisauthorid) || $thisauthorid=='' || $thisauthorid==0) ? '&amp;letter='.$letter : '' ).'"><big>'.$thisauthor.'</big></a></b></td>
-</tr><tr valign="middle" style="height:20px">
-	<td align="right">&nbsp; &nbsp; published :</td><td style="padding-left:10px"><b>'.$thisyear.'</b></td>
-</tr><tr valign="middle" style="height:20px"><td align="right">language :</td><td style="padding-left:10px"><b>'.$language.'</b></td></tr><tr valign="middle" style="height:20px">
-	<td align="right">subject :</td><td style="padding-left:10px"><b><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a></b></td>
-</tr>';
+		.'<a href="./covers/cover'.$id.'.jpg"><img class="Cover" alt="Cover" src="./covers/cover'.$id.'"/></a>
+	<div class="order"><small>by : <b><a href="?author=view&amp;id='.$thisauthorid.( ( !isset($thisauthorid) || $thisauthorid=='' || $thisauthorid==0) ? '&amp;letter='.$letter : '' ).'">'.$thisauthor.'</a></b>
+<br/>published : <b>'.$thisyear.'</b>
+<br/>language : <b>'.$language.'</b>
+<br/>subject : <b><a href="?subject=view&amp;id='.$thissubjectid.'">'.$thissubject.'</a></b>';
 //.'<tr valign="top"><td align="right">BiBTeX :</td><td><div class="bibtex"><textarea id="bibtext" name="bibtext" rows="13" cols="40" readonly="readonly">' .getBibTeX( $id ) .'</textarea></div></td></tr>';
 
 	if( $thiskeywords ) {
-		$out .= "\n".'<tr valign="middle" style="height:20px"><td align="right">keywords :</td><td style="padding-left:10px"><b>'.$thiskeywords.'</b></td></tr>';
+		$out .= "<br/>".'keywords :<b>'.$thiskeywords.'</b>';
 	}
 	
 	$tablename = RMLgetactivetable( $id );
@@ -424,15 +420,15 @@ function RMLviewdocument( $id, $print_on = true )
 	$thisrow = pg_Fetch_Object( $sql, 0 );
 	$docsize = $thisrow->docsize;
 
-
-	$out.= "\n".'<tr valign="middle" style="height:20px"><td align="right" valign="top">size :</td><td style="padding-left:10px">';
+	$out.= "<br/>".'size : ';
 
 	$pagecount = $docsize / 2000;
 	$docsize = sizeFormat( $docsize );
+	$readtime = getNumberFormatted( ($pagecount / 0.6) / 60 , 1);
+	// Jotunbane : I read about 0.6 page/minute.	
+	
+	$out .= '<b>~ ' .getNumberFormatted( $pagecount, 0 ) .'</b> pages (<b>'.$readtime.'</b> hours)</small></div>';
 
-	$out .= '<b>~ ' .getNumberFormatted( $pagecount, 0 ) .'</b> pages</td></tr>';
-
-	$out .= "\n<tr><td>&nbsp;</td></tr></table>";
 	$user = RMLgetcurrentuser();
 	if( $thisstatus > 0		//book is published
 		&& $user !== null	//and user logged in
