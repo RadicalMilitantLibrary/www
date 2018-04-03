@@ -422,7 +422,12 @@ function RMLviewdocument( $id, $print_on = true )
 
 	$out.= "<br/>".'size : ';
 
-	$pagecount = $docsize / 2000;
+	$pagecount = $docsize / 2176;
+	// Adobe claims a "page" is 2000 bytes.
+	// As I learned it, a normal page is 34 lines with 64 characters
+	// That comes to 2176 bytes/page
+	// (I have seen people argue as low as 1800, and as high as 2500)
+	
 	$docsize = sizeFormat( $docsize );
 	$readtime = getNumberFormatted( ($pagecount / 0.6) / 60 , 1);
 	// Jotunbane : I read about 0.6 page/minute.	
