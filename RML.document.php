@@ -432,7 +432,7 @@ function RMLviewdocument( $id, $print_on = true )
 	$readtime = getNumberFormatted( ($pagecount / 0.6) / 60 , 1);
 	// Jotunbane : I read about 0.6 page/minute.	
 	
-	$out .= '<b>~ ' .getNumberFormatted( $pagecount, 0 ) .'</b> pages (<b>'.$readtime.'</b> hours)</small></div>';
+	$out .= '<b>' .getNumberFormatted( $pagecount, 0 ) .'</b> pages (<b>'.$readtime.'</b> hours)</small></div>';
 
 	$user = RMLgetcurrentuser();
 	if( $thisstatus > 0		//book is published
