@@ -420,7 +420,7 @@ function RMLviewdocument( $id, $print_on = true )
 	$thisrow = pg_Fetch_Object( $sql, 0 );
 	$docsize = $thisrow->docsize;
 
-	$out.= "<br/>".'size : ';
+	$out.= "<br/>".'readtime : ';
 
 	$pagecount = $docsize / 2176;
 	// Adobe claims a "page" is 2000 bytes.
@@ -432,7 +432,7 @@ function RMLviewdocument( $id, $print_on = true )
 	$readtime = getNumberFormatted( ($pagecount / 0.6) / 60 , 1);
 	// Jotunbane : I read about 0.6 page/minute.	
 	
-	$out .= 'readtime : <b>' .getNumberFormatted( $pagecount, 0 ) .'</b> pages (<b>'.$readtime.'</b> hours)</small></div>';
+	$out .= '<b>'.$readtime.'</b> hours (<b>' .getNumberFormatted( $pagecount, 0 ) .'</b> pages)</small></div>';
 
 	$user = RMLgetcurrentuser();
 	if( $thisstatus > 0		//book is published
