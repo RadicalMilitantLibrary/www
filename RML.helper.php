@@ -201,9 +201,12 @@ function RMLcreateauthor( $author )
 
 function RMLpreparestring( $string )
 {
-	// Jotunbane : Whatever this did, it did not do as expected.
-	// broken :(
-	$result = preg_replace( "/'/", "''", $string );
+	$result = str_replace( '\'', '\'\'', $string );
+	
+	$result = str_replace(array( '​', '‌', '‍',''),'',$result);
+	// Remove zero-width space, zero-width non-joiner. zero-width joiner and zero-width no-break space
+	// See : https://medium.com/@umpox/be-careful-what-you-copy-invisibly-inserting-usernames-into-text-with-zero-width-characters-18b4e6f17b66	
+	
 	$result = preg_replace_callback( '@&#(\d+);@', function($m){ // using callback variant after e modifier was deprecated
 		// we expect integer
 		if ( $m[1] >= 0 && $m[1] < 32 ) {
@@ -214,7 +217,7 @@ function RMLpreparestring( $string )
 		} else { // < 0 
 			trigger_error("unexpected match in function RMLpreparestring: ".$m[0], E_USER_WARNING);
 		}
-	}, $string );
+	}, $result );
 
 	// replace without regex
 	//$result = str_replace(array('$','"','{','}'),'',$result);
@@ -254,7 +257,10 @@ function RMLgetuniqueid()
 function RMLpreparexml( $string )
 {
 	global $id;
-
+	
+	$result = str_replace(array( '​', '‌', '‍',''),'',$string);
+	// Remove zero-width space, zero-width non-joiner. zero-width joiner and zero-width no-break space
+	
 	$search = array ('@<text:span text:style-name=".*?">@',
 					 '@</text:span>@',
 					 "@\\n@",
@@ -293,7 +299,7 @@ function RMLpreparexml( $string )
 					 "",
 					 "\\1");
 
-	$result = preg_replace($search,$replace,$string);
+	$result = preg_replace($search,$replace,$result);
 
 	return $result;
 }
@@ -302,6 +308,9 @@ function RMLpreparexml( $string )
 
 function RMLpreparetxt($string)
 {
+	$result = str_replace(array( '​', '‌', '‍',''),'',$string);
+	// Remove zero-width space, zero-width non-joiner. zero-width joiner and zero-width no-break space
+
 	$search = array('@<i>@',
 					 '@</i>@',
 					 "@<br />@");
@@ -310,7 +319,7 @@ function RMLpreparetxt($string)
 					 "_",
 					 "\n");
 
-	$result = preg_replace($search,$replace,$string);
+	$result = preg_replace($search,$replace,$result);
 
 	return $result;
 }
@@ -319,6 +328,9 @@ function RMLpreparetxt($string)
 
 function RMLpreparehtml( $string )
 {
+	$result = str_replace(array( '​', '‌', '‍',''),'',$string);
+	// Remove zero-width space, zero-width non-joiner. zero-width joiner and zero-width no-break space
+	
 	$search = array('@ @',
 					 '@<a href="\?footnote=view&id=.*?&note=(.*?)">@',
 					 '@<a href="\?footnote=view&amp;id=.*?&amp;note=(.*?)">@',
@@ -523,7 +535,7 @@ function RMLpreparehtml( $string )
 					 "<a id=\"\\1\" href=\"\\1.html\">"
 					);
 
-	$result = preg_replace($search,$replace,$string);
+	$result = preg_replace($search,$replace,$result);
 
 	return $result;
 }
