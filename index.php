@@ -19,10 +19,7 @@ ini_set('display_errors', '1');
 $starttime = microtime();
 $Version = "0.5.7";
 $itemprpage = 20;
-//define('SETTINGS_FILENAME', './settings.php');
 
-//require SETTINGS_FILENAME;
-//checkSettings( SETTINGS_FILENAME );
 require 'settings.php';
 require 'RML.common.php';
 require 'RML.helper.php';
@@ -49,9 +46,8 @@ $blog = RMLpreparestring($_REQUEST['blog']);
 $document = RMLpreparestring($_REQUEST['document']);
 $subject = RMLpreparestring($_REQUEST['subject']);
 $body = RMLpreparestring($_REQUEST['body']);
-$username = RMLpreparestring($_REQUEST['username']);
-$password = RMLpreparestring($_REQUEST['password']);
-$password2 = RMLpreparestring($_REQUEST['password2']);
+$login = RMLpreparestring($_REQUEST['login']);
+$logon = RMLpreparestring($_REQUEST['logon']);
 $mail = RMLpreparestring($_REQUEST['mail']);
 $author = RMLpreparestring($_REQUEST['author']);
 $cookie = RMLpreparestring($_COOKIE['RML']);
@@ -127,10 +123,11 @@ switch( $author ) {
 
 switch( $function ) {
 	case 'login':
-		if( $password <> "" ) {
+		if($login <> '') {
 			RMLlogin();
 			break;
 		}
+		break;
 	break;
 	case 'logout':
 		RMLlogout();

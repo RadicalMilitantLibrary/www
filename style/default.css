@@ -30,7 +30,7 @@ body {
 	padding-top	: 5px
 }
 
-table {
+table.main {
 	border-spacing	: 0;
 	border-style	: solid;
 	border-width	: 1px;

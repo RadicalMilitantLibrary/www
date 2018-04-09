@@ -434,6 +434,8 @@ function RMLviewdocument( $id, $print_on = true )
 	
 	$out .= '<b>'.$readtime.'</b> hours (<b>' .getNumberFormatted( $pagecount, 0 ) .'</b> pages)</small></div>';
 
+	$out .= '<div class="inlineclear">&nbsp;</div>';
+
 	$user = RMLgetcurrentuser();
 	if( $thisstatus > 0		//book is published
 		&& $user !== null	//and user logged in

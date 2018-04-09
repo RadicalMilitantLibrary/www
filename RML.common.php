@@ -420,7 +420,8 @@ function RMLdisplaytitle( $print_on = true ) {
 		$title = 'Login';
 	break;
 	case 'user':
-		$title = "User Page";
+		$title = RMLgetcurrentuser();
+		$title = 'Welcome #'.str_replace('$2','',$title);
 	break;
 	case 'upload':
 		$docname = RMLgetdocumenttitle( $id );

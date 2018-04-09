@@ -56,36 +56,27 @@ function RMLgetcurrentuser()
 	global $cookie;
 
 	if( $cookie ) {
-		list( $thisuser, $cookie_hash ) = preg_split( '@,@', $cookie );
-		if ( getPwdHash( $secret_salt . $thisuser . $secret_salt ) == $cookie_hash ) {
-			return $thisuser;
-		} else {
-			return null;
-		}
+		return $cookie;
+	} else {
+		return null;
 	}
-	return null;
 }
 
 // ============================================================================
 
 function RMLlogin()
 {
-	global $username, $password;
+	global $login, $logon, $secretsalt;
 
-	$id = ( isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ) ? $_GET['id'] : 0 ;
-
-	if ( RMLvalidateuser( $username, $password ) ) {
-		setcookie( 'RML', $username .',' .getPwdHash( $secret_salt . $username . $secret_salt) );
+    $username = crypt ( crypt($login, '$2y10'.$logon), '$2y10'.$secret_salt );
+    
+    if ( RMLvalidateuser( $login, $logon ) ) {
+		setcookie ("RML", $username );
 	} else {
-		unset( $username );
-		unset( $password );
+		die ("Login failed...");
 	}
 
-//	if ( $id !== 0 ) {
-		header( 'Location: ?function=user' );
-//	} else {
-//		header( 'Location: ?document=view&id='.$id );
-//	}
+	header( 'Location: ?function=user' );
 }
 
 // ============================================================================
@@ -97,17 +88,19 @@ function RMLlogout()
 
 // ============================================================================
 
-function RMLvalidateuser($username,$password)
+function RMLvalidateuser($login,$logon)
 {
-	$result = RMLfiresql("SELECT pass FROM \"user\" WHERE handle='$username'");
-	$thisrow = pg_Fetch_Object($result,0);
-	$thispass = $thisrow->pass;
+    global $secret_salt;
+    
+    $username = crypt ( crypt($login, '$2y10'.$logon), '$2y10'.$secret_salt );
 
-	if($thispass == getPwdHash($password)) {
+	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
+	
+	if(pg_num_rows($result) == 1) {
 		return true;
 	} else {
 		return false;
-	}
+	}	
 }
 
 // ============================================================================
@@ -120,20 +113,18 @@ function RMLdisplaysignup( $print_on = true ) {
 .'<div style="margin-top: 1ex;"><img src="./img/proxypic.png" alt="do not use fake onions: c3jembnkdnbcdniu !" ></div>'
 
 .'<table><form method="post" action="?function=login"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
-<tr><td>Handle </td><td>: <input type="text" size="40" name="username" /></td></tr>
-<tr><td>Password </td><td>: <input type="password" size="40" name="password" /></td></tr>
-<tr><td></td><td><input class="formbutton" type="submit" value="Log in" /></td></tr>
+<tr><td>Login </td><td>: <input type="password" size="40" name="login" /></td></tr>
+<tr><td>Logon </td><td>: <input type="password" size="40" name="logon" /></td></tr>
+<tr><td></td><td><input class="formbutton" type="submit" value="Turn On" /></td></tr>
 </fieldset></form></table></div></div>'
 
-/*.'<div class="box"><div class="boxheader"><b>Sign Up</b></div>
-<div class="boxtext">'."Thank You for your interest in Radical Militant Library.<br/> This page is very temporary, and as such may not be all that user friendly.<br/>Handle' must be unique.<br/>'E-mail' can be anything. Your email is ONLY used on the books that you upload, if you don't want your email show here then please leave this field blank.".'<br/><br/><b><big>I CAN NOT RETRIEVE LOST PASSWORDS</big></b>
+.'<div class="box"><div class="boxheader"><b>Sign Up</b></div>
+<div class="boxtext">'."We take great pride in not knowing who our users are, so please don't use any identifying information to log on. This is NOT your 'username' and 'password', it's just two words used to identify you. (Hint: Use a password manager)<br><br><big><b>It is impossible to restore lost accounts.</b></big>".'
 <table><form method="post" action="?function=newuser"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
-<tr><td>Handle </td><td>: <input type="text" size="30" maxlength="15" name="username"/></td></tr>
-<tr><td>E-mail </td><td>: <input type="text" size="30" maxlength="30" name="mail"/></td></tr>
-<tr><td>Password </td><td>: <input type="password" size="30" name="password"/></td></tr>
-<tr><td>Password&nbsp;again </td><td>: <input type="password" size="30" name="password2"/></td></tr>
+<tr><td>Login : </td><td>: <input type="password" size="40" name="login"/></td></tr>
+<tr><td>Logon : </td><td>: <input type="password" size="40" name="logon"/></td></tr>
 <tr><td></td><td><input class="formbutton" type="submit" value="Sign Up"/></td></tr>
-</fieldset></form></table></div></div>'*/;
+</fieldset></form></table></div></div>';
 	return processOutput( $out, $print_on );
 }
 
@@ -141,34 +132,23 @@ function RMLdisplaysignup( $print_on = true ) {
 
 function RMLcreatenewuser()
 {
-	$welcomemessage = "Welcome to Radical Militant Library. This message is a placeholder for a more informative message coming sometime in the future.<br><br>This service is not yet ready, so dont expect anything to work, but feel free to snoop around.";
+	global $login, $logon, $secret_salt;
 
-	global $username, $mail, $password, $password2;
-
-	$id = ( isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ) ? $_GET['id'] : 0 ;
+	if (CRYPT_BLOWFISH <> 1) {
+		echo 'RMLcreatenewuser() : Blowfish not available ... FATAL';
+		die;
+	}
+    
+    $username = crypt ( crypt($login, '$2y10'.$logon), '$2y10'.$secret_salt );
 
 	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
-	if( pg_numrows( $result ) > 0 ) {
-		unset( $username );
+	
+	if(pg_num_rows($result) == 0) {
+		RMLfiresql("INSERT INTO \"user\" (id,handle,email,pass) VALUES(DEFAULT,'$username','','')");
 	} else {
-		$result = RMLfiresql("SELECT email FROM \"user\" WHERE email='$mail'");
+		die("Signup failed...");
 	}
-
-	if(
-		!isset( $username )
-		|| strlen( $username )  > 15
-		|| strlen( $mail ) > 30
-		|| pg_numrows( $result ) > 0
-		|| $password !== $password2
-	) {
-		header( 'Location: ?function=login' .( ( $id !== 0 ) ? '&id='.$id : '' ) );
-	}
-
-	unset( $password2 );
-
-	RMLfiresql("INSERT INTO \"user\" (id,handle,email,pass) VALUES(DEFAULT,'$username','$mail','" .getPwdHash( $password ) ."')");
-	RMLsendmessage( $username, $welcomemessage, 'SYSTEM', 'Welcome '.$username, true );
-
+    
 	RMLlogin();
 }
 
@@ -178,13 +158,15 @@ function RMLcreatenewuser()
  * */
 function getPwdHash( $password )
 {
-	return sha1($password);
+	global $secret_salt;
+	
+	return crypt ( $password, '$2y10'.$secret_salt );
 }
 
 // ============================================================================
 
 function RMLdisplayuserpage( $print_on = true ) {
-	$out = "<div class=\"order\"><a href=\"./?function=logout\" class=\"button delete\">Log-out</a></div>"
+	$out = "<div class=\"order\"><a href=\"./?function=logout\" class=\"button delete\">Tune Out</a></div>"
 	.RMLdisplaydocuments( false )
 	.RMLdisplaystylesheets( false )
 	.RMLdisplaymessages( false )
