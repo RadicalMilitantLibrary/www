@@ -372,7 +372,7 @@ function RMLgetBibTeX( $data )	//get all data in this named list, e.g. via itera
 
 function RMLviewdocument( $id, $print_on = true )
 {
-	$result = RMLfiresql( "SELECT status,posted_on,handle,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT email FROM \"user\" WHERE handle=document.handle) AS mail,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
+	$result = RMLfiresql( "SELECT status,posted_on,handle,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$thissubjectid = $thisrow->subject_id;
 	$thisauthorid = $thisrow->author_id;
@@ -389,7 +389,6 @@ function RMLviewdocument( $id, $print_on = true )
 	$letter = $letter[0];
 	$avgscore = round( $thisrow->score,2 );
 	$reviewer = $thisrow->owner;
-	$mail = $thisrow->mail;
 	$posted = RMLfixdate( $thisrow->posted_on );
 	$thishandle = $thisrow->handle;
 	$language = $thisrow->language;
