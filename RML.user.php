@@ -169,7 +169,22 @@ function getPwdHash( $password )
 // ============================================================================
 
 function RMLdisplayuserpage( $print_on = true ) {
-	$out = "<div class=\"order\"><a href=\"./?function=logout\" class=\"button delete\">Tune Out</a></div>"
+	$result = RMLfiresql("SELECT user_name,karma,xmpp,diaspora,mastodon FROM \"user\" WHERE handle='". RMLgetcurrentuser() ."'");
+	
+	$thisrow = pg_Fetch_Object( $result, 0 );
+	$username = $thisrow->user_name;
+	$karma = $thisrow->karma;
+	$xmpp = $thisrow->xmpp;
+	$diaspora = $thisrow->diaspora;
+	$mastodon = $thisrow->mastodon;
+	
+	$out = "<div class=\"order\"><small>";
+	if($username) $out .= "<b>Name</b> : $username ";
+	if($karma) $out .= "<b>Karma</b> : $karma (".RMLgetrating($karma).") ";
+	if($xmpp) $out .= "<b>XMPP</b> : $xmpp ";
+	if($diaspora) $out .= "<b>Diaspora*</b> : $diaspora ";
+	if($mastodon) $out .= "<b>Mastodon</b> : $mastodon ";
+	$out .= "</small></div>"
 	.RMLdisplaydocuments( false )
 	.RMLdisplaystylesheets( false )
 	.RMLdisplaymessages( false )
@@ -436,7 +451,7 @@ function RMLdisplaydocuments( $print_on = true ) {
 		$out .= 'Displaydocuments : Bad user...';
 		RMLlogout();//ensure cookie is unset
 	}
-	$out .= "\n</div></div>";
+
 	return processOutput( $out, $print_on );
 }
 
