@@ -53,7 +53,8 @@ function RMLMenuButton( $btntile, $href = "", $class = "", $decoration = 'star' 
 function RMLdisplaymenu( $print_on = true )
 {
 	global $author, $subject, $news, $document, $function, $message, $style, $lists;
-	$currentuser = RMLgetcurrentuser();
+
+	$currentuser = str_replace('$2','#',RMLgetcurrentuser());
 
 	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button home" href=".">Home</a>
 ';
@@ -104,10 +105,10 @@ function RMLdisplaymenu( $print_on = true )
 	}
 
 	if(($currentuser) && ($function <> 'user') && ($message <> 'new') && ($style <> 'new') && ($document <> 'new')) {
-		$out .= "\n<a class=\"button\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=user\">$currentuser</a>";
 	}
 	if(($function == 'user') || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
-		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">$currentuser</a>";
 	}
 
 	$out .= "\n</div>";
