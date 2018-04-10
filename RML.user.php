@@ -56,9 +56,13 @@ function RMLgetcurrentuser()
 	global $cookie;
 
 	if( $cookie ) {
-		return $cookie;
-	} else {
-		return null;
+		list( $thisuser, $cookie_hash ) = preg_split( '@,@', $cookie );
+		
+		if ( getPwdHash( $thisuser ) == $cookie_hash ) {
+			return $thisuser;
+		} else {
+			return null;
+		}
 	}
 }
 
@@ -68,10 +72,10 @@ function RMLlogin()
 {
 	global $login, $logon, $secretsalt;
 
-    $username = crypt ( crypt($login, '$2y10'.$logon), '$2y10'.$secret_salt );
+    $username = crypt ( crypt($login, '$2y'.$logon), '$2y'.$secret_salt );
     
     if ( RMLvalidateuser( $login, $logon ) ) {
-		setcookie ("RML", $username );
+		setcookie ("RML", $username . ',' . getPwdHash( $username ) );
 	} else {
 		die ("Login failed...");
 	}
@@ -92,7 +96,7 @@ function RMLvalidateuser($login,$logon)
 {
     global $secret_salt;
     
-    $username = crypt ( crypt($login, '$2y10'.$logon), '$2y10'.$secret_salt );
+    $username = crypt ( crypt($login, '$2y'.$logon), '$2y'.$secret_salt );
 
 	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
 	
@@ -135,11 +139,10 @@ function RMLcreatenewuser()
 	global $login, $logon, $secret_salt;
 
 	if (CRYPT_BLOWFISH <> 1) {
-		echo 'RMLcreatenewuser() : Blowfish not available ... FATAL';
-		die;
+		die( 'RMLcreatenewuser() : Blowfish not available ... FATAL' );
 	}
     
-    $username = crypt ( crypt($login, '$2y10'.$logon), '$2y10'.$secret_salt );
+    $username = crypt ( crypt($login, '$2y'.$logon), '$2y'.$secret_salt );
 
 	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
 	
@@ -160,7 +163,7 @@ function getPwdHash( $password )
 {
 	global $secret_salt;
 	
-	return crypt ( $password, '$2y10'.$secret_salt );
+	return crypt ( $password, '$2y'.$secret_salt );
 }
 
 // ============================================================================
