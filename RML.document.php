@@ -372,7 +372,7 @@ function RMLgetBibTeX( $data )	//get all data in this named list, e.g. via itera
 
 function RMLviewdocument( $id, $print_on = true )
 {
-	$result = RMLfiresql( "SELECT status,posted_on,handle,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT AVG(level) AS score FROM forum WHERE thread_id=document.id AND level > 0) AS score,(SELECT owner FROM subject WHERE id=document.subject_id) AS owner,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
+	$result = RMLfiresql( "SELECT status,handle,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$thissubjectid = $thisrow->subject_id;
 	$thisauthorid = $thisrow->author_id;
@@ -387,9 +387,6 @@ function RMLviewdocument( $id, $print_on = true )
 	$thissubject = $thisrow->subjecttitle;
 	$letter = $thisrow->sort_name;
 	$letter = $letter[0];
-	$avgscore = round( $thisrow->score,2 );
-	$reviewer = $thisrow->owner;
-	$posted = RMLfixdate( $thisrow->posted_on );
 	$thishandle = $thisrow->handle;
 	$language = $thisrow->language;
 
@@ -657,8 +654,8 @@ function RMLreaddocument( $id, $section, $print_on = true )
 		$type = $thisrow->paragraphtype;
 		$sequence = $thisrow->id;
 
-		if( hasRights( 'editdocument', array( $owner ) ) ) {
-			$out .= RMLdisplay( '<a id="s'.$sequence.'"/>'.$thisbody.' <small>[<a href="?function=edit&amp;id='.$id.'&amp;sequence=s'.$sequence.'&amp;section='.$section.'">Edit</a>]&nbsp;[<a href="?para=delete&amp;id='.$id.'&amp;section='.$section.'&amp;sequence=s'.$sequence.'">Delete</a>]</small>', $type, false );
+		if( RMLgetcurrentuser() ) {
+			$out .= RMLdisplay( '<a id="s'.$sequence.'"/><small>[<a href="?function=edit&amp;id='.$id.'&amp;sequence=s'.$sequence.'&amp;section='.$section.'">Edit</a>]</small>&nbsp;'.$thisbody.' <small>[<a href="?para=delete&amp;id='.$id.'&amp;section='.$section.'&amp;sequence=s'.$sequence.'">Delete</a>]</small>', $type, false );
 		} else {
 			$out .= RMLdisplay( '<a id="s'.$sequence.'"/>'.$thisbody, $type, false );
 		}
@@ -969,7 +966,6 @@ function RMLpublishdocument( $id )
 
 		RMLfiresql("DELETE FROM $table WHERE doc_id=$id");
 		RMLfiresql("UPDATE \"document\" SET status=2, posted_on=NOW() WHERE id=$id");
-		RMLsendconfirmmessage( $id, $owner, $subject_owner );
 	}
 }
 

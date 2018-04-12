@@ -79,6 +79,7 @@ $messagesubject = RMLpreparestring($_REQUEST['messagesubject']);
 $style = RMLpreparestring($_REQUEST['style']);
 $lists = RMLpreparestring($_REQUEST['lists']);
 $docid = RMLpreparestring($_REQUEST['docid']);
+$forum = RMLpreparestring($_REQUEST['forum']);
 
 switch( $para ) {
 	case 'delete':

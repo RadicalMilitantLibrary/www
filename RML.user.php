@@ -70,9 +70,14 @@ function RMLgetcurrentuser()
 
 function RMLlogin()
 {
-	global $login, $logon, $secretsalt;
+	global $login, $logon, $secret_salt;
 
-    $username = crypt ( crypt($login, '$2y'.$logon), '$2y'.$secret_salt );
+	$options = [
+	    'cost' => 10,
+	    'salt' => $secret_salt
+	];
+
+    $username = password_hash($login . $logon, PASSWORD_BCRYPT, $options);
     
     if ( RMLvalidateuser( $login, $logon ) ) {
 		setcookie ("RML", $username . ',' . getPwdHash( $username ) );
@@ -96,7 +101,12 @@ function RMLvalidateuser($login,$logon)
 {
     global $secret_salt;
     
-    $username = crypt ( crypt($login, '$2y'.$logon), '$2y'.$secret_salt );
+	$options = [
+	    'cost' => 10,
+	    'salt' => $secret_salt
+	];
+
+    $username = password_hash($login . $logon, PASSWORD_BCRYPT, $options);
 
 	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
 	
@@ -125,8 +135,8 @@ function RMLdisplaysignup( $print_on = true ) {
 .'<div class="box"><div class="boxheader"><b>Sign Up</b></div>
 <div class="boxtext">'."We take great pride in not knowing who our users are, so please don't use any identifying information to log on. This is NOT your 'username' and 'password', it's just two words used to identify you. (Hint: Use a password manager)<br><br><big><b>It is impossible to restore lost accounts.</b></big>".'
 <table><form method="post" action="?function=newuser"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
-<tr><td>Login : </td><td>: <input type="password" size="40" name="login"/></td></tr>
-<tr><td>Logon : </td><td>: <input type="password" size="40" name="logon"/></td></tr>
+<tr><td>Login </td><td>: <input type="password" size="40" name="login"/></td></tr>
+<tr><td>Logon </td><td>: <input type="password" size="40" name="logon"/></td></tr>
 <tr><td></td><td><input class="formbutton" type="submit" value="Sign Up"/></td></tr>
 </fieldset></form></table></div></div>';
 	return processOutput( $out, $print_on );
@@ -142,12 +152,17 @@ function RMLcreatenewuser()
 		die( 'RMLcreatenewuser() : Blowfish not available ... FATAL' );
 	}
     
-    $username = crypt ( crypt($login, '$2y'.$logon), '$2y'.$secret_salt );
+	$options = [
+	    'cost' => 10,
+	    'salt' => $secret_salt
+	];
+
+    $username = password_hash($login . $logon, PASSWORD_BCRYPT, $options);
 
 	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
 	
 	if(pg_num_rows($result) == 0) {
-		RMLfiresql("INSERT INTO \"user\" (id,handle,email,pass) VALUES(DEFAULT,'$username','','')");
+		RMLfiresql("INSERT INTO \"user\" (id,handle,user_name,karma) VALUES(DEFAULT,'$username',DEFAULT,DEFAULT)");
 	} else {
 		die("Signup failed...");
 	}
@@ -160,10 +175,8 @@ function RMLcreatenewuser()
 /* vv01f: change password method in a single function
  * */
 function getPwdHash( $password )
-{
-	global $secret_salt;
-	
-	return crypt ( $password, '$2y'.$secret_salt );
+{	
+	return sha1($password);
 }
 
 // ============================================================================

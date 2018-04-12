@@ -52,9 +52,9 @@ function RMLMenuButton( $btntile, $href = "", $class = "", $decoration = 'star' 
 
 function RMLdisplaymenu( $print_on = true )
 {
-	global $author, $subject, $news, $document, $function, $message, $style, $lists;
+	global $author, $subject, $news, $document, $function, $message, $style, $lists, $forum;
 
-	$currentuser = str_replace('$2','#',RMLgetcurrentuser());
+	$currentuser = str_replace('$2y$10$WW86c3VwM3IjI3MzY3Izd.','#',RMLgetcurrentuser());
 
 	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button home" href=".">Home</a>
 ';
@@ -104,11 +104,19 @@ function RMLdisplaymenu( $print_on = true )
 		$out .= "\n<a class=\"activebutton\" href=\"?function=login\">Login</a>";
 	}
 
+	if(($currentuser) && ($forum == 'view') ) {
+		$out .= "\n<a class=\"activebutton\" href=\"?forum=view\">Forum</a>";
+	}
+	
+	if($currentuser && !$forum) {
+		$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
+	}
+
 	if(($currentuser) && ($function <> 'user') && ($message <> 'new') && ($style <> 'new') && ($document <> 'new')) {
-		$out .= "\n<a class=\"button\" href=\"?function=user\">$currentuser</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=user\">My Page</a>";
 	}
 	if(($function == 'user') || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
-		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">$currentuser</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">My Page</a>";
 	}
 
 	$out .= "\n</div>";
@@ -120,7 +128,7 @@ function RMLdisplaymenu( $print_on = true )
 
 function RMLdisplaymain( $id, $print_on = true ) {
 	global $function, $subject, $static, $message, $document,
-		$author, $section, $comment, $news, $footnote, $note, $style, $lists;
+		$author, $section, $comment, $news, $footnote, $note, $style, $lists, $forum;
 
 	$out = "\n\n".'<!-- MAIN START -->'."\n\n".'<div class="main">';
 
@@ -188,9 +196,9 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	}
 
 	// ======================================
-	switch( $comment ) {
+	switch( $forum ) {
 	case 'view':
-		$out .= RMLdisplaycomment( false );
+		$out .= RMLdisplayforum( false );
 		$frontpage = false;
 	break;
 	}
@@ -367,7 +375,7 @@ function RMLdisplaylocation( $print_on = true ) {
 // ============================================================================
 
 function RMLdisplaytitle( $print_on = true ) {
-	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists;
+	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists, $forum;
 
 	//default
 	$title = '~ The Library ~';
@@ -422,7 +430,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	break;
 	case 'user':
 		$title = RMLgetcurrentuser();
-		$title = 'Welcome #'.str_replace('$2','',$title);
+		$title = '#'.str_replace('$2y$10$WW86c3VwM3IjI3MzY3Izd.','',$title);
 	break;
 	case 'upload':
 		$docname = RMLgetdocumenttitle( $id );
@@ -521,6 +529,12 @@ function RMLdisplaytitle( $print_on = true ) {
 	break;
 	case 'edit':
 		$title = "Edit Stylesheet";
+	break;
+	}
+	
+	switch ($forum) {
+	case 'view':
+		$title = "Readers talking Shit";
 	break;
 	}
 

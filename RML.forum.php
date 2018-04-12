@@ -1,7 +1,7 @@
 <?php
 // ============================================================================
-//  Comments for Radical Militant Library
-//  Copyright (C) 2009-2016 Jotunbane 
+//  Forum for Radical Militant Library
+//  Copyright (C) 2009-2018 Jotunbane 
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 //  GNU General Public License for more details.
 // ============================================================================
 
-function RMLdisplaycomment()
+function RMLdisplayforum()
 {
 	$result = RMLfiresql("SELECT thread_id,id,author,body,level,posted_on FROM forum ORDER BY posted_on DESC LIMIT 10");
 
@@ -52,9 +52,6 @@ function RMLdisplaycomment()
 		print("\n</div>");
 	}
 	
-	if($numrows == 0) {
-		print("ERROR : Forum is empty.<br>");
-	}	
 }
 
 // ============================================================================
@@ -203,11 +200,6 @@ function RMLsaveforum( $id, $print_on = true ) {
 
 		RMLfiresql("INSERT INTO forum (id,thread_id,parent_id,posted_on,level,author,body) VALUES(DEFAULT,$id,$parent_id,NOW(),$score,'$author','$body')");
 
-/*		if($score == 0) {
-			RMLfiresql("INSERT INTO news (id,headline,body,author,posted) VALUES(DEFAULT,'New comment.','<b>$author</b>, on <b><a href=\"./?document=view&id=$id\">$docname</a></b>. No Rating','SYSTEM',NOW())");
-		} else {
-			RMLfiresql("INSERT INTO news (id,headline,body,author,posted) VALUES(DEFAULT,'New comment.','<b>$author</b>, on <b><a href=\"./?document=view&id=$id\">$docname</a></b>. Rating <b>$score</b>.','SYSTEM',NOW())"); 
-		}*/
 	}
 	return processOutput( $out, $print_on );
 }
