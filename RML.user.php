@@ -173,7 +173,9 @@ function RMLgetusername($string1, $string2) {
  * */
 function getPwdHash( $password )
 {	
-	return sha1($password);
+	global $secret_salt;
+	
+	return sha1($secret_salt . $password . $secret_salt);
 }
 
 // ============================================================================
