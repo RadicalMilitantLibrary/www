@@ -53,8 +53,8 @@ function RMLMenuButton( $btntile, $href = "", $class = "", $decoration = 'star' 
 function RMLdisplaymenu( $print_on = true )
 {
 	global $author, $subject, $news, $document, $function, $message, $style, $lists, $forum;
-
-	$currentuser = str_replace('$2y$10$WW86c3VwM3IjI3MzY3Izd.','#',RMLgetcurrentuser());
+	
+	$currentuser = RMLgetcurrentuser();
 
 	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button home" href=".">Home</a>
 ';
@@ -395,16 +395,6 @@ function RMLdisplaytitle( $print_on = true ) {
 	break;
 	}
 
-	switch($comment) {
-	case 'view':
-		$title = "~ Comments ~";
-	break;
-	case 'new':
-		$title = RMLgetdocumenttitle( $id );
-		$title = "Comment on <i>" . $title . "</i>";
-	break;
-	}
-
 	switch( $document ) {
 	case 'view':
 		if($section) {
@@ -430,7 +420,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	break;
 	case 'user':
 		$title = RMLgetcurrentuser();
-		$title = '#'.str_replace('$2y$10$WW86c3VwM3IjI3MzY3Izd.','',$title);
+		$title = 'User #'.$title;
 	break;
 	case 'upload':
 		$docname = RMLgetdocumenttitle( $id );

@@ -70,15 +70,10 @@ function RMLgetcurrentuser()
 
 function RMLlogin()
 {
-	global $login, $logon, $secret_salt;
+	global $login, $logon;
 
-	$options = [
-	    'cost' => 10,
-	    'salt' => $secret_salt
-	];
-
-    $username = password_hash($login . $logon, PASSWORD_BCRYPT, $options);
-    
+	$username = RMLgetusername($login, $logon);
+	    
     if ( RMLvalidateuser( $login, $logon ) ) {
 		setcookie ("RML", $username . ',' . getPwdHash( $username ) );
 	} else {
@@ -99,16 +94,9 @@ function RMLlogout()
 
 function RMLvalidateuser($login,$logon)
 {
-    global $secret_salt;
-    
-	$options = [
-	    'cost' => 10,
-	    'salt' => $secret_salt
-	];
+	$username = RMLgetusername($login, $logon);
 
-    $username = password_hash($login . $logon, PASSWORD_BCRYPT, $options);
-
-	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
+	$result = RMLfiresql("SELECT id FROM \"user\" WHERE handle='$username'");
 	
 	if(pg_num_rows($result) == 1) {
 		return true;
@@ -146,20 +134,14 @@ function RMLdisplaysignup( $print_on = true ) {
 
 function RMLcreatenewuser()
 {
-	global $login, $logon, $secret_salt;
+	global $login, $logon;
 
 	if (CRYPT_BLOWFISH <> 1) {
 		die( 'RMLcreatenewuser() : Blowfish not available ... FATAL' );
 	}
+    $username = RMLgetusername($login, $logon);
     
-	$options = [
-	    'cost' => 10,
-	    'salt' => $secret_salt
-	];
-
-    $username = password_hash($login . $logon, PASSWORD_BCRYPT, $options);
-
-	$result = RMLfiresql("SELECT * FROM \"user\" WHERE handle='$username'");
+	$result = RMLfiresql("SELECT id FROM \"user\" WHERE handle='$username'");
 	
 	if(pg_num_rows($result) == 0) {
 		RMLfiresql("INSERT INTO \"user\" (id,handle,user_name,karma) VALUES(DEFAULT,'$username',DEFAULT,DEFAULT)");
@@ -168,6 +150,21 @@ function RMLcreatenewuser()
 	}
     
 	RMLlogin();
+}
+
+// ============================================================================
+
+function RMLgetusername($string1, $string2) {
+	global $secret_salt;
+
+	$result = crypt($string1, $string2);
+	
+	$options = ['salt' => $secret_salt];
+    $result = password_hash($result, PASSWORD_BCRYPT, $options);
+        
+    list( $salt, $result ) = preg_split( '@\.@', $result );
+    
+    return $result;
 }
 
 // ============================================================================
