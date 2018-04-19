@@ -655,7 +655,9 @@ function RMLreaddocument( $id, $section, $print_on = true )
 		$sequence = $thisrow->id;
 
 		if( RMLgetcurrentuser() ) {
-			$out .= RMLdisplay( '<a id="s'.$sequence.'"/><small>[<a href="?function=edit&amp;id='.$id.'&amp;sequence=s'.$sequence.'&amp;section='.$section.'">Edit</a>]</small>&nbsp;'.$thisbody.' <small>[<a href="?para=delete&amp;id='.$id.'&amp;section='.$section.'&amp;sequence=s'.$sequence.'">Delete</a>]</small>', $type, false );
+		// .' <small>[<a href="?para=delete&amp;id='.$id.'&amp;section='.$section.'&amp;sequence=s'.$sequence.'">Delete</a>]</small>'
+		
+			$out .= RMLdisplay( '<a id="s'.$sequence.'"/><small>[<a href="?function=edit&amp;id='.$id.'&amp;sequence=s'.$sequence.'&amp;section='.$section.'">Edit</a>]</small>'.$thisbody, $type, false );
 		} else {
 			$out .= RMLdisplay( '<a id="s'.$sequence.'"/>'.$thisbody, $type, false );
 		}
