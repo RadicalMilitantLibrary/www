@@ -902,8 +902,8 @@ function RMLupdateelement( $id )
 	global $body, $sequence, $paratype;
 
 	$sequence = substr( $sequence, 1, strlen( $sequence ) );
-	$table = RMLgetactivetable( $id );
-	RMLfiresql( "UPDATE $table SET body='$body', paragraphtype=$paratype WHERE doc_id=$id AND id=$sequence" );
+	
+	RMLfiresql( "INSERT into korrektur (body, type,doc_id,sequence) VALUES('$body', $paratype, $id,  $sequence)" );
 }
 
 // ============================================================================
