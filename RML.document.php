@@ -490,7 +490,7 @@ function RMLdisplayerrors($id, $print_on = true) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$sequence = $thisrow->id;
 
-			$out .= '<a href="./?function=edit&id='.$id.'&sequence=s'.$sequence.'">Paragraph #'.$sequence.'</a>';
+			$out .= '<a href="./?function=edit&id='.$id.'&sequence=s'.$sequence.'">#'.$sequence.'</a>';
 		}
 		$out .= '</div></div>';	
 	}
@@ -513,7 +513,7 @@ function RMLdisplayedits($id) {
 			$sequence = $thisrow->sequence;
 			$section = $thisrow->section;
 
-			$out .= '<a href="./?document=view&id='.$id.'&section='.$section.'#s'.$sequence.'">Paragraph #'.$sequence.'</a> ';
+			$out .= '<a href="./?document=view&id='.$id.'&section='.$section.'#s'.$sequence.'">#'.$sequence.'</a> ';
 		}
 		$out .= '</div></div>';	
 	}
