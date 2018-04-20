@@ -513,7 +513,7 @@ function RMLdisplayedits($id) {
 			$sequence = $thisrow->sequence;
 			$section = $thisrow->section;
 
-			$out .= '<a href="./?document=view&id='.$id.'&section='.$section.'#s'.$sequence.'">#'.$sequence.'</a> ';
+			$out .= '<a href="./?document=verify&id='.$id.'&section='.$section.'&sequence='.$sequence.'">#'.$sequence.'</a> ';
 		}
 		$out .= '</div></div>';	
 	}
@@ -939,10 +939,14 @@ function RMLeditelement( $id, $print_on = true )
 function RMLupdateelement( $id )
 {
 	global $body, $sequence, $paratype;
+	
+	$userid = RMLgetuserID(RMLgetcurrentuser());
+	// We save userid with edits to be able to award karma points.
+	// once the karma is given, this information is deleted.
 
 	$sequence = substr( $sequence, 1, strlen( $sequence ) );
 	
-	RMLfiresql( "INSERT into korrektur (body, type,doc_id,sequence) VALUES('$body', $paratype, $id,  $sequence)" );
+	RMLfiresql( "INSERT into korrektur (body, type, doc_id, sequence, user_id) VALUES('$body', $paratype, $id,  $sequence, $userid)" );
 }
 
 // ============================================================================

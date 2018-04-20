@@ -256,6 +256,11 @@ function RMLdisplaymain( $id, $print_on = true ) {
 		$out .= RMLeditdocument( $id, false );
 		$frontpage = false;
 	break;
+	case 'verify':
+		$out .= RMLdisplayreview(false);
+		$frontpage = false;
+	break;
+
 	}
 
 	// ======================================
@@ -313,6 +318,36 @@ function RMLdisplaymain( $id, $print_on = true ) {
 
 	$out .= "\n</div>";
 	return processOutput( $out, $print_on );
+}
+
+// ============================================================================
+
+function RMLdisplayreview($print_on = true) {
+	global $id, $section, $sequence;
+	
+	$out = '';
+	$table = RMLgetactivetable($id);
+	
+	$before = RMLfiresql("SELECT body,paragraphtype FROM $table WHERE doc_id=$id AND id=$sequence");
+	$thisrow = pg_Fetch_Object( $before, 0 );
+	$before = $thisrow->body;
+	$beforetype = $thisrow->paragraphtype;
+	$out .= '<div class="boxheader"><b>Before</b></div><div class="boxtext">';
+	$out .= RMLdisplay( $before, $beforetype , false);
+	$out .= '</div>';
+	
+	$after = RMLfiresql("SELECT body, type FROM korrektur WHERE doc_id=$id and sequence=$sequence");
+	$thisrow = pg_Fetch_Object($after, 0);
+	$after = $thisrow->body;
+	$aftertype = $thisrow->type;
+	
+	$out .= '<div class="boxheader"><b>After</b></div><div class="boxtext">';
+	$out .= RMLdisplay( $after, $aftertype , false);
+	$out .= '</div>';
+	
+	
+	
+	return processOutput( $out, $print_on);
 }
 
 // ============================================================================
@@ -414,6 +449,9 @@ function RMLdisplaytitle( $print_on = true ) {
 	case 'edit':
 		$docname = RMLgetdocumenttitle( $id );
 		$title = "$docname";
+	break;
+	case 'verify':
+		$title = "Review Edit";
 	break;
 	}
 
