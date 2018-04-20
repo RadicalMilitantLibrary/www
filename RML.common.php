@@ -112,11 +112,14 @@ function RMLdisplaymenu( $print_on = true )
 		$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
 	}
 
+	$karma = RMLgetkarma($currentuser);
+	$karma = $karma . '(' . RMLgetrating($karma) . ')';
+	
 	if(($currentuser) && ($function <> 'user') && ($message <> 'new') && ($style <> 'new') && ($document <> 'new')) {
-		$out .= "\n<a class=\"button\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=user\">$karma</a>";
 	}
 	if(($function == 'user') || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
-		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">My Page</a>";
+		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">$karma</a>";
 	}
 
 	$out .= "\n</div>";

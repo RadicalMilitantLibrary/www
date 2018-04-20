@@ -390,6 +390,8 @@ function RMLviewdocument( $id, $print_on = true )
 	$thishandle = $thisrow->handle;
 	$language = $thisrow->language;
 
+	$karma = RMLgetkarma(RMLgetcurrentuser());
+
 	$out = '';
 	if($thissubtitle) {
 		$out .= "\n".'<div class="Subtitle">'.$thissubtitle.'</div>';
@@ -433,45 +435,32 @@ function RMLviewdocument( $id, $print_on = true )
 	$out .= '<div class="inlineclear">&nbsp;</div>';
 
 	$user = RMLgetcurrentuser();
-	if( $thisstatus > 0		//book is published
-		&& $user !== null	//and user logged in
-	) {
-		/* todo:	adding 404-handler so the webserver shows a nice error page when a document is not found 
-		 * 			then this one can be used to serve the book if the requested filetype has the id and file extension we assume
-		 * 			and this way filenames will work on all browsers even without considering the header (issue #105)
-		 * */
-		
+	if( $thisstatus > 0 ) {
 		$out .= '<div class="center"><a class="button save" href="./?function=download&amp;id='.$id.'">Borrow Book</a></div>';
-	} else if ( $user === null ) { // Anonymous downloads re enabled (jotunbane)
-		$out .= '<div class="center"><a class="button star" href="./?function=download&amp;id='.$id.'">Borrow Book</a></div>';
-	}
+	} 
 
 	$out .= '<div class="center">';
-	if( $reviewer === $user && $thisstatus == 2 ) {
-		$out .= "\n".'<a class="button save" href="?function=confirm&amp;id='.$id.'">Confirm</a>
-<a class="button delete" href="?function=deny&amp;id='.$id.'">Deny</a>';
+	if( ($karma > 10) && ($thisstatus == 2) ) {
+		$out .= "\n".'<a class="button save" href="?function=confirm&amp;id='.$id.'">Confirm</a>';
 	}
 
-	if( $thishandle === $user &&  $thisstatus < 3 ) {
+	if( $thishandle === $user &&  $thisstatus < 2 ) {
 		switch($thisstatus) {
-		case '0':
+		case '0':  // Just metadata
 			$out .= "\n".'<a class="button add" href="?function=upload&amp;id='.$id.'">Upload</a>
 <a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>
 <a class="button delete" href="?function=delete&amp;id='.$id.'">Delete</a>';
 		break;
-		case '1':
+		case '1': // Document contains "stuff" (may even be a book)
 			$out .= "\n".'<a class="button delete" href="?function=flush&amp;id='.$id.'">Flush</a>
 <a class="button save" href="?function=publish&amp;id='.$id.'">Publish</a>
 <a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>
 <a class="button delete" href="?function=delete&amp;id='.$id.'">Delete</a>';
 		break;
-		case '2':
-			$out .= '&nbsp;<b>Awaiting review.</b>';
-		break;
 		}
 	}
 
-	if( ( ( $thishandle == RMLgetcurrentuser() ) || ( RMLgetcurrentuser() == 'admin') ) && ( $thisstatus == 3) ) {
+	if( ( $karma > 100 ) && ( $thisstatus == 3) ) {
 		$out .= "\n".'<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>'
 			."\n".'<a class="button delete" href="?function=withdraw&amp;id='.$id.'">Un-Publish</a>';
 	}

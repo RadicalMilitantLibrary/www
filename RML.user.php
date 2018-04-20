@@ -68,6 +68,16 @@ function RMLgetcurrentuser()
 
 // ============================================================================
 
+function RMLgetkarma($userhandle) {
+	if($userhandle == '') return 0;
+	
+	$result = RMLfiresql("SELECT karma FROM \"user\" WHERE handle='$userhandle'");
+	$thisrow = pg_Fetch_Object( $result, 0 );
+	return $thisrow->karma;
+}
+
+// ============================================================================
+
 function RMLlogin()
 {
 	global $login, $logon;
