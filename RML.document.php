@@ -466,10 +466,58 @@ function RMLviewdocument( $id, $print_on = true )
 	}
 	$out .= "</div>";
 
-	$out .= "\n".'<div class="inlineclear">&nbsp;</div>
-<p class="ParaNoIndent">'.$thisteaser.'</p>
+	$out .= "\n".'<div class="inlineclear">&nbsp;</div>'
+	
+	.RMLdisplayerrors($id, false)
+	.RMLdisplayedits($id, false)
+	
+	.'<p class="ParaNoIndent">'.$thisteaser.'</p>
 <div class="inlineclear">&nbsp;</div>' . /*RMLdisplaycomments($id, false) .*/ '<div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
 		.RMLdisplaytoc( $id, false );
+	return processOutput( $out, $print_on );
+}
+
+// ============================================================================
+
+function RMLdisplayerrors($id, $print_on = true) {
+	$out = '';
+	
+	$result = RMLfiresql("SELECT id FROM sandbox WHERE doc_id=$id AND paragraphtype=0");
+	if(pg_num_rows($result) > 0) {
+		$out .= "\n".'<div class="box"><div class="boxheader"><b>Import Errors (W.I.P.)</b></div>';
+		$out .= '<div class="boxtext">';
+		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+			$thisrow = pg_Fetch_Object( $result, $row );
+			$sequence = $thisrow->id;
+
+			$out .= '<a href="./?function=edit&id='.$id.'&sequence=s'.$sequence.'">Paragraph #'.$sequence.'</a>';
+		}
+		$out .= '</div></div>';	
+	}
+		
+	return processOutput( $out, $print_on );
+}
+
+// ============================================================================
+
+function RMLdisplayedits($id) {
+	$table = RMLgetactivetable($id);
+	$out = '';
+	
+	$result = RMLfiresql("SELECT sequence,(SELECT COUNT(id) FROM $table WHERE id<korrektur.sequence AND parent_id=0 AND doc_id=$id) AS section FROM korrektur WHERE doc_id=$id ORDER BY sequence");
+	if(pg_num_rows($result) > 0) {
+		$out .= "\n".'<div class="box"><div class="boxheader"><b>Unresolved edits (W.I.P.)</b></div>';
+		$out .= '<div class="boxtext">';
+		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+			$thisrow = pg_Fetch_Object( $result, $row );
+			$sequence = $thisrow->sequence;
+			$section = $thisrow->section;
+
+			$out .= '<a href="./?document=view&id='.$id.'&section='.$section.'#s'.$sequence.'">Paragraph #'.$sequence.'</a> ';
+		}
+		$out .= '</div></div>';	
+	}
+		
 	return processOutput( $out, $print_on );
 }
 
