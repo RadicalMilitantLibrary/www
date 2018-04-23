@@ -449,7 +449,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists, $forum;
 
 	//default
-	$title = '~ The Library ~';
+	$title = '~ Paranoid Proofreaders ~';
 
 	$out = '<p class="pagetitle">';
 
@@ -614,15 +614,26 @@ function RMLdisplayfrontpage( $print_on = true ) {
 
 	$sql = '';
 	
-	if( RMLgetkarma(RMLgetcurrentuser()) < 50) {
-		$sql = "SELECT id FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20"; 
-	} else {
-		$sql = "SELECT DISTINCT(doc_id) AS id FROM korrektur";
-		$out .= '<div class="boxheader"><b>Books with edits</b></div>';	
+	if( RMLgetkarma(RMLgetcurrentuser()) > 50) {
+		
+		$result = RMLfiresql("SELECT DISTINCT(doc_id) AS id FROM korrektur");
+	
+		if(pg_numrows($result) > 0) {
+			$out .= '<div class="BoxStart"><div class="boxheader"><b>Books with edits</b></div><p class="boxtext">';	
+		}
+	
+		for($row=0;$row<pg_numrows($result);$row++) {
+			$thisrow = pg_Fetch_Object($result,$row);
+			$thisid = $thisrow->id;
+			$out .= "\n<a href=\"?document=view&amp;id=$thisid\"><img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
+		}
+		if(pg_numrows($result) > 0) {
+			$out .= "\n</p></div>";
+		}
 	}
 
 	$out .= '<p class="boxtext" style="text-align:center">';
-	$result = RMLfiresql($sql);
+	$result = RMLfiresql("SELECT id FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;

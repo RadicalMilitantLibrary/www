@@ -1,7 +1,7 @@
 <?php
 // ============================================================================
 //  Database functions for Radical Militant Library
-//  Copyright (C) 2009-2016 Jotunbane 
+//  Copyright (C) Jotunbane 
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by

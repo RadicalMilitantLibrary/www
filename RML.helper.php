@@ -19,7 +19,7 @@ function RMLgetpagetitle()
 	global $function, $subject, $static, $message, $document, $author,
 		$id, $section, $sequence, $news, $footnote, $note, $style, $forum;
 
-	$title = "The Library";
+	$title = "Paranoid Proofreaders";
 
 	switch( $author ) {
 	case 'view':

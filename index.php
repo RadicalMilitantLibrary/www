@@ -3,7 +3,7 @@ error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
 ini_set('display_errors', '1');
 // ============================================================================
 //  "Frontpage" for Radical Militant Library
-//  Copyright (C) 2009-2016 Jotunbane
+//  Copyright (C) Jotunbane
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ ini_set('display_errors', '1');
 // ============================================================================
 
 $starttime = microtime();
-$Version = "0.5.7";
+$Version = "0.6";
 $itemprpage = 20;
 
 require 'settings.php';
