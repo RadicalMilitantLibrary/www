@@ -1,7 +1,7 @@
 <?php
 // ============================================================================
 //  Forum for Radical Militant Library
-//  Copyright (C) 2009-2018 Jotunbane 
+//  Copyright (C) Jotunbane 
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,44 +14,20 @@
 //  GNU General Public License for more details.
 // ============================================================================
 
-function RMLdisplayforum()
+function RMLdisplayforum($print_on = true)
 {
-	$result = RMLfiresql("SELECT thread_id,id,author,body,level,posted_on FROM forum ORDER BY posted_on DESC LIMIT 10");
-
-	$numrows = pg_numrows( $result );
-
-	for( $row=0; $row < $numrows; $row++ ) {
-		$thisrow = pg_Fetch_Object( $result, $row );
-		$thisid = $thisrow->thread_id;
-		$threadid = $thisrow->thread_id;
-		$postedon = $thisrow->posted_on;
-		$body = $thisrow->body;
-		$author = $thisrow->author;	
-		$level = $thisrow->level;
-
-		setTimeZone();
-		$date = strtotime($postedon);
-		$date = strftime('%d %b %Y %H:%M',$date);
-
-		$body = nl2br($body);		
-
-		print("\n<div class=\"inlineitem\">");
-		if($threadid > 0) { // ewa: todo: css-class
-			print("\n<a href=\"?document=view&amp;id=$threadid\"><img style=\"float:left;width:150px;margin:0px;margin-right:10px;border-width:1px;border-color:black\" alt=\"Cover\" src=\"./covers/cover$threadid\"/></a>");
-		}
-		
-		$thistitle = RMLgetdocumenttitle($threadid);
-		print("\n<p class=\"boxheader\"><big>$thistitle</big></p>");
-		print("\n<hr class=\"forumseperator\">");
-
-		print( getRatingDisplay( $level ) );
-
-		print("\n<div class=\"order\"><small><b>$date</b> by <b>$author</b></small></div>");
-		print("\n<p class=\"ParaNoIndent\">$body</p>");
-		print("\n<div class=\"inlineclear\"></div>");
-		print("\n</div>");
-	}
+	$out = '';
 	
+	$out .= '<div class="boxheader"><b>... about The Library</b></div>';
+	
+	$out .= '<div class="boxheader"><b>... about The Books</b></div>';
+	
+	$out .= '<div class="boxheader"><b>... about The Authors</b></div>';
+	
+	$out .= '<div class="boxheader"><b>... about Shit</b></div>';
+
+
+	return processOutput( $out, $print_on);	
 }
 
 // ============================================================================

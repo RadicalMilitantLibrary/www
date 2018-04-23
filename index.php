@@ -87,6 +87,14 @@ switch( $para ) {
 		$sequence = $sequence - 1;
 		header( 'Location: ?document=view&id='.$id.'&section='.$section.'#s'.$sequence );
 	break;
+	case 'confirm':
+		RMLconfirmedit($id,$sequence);
+		header( 'Location: ?document=view&id='.$id.'&section='.$section.'#s'.$sequence );
+	break;
+	case 'reject':
+		RMLrejectedit($id,$sequence);
+		header( 'Location: ?document=view&id='.$id.'&section='.$section.'#s'.$sequence );
+	break;
 }
 
 switch( $subject ) {

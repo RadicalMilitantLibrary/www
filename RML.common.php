@@ -325,14 +325,17 @@ function RMLdisplaymain( $id, $print_on = true ) {
 function RMLdisplayreview($print_on = true) {
 	global $id, $section, $sequence;
 	
+	$karma = RMLgetkarma(RMLgetcurrentuser());
+	if($karma < 50) die("Karma Police");
+	
 	$out = '';
 	$table = RMLgetactivetable($id);
-	
+		
 	$before = RMLfiresql("SELECT body,paragraphtype FROM $table WHERE doc_id=$id AND id=$sequence");
 	$thisrow = pg_Fetch_Object( $before, 0 );
 	$before = $thisrow->body;
 	$beforetype = $thisrow->paragraphtype;
-	$out .= '<div class="boxheader"><b>Before</b></div><div class="boxtext">';
+	$out .= '<div class="boxheader"><b>Current</b></div><div class="boxtext">';
 	$out .= RMLdisplay( $before, $beforetype , false);
 	$out .= '</div>';
 	
@@ -341,13 +344,40 @@ function RMLdisplayreview($print_on = true) {
 	$after = $thisrow->body;
 	$aftertype = $thisrow->type;
 	
-	$out .= '<div class="boxheader"><b>After</b></div><div class="boxtext">';
+	$out .= '<div class="boxheader"><b>Suggested edit</b></div><div class="boxtext">';
 	$out .= RMLdisplay( $after, $aftertype , false);
 	$out .= '</div>';
 	
-	
+	$out .= '<a href="./?para=confirm&id='.$id.'&sequence='.$sequence.'" class="button edit">Confirm</a> &nbsp; <a href="./?para=reject&id='.$id.'&sequence='.$sequence.'" class="button delete">Reject</a>';
 	
 	return processOutput( $out, $print_on);
+}
+
+// ============================================================================
+
+function RMLconfirmedit($id,$sequence) {
+	$karma = RMLgetkarma(RMLgetcurrentuser());
+	if($karma < 50) die("Karma Police...");
+	
+	$table = RMLgetactivetable($id);
+	$edit = RMLfiresql("SELECT body,type FROM korrektur WHERE doc_id=$id AND sequence=$sequence");
+	$thisedit = pg_Fetch_Object($edit,0);
+	$thisbody = $thisedit->body;
+	$thistype = $thisedit->type;
+	
+	$edit = RMLfiresql("UPDATE $table SET body='$thisbody', paragraphtype=$thistype WHERE doc_id=$id AND id=$sequence");
+	$edit = RMLfiresql("DELETE FROM korrektur WHERE doc_id=$id AND sequence=$sequence");
+	
+	RMLgivekarma(RMLgetcurrentuser());
+}
+
+// ============================================================================
+
+function RMLrejectedit($id,$sequence) {
+	$karma = RMLgetkarma(RMLgetcurrentuser());
+	if($karma < 50) die("Karma Police...");
+	
+	$edit = RMLfiresql("DELETE FROM korrektur WHERE doc_id=$id AND sequence=$sequence");
 }
 
 // ============================================================================
@@ -565,7 +595,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	
 	switch ($forum) {
 	case 'view':
-		$title = "Readers talking Shit";
+		$title = "Readers talking Shit ...";
 	break;
 	}
 
