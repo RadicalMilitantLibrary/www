@@ -612,14 +612,23 @@ function RMLdisplayfrontpage( $print_on = true ) {
 
 	$out = "\n".'<div class="order" style="text-align:center">Protecting your <a href="http://www.ala.org/advocacy/intfreedom/statementspols/freedomreadstatement">Freedom to Read</a> since 2010</div>';
 
+	$sql = '';
+	
+	if( RMLgetkarma(RMLgetcurrentuser()) < 50) {
+		$sql = "SELECT id FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20"; 
+	} else {
+		$sql = "SELECT DISTINCT(doc_id) AS id FROM korrektur";
+		$out .= '<div class="boxheader"><b>Books with edits</b></div>';	
+	}
+
 	$out .= '<p class="boxtext" style="text-align:center">';
-	$result = RMLfiresql("SELECT id,title FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
+	$result = RMLfiresql($sql);
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;
-		$thistitle = $thisrow->title;
+
 		$out .= "\n<a href=\"?document=view&amp;id=$thisid\">
-<img class=\"FrontCover\" alt=\"$thistitle Cover\" src=\"./covers/cover$thisid\" /></a>";
+<img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
 	}
 	$out .= "\n</p>";
 

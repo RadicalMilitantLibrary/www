@@ -482,9 +482,11 @@ function RMLviewdocument( $id, $print_on = true )
 function RMLdisplayerrors($id, $print_on = true) {
 	$out = '';
 	
+	if( RMLgetkarma(RMLgetcurrentuser()) < 50) return;
+	
 	$result = RMLfiresql("SELECT id FROM sandbox WHERE doc_id=$id AND paragraphtype=0");
 	if(pg_num_rows($result) > 0) {
-		$out .= "\n".'<div class="box"><div class="boxheader"><b>Import Errors (W.I.P.)</b></div>';
+		$out .= "\n".'<div class="box"><div class="boxheader"><b>Import Errors</b></div>';
 		$out .= '<div class="boxtext">';
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
@@ -501,12 +503,15 @@ function RMLdisplayerrors($id, $print_on = true) {
 // ============================================================================
 
 function RMLdisplayedits($id) {
-	$table = RMLgetactivetable($id);
 	$out = '';
 	
+	if( RMLgetkarma(RMLgetcurrentuser()) < 50) return;
+	
+	$table = RMLgetactivetable($id);
+		
 	$result = RMLfiresql("SELECT sequence,(SELECT COUNT(id) FROM $table WHERE id<korrektur.sequence AND parent_id=0 AND doc_id=$id) AS section FROM korrektur WHERE doc_id=$id ORDER BY sequence");
 	if(pg_num_rows($result) > 0) {
-		$out .= "\n".'<div class="box"><div class="boxheader"><b>Unresolved edits (W.I.P.)</b></div>';
+		$out .= "\n".'<div class="box"><div class="boxheader"><b>Unresolved edits</b></div>';
 		$out .= '<div class="boxtext">';
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
