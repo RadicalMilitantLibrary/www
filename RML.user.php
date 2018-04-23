@@ -78,9 +78,9 @@ function RMLgetkarma($userhandle) {
 
 // ============================================================================
 
-function RMLgivekarma($userhandle) {
-	if($userhandle == '') return 0;
-	$result = RMLfiresql("UPDATE \"user\" SET karma=karma+1 WHERE handle='$userhandle'");
+function RMLgivekarma($userid) {
+	if($userid == '') return 0;
+	$result = RMLfiresql("UPDATE \"user\" SET karma=karma+1 WHERE id='$userid'");
 }
 
 // ============================================================================

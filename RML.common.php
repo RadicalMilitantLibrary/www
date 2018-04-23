@@ -366,6 +366,8 @@ function RMLconfirmedit($id,$sequence) {
 	$thistype = $thisedit->type;
 	$thisuser = $thisedit->user_id;
 	
+	$thisbody = RMLpreparestring($thisbody);
+	
 	$edit = RMLfiresql("UPDATE $table SET body='$thisbody', paragraphtype=$thistype WHERE doc_id=$id AND id=$sequence");
 	$edit = RMLfiresql("DELETE FROM korrektur WHERE doc_id=$id AND sequence=$sequence");
 	
