@@ -360,15 +360,16 @@ function RMLconfirmedit($id,$sequence) {
 	if($karma < 50) die("Karma Police...");
 	
 	$table = RMLgetactivetable($id);
-	$edit = RMLfiresql("SELECT body,type FROM korrektur WHERE doc_id=$id AND sequence=$sequence");
+	$edit = RMLfiresql("SELECT body,type,user_id FROM korrektur WHERE doc_id=$id AND sequence=$sequence");
 	$thisedit = pg_Fetch_Object($edit,0);
 	$thisbody = $thisedit->body;
 	$thistype = $thisedit->type;
+	$thisuser = $thisedit->user_id;
 	
 	$edit = RMLfiresql("UPDATE $table SET body='$thisbody', paragraphtype=$thistype WHERE doc_id=$id AND id=$sequence");
 	$edit = RMLfiresql("DELETE FROM korrektur WHERE doc_id=$id AND sequence=$sequence");
 	
-	RMLgivekarma(RMLgetcurrentuser());
+	RMLgivekarma($thisuser);
 }
 
 // ============================================================================
