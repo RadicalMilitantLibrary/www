@@ -785,7 +785,7 @@ function RMLdisplayfootnote( $docid, $noteid, $print_on = true )
 
 function RMLdisplayabout( $print_on = true )
 {
-	$out = "\n".'<div class="order" style="text-align:center"><img src="./img/about.jpg" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
+	$out = "\n".'<img src="./img/about.jpg" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
 	.RMLdisplay( "This site is made by readers, for readers. It's about the books.", 8, false )
 	.RMLdisplay( "We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can send a message to the librarian in charge of the book. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.", 5, false )
 	.RMLdisplay( "This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation.", 4, false )

@@ -245,7 +245,7 @@ function RMLcreatedocument( $print_on = true )
 function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 {
 	$out = '';
-	$sql = RMLfiresql( "SELECT name,bio,born,dead,(SELECT COUNT(id) FROM document WHERE author_id = author.id AND status=3) AS numdoc FROM author where id=$id" );
+	$sql = RMLfiresql( "SELECT name,bio,born,dead,(SELECT COUNT(id) FROM document WHERE author_id = author.id AND status=2) AS numdoc FROM author where id=$id" );
 	if ( ! ( $thisrow = pg_Fetch_Object( $sql, 0 ) ) ) {
 		$out = 'ERROR: This Author is not used yet, read how to add a book yourself <a href="?function=manual">in the manual</a>.';
 	} else {
@@ -293,7 +293,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 
 		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
 
-		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE author_id=$id AND status=3 ORDER BY title" );
+		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE author_id=$id AND status=2 ORDER BY title" );
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$thisid = $thisrow->id;
@@ -370,6 +370,18 @@ function RMLgetBibTeX( $data )	//get all data in this named list, e.g. via itera
 
 // ============================================================================
 
+function RMLproofbook($id)
+{	
+	$result = RMLfiresql("SELECT doc_id FROM korrektur WHERE doc_id=$id");
+	if(pg_num_rows($result) > 0) {
+		die("Book contains unresolved edits, please resolve those first.");
+	}
+	
+	$result = RMLfiresql("UPDATE document SET status=3 WHERE id=$id");
+}
+
+// ============================================================================
+
 function RMLviewdocument( $id, $print_on = true )
 {
 	$result = RMLfiresql( "SELECT status,handle,subject_id,author_id,title,subtitle,year,\"unique\",keywords,copyright,teaser,(SELECT name FROM author WHERE id=document.author_id) AS authorname,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE id=".$id );
@@ -410,7 +422,22 @@ function RMLviewdocument( $id, $print_on = true )
 //.'<tr valign="top"><td align="right">BiBTeX :</td><td><div class="bibtex"><textarea id="bibtext" name="bibtext" rows="13" cols="40" readonly="readonly">' .getBibTeX( $id ) .'</textarea></div></td></tr>';
 
 	if( $thiskeywords ) {
-		$out .= "<br/>".'keywords :<b>'.$thiskeywords.'</b>';
+		$out .= "<br/>".'keywords : <b>'.$thiskeywords.'</b>';
+	}
+
+	switch($thisstatus) {
+	case 0 :
+		$out .= "<br/>".'status : <b>'.$thisstatus.' (metadata)</b>';
+	break;
+	case 1 :
+		$out .= "<br/>".'status : <b>'.$thisstatus.' (draft)</b>';
+	break;
+	case 2 :
+		$out .= "<br/>".'status : <b>'.$thisstatus.' (published)</b>';
+	break;
+	case 3 :
+		$out .= "<br/>".'status : <b>'.$thisstatus.' (proofread)</b>';
+	break;
 	}
 	
 	$tablename = RMLgetactivetable( $id );
@@ -440,9 +467,9 @@ function RMLviewdocument( $id, $print_on = true )
 	} 
 
 	$out .= '<div class="center">';
-	if( ($karma > 10) && ($thisstatus == 2) ) {
-		$out .= "\n".'<a class="button save" href="?function=confirm&amp;id='.$id.'">Confirm</a>';
-	}
+//	if( ($karma > 10) && ($thisstatus == 2) ) {
+//		$out .= "\n".'<a class="button save" href="?function=confirm&amp;id='.$id.'">Confirm</a>';
+//	}
 
 	if( $thishandle === $user &&  $thisstatus < 2 ) {
 		switch($thisstatus) {
@@ -460,9 +487,10 @@ function RMLviewdocument( $id, $print_on = true )
 		}
 	}
 
-	if( ( $karma > 100 ) && ( $thisstatus == 3) ) {
-		$out .= "\n".'<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>'
-			."\n".'<a class="button delete" href="?function=withdraw&amp;id='.$id.'">Un-Publish</a>';
+	if( ( $karma > 100 ) && ( $thisstatus == 2) ) {
+		$out .= '<a class="button like" href="?document=proof&amp;id='.$id.'">Proofed</a> 
+<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a> 
+<a class="button delete" href="?function=withdraw&amp;id='.$id.'">Un-Publish</a>';
 	}
 	$out .= "</div>";
 
@@ -952,6 +980,7 @@ function RMLupdateelement( $id )
 	$sequence = substr( $sequence, 1, strlen( $sequence ) );
 	
 	RMLfiresql( "INSERT into korrektur (body, type, doc_id, sequence, user_id) VALUES('$body', $paratype, $id,  $sequence, $userid)" );
+	RMLfiresql( "UPDATE document SET status=2 WHERE id=$id" );
 }
 
 // ============================================================================

@@ -213,6 +213,10 @@ switch ( $document ) {
 		RMLuploadavatar();
 		header( 'Location: ?function=user' );
 	break;
+	case 'proof':
+		RMLproofbook($id);
+		header( 'Location: ?document=view&id='.$id );
+	break;
 }
 
 switch ($comment) {
@@ -246,7 +250,6 @@ switch ( $style ) {
 
 $out .= RMLdisplayhead( false )
 	.RMLdisplaytop( false )
-/*	.RMLdisplayleft( false ) */
 	.RMLdisplaymain( $id, false )
 	.RMLdisplaybottom( false )
 	.RMLdisplayend( false );

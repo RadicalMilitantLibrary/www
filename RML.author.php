@@ -23,7 +23,7 @@ function RMLdisplayauthor( $id, $print_on = true )
 	if( !isset( $id ) || $id == 0 ) {
 		$out .= RMLdisplayauthororder( false );
 
-		$result = RMLfiresql("SELECT id,name,sort_name,born,dead,bio,(SELECT COUNT(author_id) FROM document WHERE author_id = author.id AND status=3) AS counter FROM author WHERE letter='$letter' GROUP BY counter,sort_name,author.id,author.name,author.born,author.dead,author.bio ORDER BY sort_name");
+		$result = RMLfiresql("SELECT id,name,sort_name,born,dead,bio,(SELECT COUNT(author_id) FROM document WHERE author_id = author.id AND status=2) AS counter FROM author WHERE letter='$letter' GROUP BY counter,sort_name,author.id,author.name,author.born,author.dead,author.bio ORDER BY sort_name");
 		$displaycount = 0;
 		setTimeZone();
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
@@ -34,7 +34,6 @@ function RMLdisplayauthor( $id, $print_on = true )
 			$born = $thisrow->born;
 			$dead = $thisrow->dead;
 			$counter = $thisrow->counter;
-			//$maintainer = $thisrow->maintainer;//not in query! maybe add doc-maintainer
 			$bio = $thisrow->bio;
 
 			$age = getAge( $born, $dead );
@@ -76,8 +75,7 @@ Books online <b>'. getNumberFormatted( $counter, 0 ) .'</b></small></p>';
 				}
 			}
 		}
-
-		if( hasRights( 'addauthor'/** /, array( $maintainer )/**/ ) ) {//maintainer not in query!
+		if( RMLgetkarma(RMLgetcurrentuser()) > 10 ) {//maintainer not in query!
 			$out .= "\n".'<a href="?author=new" class="button add">Add</a>';
 		}
 	} else {
