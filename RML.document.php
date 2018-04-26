@@ -293,7 +293,7 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 
 		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
 
-		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE author_id=$id AND status=2 ORDER BY title" );
+		$result = RMLfiresql( "SELECT id,title,year,keywords,subject_id,teaser,(SELECT subject_name FROM subject WHERE id=document.subject_id) AS subjecttitle,(SELECT native_name FROM \"ISO639\" WHERE id=document.language_id) AS language FROM document WHERE author_id=$id AND status>1 ORDER BY title" );
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$thisid = $thisrow->id;
@@ -489,8 +489,7 @@ function RMLviewdocument( $id, $print_on = true )
 
 	if( ( $karma > 100 ) && ( $thisstatus == 2) ) {
 		$out .= '<a class="button like" href="?document=proof&amp;id='.$id.'">Proofed</a> 
-<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a> 
-<a class="button delete" href="?function=withdraw&amp;id='.$id.'">Un-Publish</a>';
+<a class="button edit" href="?document=edit&amp;id='.$id.'">Edit</a>';
 	}
 	$out .= "</div>";
 

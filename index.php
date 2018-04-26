@@ -174,11 +174,11 @@ switch( $function ) {
 	case 'deny':
 		RMLdenydocument( $id );
 	break;
-	case 'withdraw':
-		RMLwithdrawdocument( $id, false );
-		$user = RMLgetcurrentuser();
-		header( 'Location: ?function=user' );
-	break;
+//	case 'withdraw':
+//		RMLwithdrawdocument( $id, false );
+//		$user = RMLgetcurrentuser();
+//		header( 'Location: ?function=user' );
+//	break;
 	case 'rss':
 		RMLgeneraterss(true);
 		die();
