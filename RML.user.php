@@ -198,24 +198,32 @@ function getPwdHash( $password )
 // ============================================================================
 
 function RMLdisplayuserpage( $print_on = true ) {
-	$result = RMLfiresql("SELECT user_name,karma,xmpp,diaspora,mastodon,irc FROM \"user\" WHERE handle='". RMLgetcurrentuser() ."'");
+	$result = RMLfiresql("SELECT id,user_name,karma,xmpp,diaspora,mastodon,irc,ricochet FROM \"user\" WHERE handle='". RMLgetcurrentuser() ."'");
 	
 	$thisrow = pg_Fetch_Object( $result, 0 );
+	$thisid = $thisrow->id;
 	$username = $thisrow->user_name;
 	$karma = $thisrow->karma;
 	$xmpp = $thisrow->xmpp;
 	$diaspora = $thisrow->diaspora;
 	$mastodon = $thisrow->mastodon;
 	$irc = $thisrow->irc;
+	$ricochet = $thisrow->ricochet;
 	
-	$out = "<div class=\"order\"><small>";
-	if($username) $out .= "<b>Name</b>&nbsp;:&nbsp;$username ";
-	if($karma) $out .= "<b>Karma</b>&nbsp;:&nbsp;$karma (".RMLgetrating($karma).") ";
+	if(file_exists("./users/".$thisid.".png")) {	
+		$out = "<div class=\"order\"><img style=\"float:left\" src=\"./users/".$thisid.".png\">";
+	} else {
+		$out = "<div class=\"order\"><img style=\"float:left\" src=\"./users/Anonymous.png\">";
+	}
+	
+	if($username) $out .= "<small><b>Name</b>&nbsp;:&nbsp;$username ";
+	if($karma) $out .= "<br/><b>Karma</b>&nbsp;:&nbsp;$karma (".RMLgetrating($karma).") <br/>";
 	if($xmpp) $out .= "<b>XMPP</b>&nbsp;:&nbsp;$xmpp ";
 	if($irc) $out .= "<b>IRC</b>&nbsp;:&nbsp;$irc ";
 	if($diaspora) $out .= "<b>Diaspora*</b>&nbsp;:&nbsp;$diaspora ";
 	if($mastodon) $out .= "<b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
-	$out .= "</small></div>"
+	if($ricochet) $out .= "<b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
+	$out .= "</small></div><div class=\"inlineclear\"> </div>"
 	.RMLdisplaydocuments( false )
 	.RMLdisplaystylesheets( false )
 	.RMLdisplaymessages( false )

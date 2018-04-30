@@ -519,7 +519,7 @@ function RMLdisplayerrors($id, $print_on = true) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$sequence = $thisrow->id;
 
-			$out .= '<a href="./?function=edit&id='.$id.'&sequence=s'.$sequence.'">#'.$sequence.'</a>';
+			$out .= '<a href="./?function=edit&id='.$id.'&sequence=s'.$sequence.'">#'.$sequence.'</a> ';
 		}
 		$out .= '</div></div>';	
 	}

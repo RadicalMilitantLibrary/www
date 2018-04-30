@@ -113,7 +113,7 @@ function RMLdisplaymenu( $print_on = true )
 	}
 
 	$karma = RMLgetkarma($currentuser);
-	$karma = $karma . '(' . RMLgetrating($karma) . ')';
+	$karma = $karma . ' (' . RMLgetrating($karma) . ')';
 	
 	if(($currentuser) && ($function <> 'user') && ($message <> 'new') && ($style <> 'new') && ($document <> 'new')) {
 		$out .= "\n<a class=\"button\" href=\"?function=user\">$karma</a>";

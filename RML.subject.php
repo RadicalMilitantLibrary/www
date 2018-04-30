@@ -18,15 +18,17 @@ function RMLdisplaysubject( $id, $print_on = true )
 {
 	global $page, $letter, $itemprpage;
 
+	$karma = RMLgetkarma(RMLgetcurrentuser());
 	$out = '';
+	
 	if( !isset( $id ) || $id < 1 ) {
-		$out .= RMLdisplaysubjectorder( false );
+		//$out .= RMLdisplaysubjectorder( false );
 
-		if( hasRights( 'addsubject' ) ) {
+		if( $karma > 100 ) {
 			$out .= "\n".'<a class="button add" href="?subject=add">Add Subject</a>';
 		}
 
-		$result = RMLfiresql( "SELECT id,subject_name,subject_description,(SELECT count(id) FROM document WHERE subject_id=subject.id AND status>3) AS doccount FROM subject ORDER BY subject_name" );
+		$result = RMLfiresql( "SELECT id,subject_name,subject_description,(SELECT count(id) FROM document WHERE subject_id=subject.id AND status>1) AS doccount FROM subject ORDER BY subject_name" );
 		if ( ! $result ) {
 			$out = 'ERROR: No elements to list';
 		} else {
@@ -45,13 +47,14 @@ function RMLdisplaysubject( $id, $print_on = true )
 				}
 				$out .= "\n".'<div class="box">
 <div class="boxheader"><a href="?subject=view&amp;id='.$thisid.'"><b>'.$thisname.'</a></b></div>
+<div class="order" style="text-align:right;margin-top:-1.4em;margin-bottom:0"><small><b>'.$doccount.'</b> books</small></div>
 <div class="boxtext">'.$description.'</div>
 <div class="inlineclear"></div>
 </div>';
 			}
 		}
 	} else {
-		$sql = RMLfiresql( "SELECT id,subject_name,subject_description AS subjdesc,(SELECT COUNT(id) FROM document WHERE subject_id=$id AND status=3) AS doccount FROM subject ORDER BY subject_name" );
+		$sql = RMLfiresql( "SELECT id,subject_name,subject_description AS subjdesc,(SELECT COUNT(id) FROM document WHERE subject_id=$id AND status>1) AS doccount FROM subject ORDER BY subject_name" );
 		if( ! $sql ) {
 			$out = 'ERROR: No elements to list';
 		} else {
@@ -92,7 +95,7 @@ function RMLdisplaysubject( $id, $print_on = true )
 			
 // todo: needs fix for correct subject image (its asked for when creating a new one), could default on maintainer image if not available
 
-			$sql = RMLfiresql( "SELECT id,title,status,author_id,year,keywords,teaser,(SELECT name FROM author WHERE id=document.author_id) AS autname,(SELECT AVG(level) FROM forum WHERE thread_id=document.id) AS score FROM document WHERE subject_id=$id AND status=3 ORDER BY title LIMIT $itemprpage OFFSET $firstrow" );
+			$sql = RMLfiresql( "SELECT id,title,status,author_id,year,keywords,teaser,(SELECT name FROM author WHERE id=document.author_id) AS autname FROM document WHERE subject_id=$id AND status>1 ORDER BY title LIMIT $itemprpage OFFSET $firstrow" );
 			if( ! $sql ) {
 				$out = 'ERROR: No Subject Information.';
 			} else {
@@ -108,7 +111,6 @@ function RMLdisplaysubject( $id, $print_on = true )
 					$thiskeywords = $thisrow->keywords;
 					$thisteaser = $thisrow->teaser;
 					$authorname = $thisrow->autname;
-					$avgscore = $thisrow->score;
 
 					$out .= "\n".'<div class="box">
 <p class="boxheader"><a href="?document=view&amp;id='.$thisid.'"><img class="Cover" alt="Cover" src="./covers/cover'.$thisid.'"/><b>'.$thistitle.'</b></a></p>';
