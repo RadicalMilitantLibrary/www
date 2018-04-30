@@ -619,7 +619,7 @@ function RMLdisplayfrontpage( $print_on = true ) {
 		$result = RMLfiresql("SELECT DISTINCT(doc_id) AS id FROM korrektur");
 	
 		if(pg_numrows($result) > 0) {
-			$out .= '<div class="BoxStart"><div class="boxheader"><b>Books with edits</b></div><p class="boxtext">';	
+			$out .= '<div class="BoxStart"><div class="BoxHead"><b>Books with edits</b></div><p class="BoxText">';	
 		}
 	
 		for($row=0;$row<pg_numrows($result);$row++) {
@@ -632,7 +632,7 @@ function RMLdisplayfrontpage( $print_on = true ) {
 		}
 	}
 
-	$out .= '<p class="boxtext" style="text-align:center">';
+	$out .= '<p class="BoxText" style="text-align:center">';
 	$result = RMLfiresql("SELECT id FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);

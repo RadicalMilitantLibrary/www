@@ -20,14 +20,21 @@ function RMLdisplaylists($print_on = true) {
 	$user = RMLgetcurrentuser();
 
 	if($id == 0) {
-		$result = RMLfiresql("SELECT id,name,owner FROM lists ORDER BY name");
+		$result = RMLfiresql("SELECT id,name,owner,description,(SELECT COUNT(list_id) FROM listitems WHERE list_id=lists.id) AS counter FROM lists ORDER BY name");
 		for($row=0;$row<pg_numrows($result);$row++) {
 			$thisrow = pg_Fetch_Object($result,$row);
 			$thisid = $thisrow->id;
 			$thisname = $thisrow->name;
 			$thisowner = $thisrow->owner;
+			$thisdesc = $thisrow->description;
+			$counter = $thisrow->counter;
+			
+			if( strlen( $thisdesc ) > 400 ) {
+				$thisdesc = substr( $thisdesc, 0, 400 ) .' ...';
+				$thisdesc = strip_tags( $thisdesc );
+			}
 		
-			$out .= "\n<div class=\"box\"><div class=\"boxheader\"><a href=\"?lists=view&amp;id=$thisid\"><b>$thisname</b></a></div></div>";
+			$out .= "\n<div class=\"box\"><div class=\"boxheader\"><a href=\"?lists=view&amp;id=$thisid\"><b>$thisname</b></a></div><div class=\"order\" style=\"text-align:right;margin:0;margin-top:-1.4em\"><small><b>$counter</b> books</small></div><p class=\"boxtext\">$thisdesc</p></div>";
 		}
 		if($user) {
 			$out .= '<a class="button star" href="?lists=create">New List</a>';

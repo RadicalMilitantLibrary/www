@@ -34,6 +34,12 @@ function RMLdisplayauthor( $id, $print_on = true )
 			$born = $thisrow->born;
 			$dead = $thisrow->dead;
 			$counter = $thisrow->counter;
+			if($counter == 1) {
+				$counter .= '</b> book ';
+			} else {
+				$counter .= '</b> books ';
+			}
+			
 			$bio = $thisrow->bio;
 
 			$age = getAge( $born, $dead );
@@ -54,7 +60,7 @@ function RMLdisplayauthor( $id, $print_on = true )
 					$out .= "\n".'<div class="box"><div class="inlineclear">
 <a href="?author=view&amp;id='.$thisid.'&amp;letter='.$letter.'"><img alt="Author #'.$thisid.'" class="Author" src="./authors/author'.$thisid.'"/></a>
 <div class="boxheader"><a href="?author=view&amp;id='.$thisid.'&amp;letter='.$letter.'"><b>'.$thisname.'</b></a></div>';
-					$out .= "\n".'<div class="boxtext">'.$bio.'</div></div></div>';
+					$out .= "\n".'<div class="order" style="text-align:right;margin:0;margin-top:-1.4em"><small><b>'.$counter.'</small></div><div class="boxtext">'.$bio.'</div></div></div>';
 				}
 			} else {	// ewa: was defunct?! (by if obove)
 				if( $displaycount < 20 ) {	//todo: implement pages to turn over -> limit in query already

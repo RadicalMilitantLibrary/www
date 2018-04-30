@@ -513,8 +513,8 @@ function RMLdisplayerrors($id, $print_on = true) {
 	
 	$result = RMLfiresql("SELECT id FROM sandbox WHERE doc_id=$id AND paragraphtype=0");
 	if(pg_num_rows($result) > 0) {
-		$out .= "\n".'<div class="box"><div class="boxheader"><b>Import Errors</b></div>';
-		$out .= '<div class="boxtext">';
+		$out .= "\n".'<div class="BoxStart"><div class="BoxHead"><b>Import Errors</b></div>';
+		$out .= '<div class="BoxText">';
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$sequence = $thisrow->id;
@@ -538,8 +538,8 @@ function RMLdisplayedits($id) {
 		
 	$result = RMLfiresql("SELECT sequence,(SELECT COUNT(id) FROM $table WHERE id<korrektur.sequence AND parent_id=0 AND doc_id=$id) AS section FROM korrektur WHERE doc_id=$id ORDER BY sequence");
 	if(pg_num_rows($result) > 0) {
-		$out .= "\n".'<div class="box"><div class="boxheader"><b>Unresolved edits</b></div>';
-		$out .= '<div class="boxtext">';
+		$out .= "\n".'<div class="BoxStart"><div class="BoxHead"><b>Unresolved edits</b></div>';
+		$out .= '<div class="BoxText">';
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
 			$sequence = $thisrow->sequence;
