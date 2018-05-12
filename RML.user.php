@@ -28,6 +28,15 @@ function RMLgetuserID( $username )
 		return false;
 	}
 }
+
+function RMLgetuserhandle ( $userid )
+{
+	$result = RMLfiresql( "SELECT user_name FROM \"user\" WHERE id=$userid" );
+	if(pg_numrows($result) == 0) { return; }
+	$thisrow = pg_Fetch_Object( $result, 0 );
+	return $thisrow->user_name;
+}
+
 // todo:
 // return ID of a user named, use pq_prepare (http://php.net/manual/en/function.pg-prepare.php)
 // sanetize RMLfiresql to use prepared statements, for now just aside each other
@@ -198,8 +207,15 @@ function getPwdHash( $password )
 // ============================================================================
 
 function RMLdisplayuserpage( $print_on = true ) {
-	$result = RMLfiresql("SELECT id,user_name,karma,xmpp,diaspora,mastodon,irc,ricochet FROM \"user\" WHERE handle='". RMLgetcurrentuser() ."'");
-	
+	global $id;
+	if($id <> 0) {
+		$result = RMLfiresql("SELECT id,user_name,karma,xmpp,diaspora,mastodon,irc,ricochet FROM \"user\" WHERE id=$id");
+	} else {
+		$result = RMLfiresql("SELECT id,user_name,karma,xmpp,diaspora,mastodon,irc,ricochet FROM \"user\" WHERE handle='". RMLgetcurrentuser() ."'");
+	}
+
+	if(!$result) { return; }
+	if(pg_numrows($result) == 0) { return; }
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$thisid = $thisrow->id;
 	$username = $thisrow->user_name;
@@ -217,13 +233,14 @@ function RMLdisplayuserpage( $print_on = true ) {
 	}
 	
 	if($username) $out .= "<small><b>Name</b>&nbsp;:&nbsp;$username ";
-	if($karma) $out .= "<br/><b>Karma</b>&nbsp;:&nbsp;$karma (".RMLgetrating($karma).") <br/>";
+	if($karma) $out .= " <b>Karma</b>&nbsp;:&nbsp;$karma (".RMLgetrating($karma).") <br/>";
 	if($xmpp) $out .= "<b>XMPP</b>&nbsp;:&nbsp;$xmpp ";
 	if($irc) $out .= "<b>IRC</b>&nbsp;:&nbsp;$irc ";
 	if($diaspora) $out .= "<b>Diaspora*</b>&nbsp;:&nbsp;$diaspora ";
 	if($mastodon) $out .= "<b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
 	if($ricochet) $out .= "<b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
 	$out .= "</small></div><div class=\"inlineclear\"> </div>"
+	.RMLdisplayfavourites( $thisid,false )
 	.RMLdisplaydocuments( false )
 	.RMLdisplaystylesheets( false )
 	.RMLdisplaymessages( false )
@@ -318,8 +335,31 @@ function RMLdisplaychpwd( $print_on = true )
 
 // ============================================================================
 
+function RMLdisplayfavourites( $user_id = 0, $print_on = true )
+{
+	if($user_id == 0) { return; }
+	
+	$result = RMLfiresql("SELECT document_id FROM favourite WHERE user_id=$user_id");
+
+	$out = "\n".'<div class="box">
+<div class="boxheader"><b>Favourite books</b></div>
+<div class="boxtext">';
+	for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+		$thisrow = pg_Fetch_Object( $result, $row );
+		$id = $thisrow->document_id;
+		$out .= '<a href="?document=view&amp;id='.$id.'"><img class="FrontCover" src="./covers/cover'.$id.'"/></a>';
+	}
+	$out .= '</div></div>';
+	return processOutput( $out, $print_on );
+}
+
+// ============================================================================
+
 function RMLdisplaystylesheets( $print_on = true ) {
 	$user = RMLgetcurrentuser();
+
+	if(!$user) { return; }
+
 	$result = RMLfiresql("SELECT id,name FROM stylesheet WHERE owner='$user' ORDER BY id");
 
 	$out = "\n".'<div class="box">
@@ -421,6 +461,7 @@ function RMLupdatestylesheet( $id, $print_on = true ) {
 
 function RMLdisplaymessages( $print_on = true ) {
 	$user = RMLgetcurrentuser();
+	if(!$user) { return; }
 	$result = RMLfiresql("SELECT id,posted_on,subject,sender_handle FROM message WHERE handle='$user' ORDER BY posted_on DESC");
 
 	$numrows = pg_numrows($result) - 1;
@@ -487,7 +528,6 @@ function RMLdisplaydocuments( $print_on = true ) {
 		}
 		$out .= "\n</div><p class=\"boxtext\"><a class=\"button add\" href=\"?document=new\">New Document</a></p></div>";
 	} else {
-		$out .= 'Displaydocuments : Bad user...';
 		RMLlogout();//ensure cookie is unset
 	}
 

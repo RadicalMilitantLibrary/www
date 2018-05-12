@@ -71,7 +71,6 @@ $format = RMLpreparestring($_REQUEST['format']);
 $page = RMLpreparestring($_REQUEST['page']);
 $comment = RMLpreparestring($_REQUEST['comment']);
 $score = RMLpreparestring($_REQUEST['score']);
-$news = RMLpreparestring($_REQUEST['news']);
 $footnote = RMLpreparestring($_REQUEST['footnote']);
 $note = RMLpreparestring($_REQUEST['note']);
 $messageto = RMLpreparestring($_REQUEST['messageto']);
@@ -183,6 +182,10 @@ switch( $function ) {
 		RMLgeneraterss(true);
 		die();
 	break;
+	case 'favourite':
+		RMLaddtofavourite($id);
+		header( 'Location: ?document=view&id='.$id );
+	break;
 }
 
 switch( $message ) {
@@ -225,17 +228,6 @@ switch ($comment) {
 		header( 'Location: ?document=view&id='.$id );
 	break;
 } 
-
-switch ( $news ) {
-	case 'delete':
-		RMLdeletenews( $id, false );
-		header( 'Location: ?news=view' );
-	break;
-	case 'save':
-		RMLsavenews( false );
-		header( 'Location: ?news=view' );
-	break;
-}
 
 switch ( $style ) {
 	case 'save':

@@ -462,11 +462,18 @@ function RMLviewdocument( $id, $print_on = true )
 	$out .= '<div class="inlineclear">&nbsp;</div>';
 
 	$user = RMLgetcurrentuser();
+	
+	$out .= '<div class="center">';
+	
+	if( $user ) {
+		$out .= '<a class="button edit" href="./?function=favourite&amp;id='.$id.'">Add to Favourites</a> ';
+	}
+	
 	if( $thisstatus > 0 ) {
-		$out .= '<div class="center"><a class="button save" href="./?function=download&amp;id='.$id.'">Borrow Book</a></div>';
+		$out .= '<a class="button save" href="./?function=download&amp;id='.$id.'">Borrow Book</a>';
 	} 
 
-	$out .= '<div class="center">';
+
 //	if( ($karma > 10) && ($thisstatus == 2) ) {
 //		$out .= "\n".'<a class="button save" href="?function=confirm&amp;id='.$id.'">Confirm</a>';
 //	}

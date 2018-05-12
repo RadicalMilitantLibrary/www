@@ -19,7 +19,7 @@ function RMLgetpagetitle()
 	global $function, $subject, $static, $message, $document, $author,
 		$id, $section, $sequence, $news, $footnote, $note, $style, $forum;
 
-	$title = "Paranoid Proofreaders";
+	$title = "Radical Militant Library";
 
 	switch( $author ) {
 	case 'view':
@@ -1866,6 +1866,15 @@ function del_dir( $dirname, $delim='/' )
 		}
 	}
 	return del_dir( $dirname );
+}
+
+// ============================================================================
+
+function RMLaddtofavourite( $documentid ) {
+	$user = RMLgetuserid(RMLgetcurrentuser());
+	if($user && $documentid) {
+		RMLfiresql("INSERT INTO favourite VALUES($user,$documentid)");
+	}
 }
 
 // ============================================================================

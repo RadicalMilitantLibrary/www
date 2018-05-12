@@ -59,18 +59,6 @@ function RMLdisplaymenu( $print_on = true )
 	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button home" href=".">Home</a>
 ';
 
-	if($function == 'about') {
-		$out .= "\n<a class=\"activebutton\" href=\"?function=about\">About</a>";
-	} else {
-		$out .= "\n<a class=\"button\" href=\"?function=about\">About</a>";
-	}
-
-	if($news) {
-		$out .= "\n<a class=\"activebutton\" href=\"?news=view\">News</a>";
-	} else {
-		$out .= "\n<a class=\"button\" href=\"?news=view\">News</a>";
-	}
-
 	if(($author == 'view') || ($document == 'view')) {
 		$out .= "\n<a class=\"activebutton\" href=\"?author=view&amp;letter=A\">Authors</a>";
 	} else {
@@ -118,8 +106,14 @@ function RMLdisplaymenu( $print_on = true )
 	if(($currentuser) && ($function <> 'user') && ($message <> 'new') && ($style <> 'new') && ($document <> 'new')) {
 		$out .= "\n<a class=\"button\" href=\"?function=user\">$karma</a>";
 	}
-	if(($function == 'user') || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
+	if((($function == 'user') && (RMLgetcurrentuser())) || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
 		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">$karma</a>";
+	}
+
+	if($function == 'readers') {
+		$out .= "\n<a class=\"activebutton\" href=\"?function=readers\">Readers</a>";
+	} else {
+		$out .= "\n<a class=\"button\" href=\"?function=readers\">Readers</a>";
 	}
 
 	$out .= "\n</div>";
@@ -159,12 +153,12 @@ function RMLdisplaymain( $id, $print_on = true ) {
 		$out .= RMLeditelement( $id, false );
 		$frontpage = false;
 	break;
-	case 'about':
-		$out .= RMLdisplayabout( false );
-		$frontpage = false;
-	break;
 	case 'manual':
 		$out .= RMLdisplaymanual( false );
+		$frontpage = false;
+	break;
+	case 'readers':
+		$out .= RMLdisplayreaders( false );
 		$frontpage = false;
 	break;
 	}
@@ -202,22 +196,6 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	switch( $forum ) {
 	case 'view':
 		$out .= RMLdisplayforum( false );
-		$frontpage = false;
-	break;
-	}
-
-	// ======================================
-	switch( $news ) {
-	case 'view':
-		$out .= RMLdisplaynews( false );
-		$frontpage = false;
-	break;
-	case 'add':
-		$out .= RMLaddnews( false );
-		$frontpage = false;
-	break;
-	case 'edit':
-		$out .= RMLeditnews( $id, false );
 		$frontpage = false;
 	break;
 	}
@@ -449,7 +427,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists, $forum;
 
 	//default
-	$title = '~ Paranoid Proofreaders ~';
+	$title = '~ All Your Books Are Belong to Us!!! ~';
 
 	$out = '<p class="pagetitle">';
 
@@ -493,12 +471,20 @@ function RMLdisplaytitle( $print_on = true ) {
 		$title = 'Login';
 	break;
 	case 'user':
-		$title = RMLgetcurrentuser();
+		if($id) {
+			$title = RMLgetuserhandle($id);
+				} else {
+			$title = RMLgetcurrentuser();
+		}
+		
 		$title = 'User #'.$title;
 	break;
 	case 'upload':
 		$docname = RMLgetdocumenttitle( $id );
 		$title = "Upload '$docname'";
+	break;
+	case 'readers':
+		$title = '~ Radical Militant Readers ~';
 	break;
 	case 'import':
 		$docname = RMLgetdocumenttitle( $id );
@@ -506,9 +492,6 @@ function RMLdisplaytitle( $print_on = true ) {
 	break;
 	case 'edit':
 		$title = "Edit Element";
-	break;
-	case 'about':
-		$title = "~ All Your Books Are Belong to Us !!! ~";
 	break;
 	case 'manual':
 		$title = "~ Manual ~";
@@ -614,26 +597,8 @@ function RMLdisplayfrontpage( $print_on = true ) {
 
 	$sql = '';
 	
-	if( RMLgetkarma(RMLgetcurrentuser()) > 50) {
-		
-		$result = RMLfiresql("SELECT DISTINCT(doc_id) AS id FROM korrektur");
-	
-		if(pg_numrows($result) > 0) {
-			$out .= '<div class="BoxStart"><div class="BoxHead"><b>Books with edits</b></div><p class="BoxText">';	
-		}
-	
-		for($row=0;$row<pg_numrows($result);$row++) {
-			$thisrow = pg_Fetch_Object($result,$row);
-			$thisid = $thisrow->id;
-			$out .= "\n<a href=\"?document=view&amp;id=$thisid\"><img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
-		}
-		if(pg_numrows($result) > 0) {
-			$out .= "\n</p></div>";
-		}
-	}
-
-	$out .= '<p class="BoxText" style="text-align:center">';
-	$result = RMLfiresql("SELECT id FROM document  WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
+	$out .= '<p class="Head1">Proofread books</p><p class="BoxText" style="text-align:center">';
+	$result = RMLfiresql("SELECT id FROM document WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
 		$thisid = $thisrow->id;
@@ -642,6 +607,24 @@ function RMLdisplayfrontpage( $print_on = true ) {
 <img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
 	}
 	$out .= "\n</p>";
+
+	if( RMLgetkarma(RMLgetcurrentuser()) > 50) {
+		
+		$result = RMLfiresql("SELECT DISTINCT(doc_id) AS id FROM korrektur");
+	
+		if(pg_numrows($result) > 0) {
+			$out .= '<p class="Head1">Books with edits</p><p class="BoxText" style="text-align:center">';	
+		}
+	
+		for($row=0;$row<pg_numrows($result);$row++) {
+			$thisrow = pg_Fetch_Object($result,$row);
+			$thisid = $thisrow->id;
+			$out .= "\n<a href=\"?document=view&amp;id=$thisid\"><img class=\"FrontCover\" alt=\"Cover\" src=\"./covers/cover$thisid\" /></a>";
+		}
+		if(pg_numrows($result) > 0) {
+			$out .= "\n</p>";
+		}
+	}
 
 	return processOutput( $out, $print_on );
 }
@@ -783,19 +766,6 @@ function RMLdisplayfootnote( $docid, $noteid, $print_on = true )
 
 // ============================================================================
 
-function RMLdisplayabout( $print_on = true )
-{
-	$out = "\n".'<img src="./img/about.jpg" style="border: 0; float: right; margin-left: 20px;margin-top: 5px;margin-bottom:10px;"/>'
-	.RMLdisplay( "This site is made by readers, for readers. It's about the books.", 8, false )
-	.RMLdisplay( "We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can send a message to the librarian in charge of the book. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.", 5, false )
-	.RMLdisplay( "This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation.", 4, false )
-	.RMLdisplay( "If you want to chat, we hang out in the #readingclub channel on <a href=\"http://www.oftc.net/\">OFTC</a>. Or you can try to reach jotunbane@<a href=\"http://cloak.dk\">cloak.dk</a> on jabber (OTR required), or at <a href=\"http://ricochet.im\">Ricochet</a> ricochet:i4oltgzz53xy7aqm.", 4, false )
-	.RMLdisplay( "The logo is released under a Creative Commons Attribution-ShareAlike license by <a href=\"http://readersbillofrights.info\">Readers Bill of Rights</a>. It is created by cartoonist and <a href=\"http://questioncopyright.org/\">QuestionCopyright.org</a> artist-in-residence <a href=\"http://blog.ninapaley.com/\">Nina Paley</a>. You can support Nina's work and view her amazing and Creative Commons licensed film, <a href=\"http://www.sitasingstheblues.com/\">Sita Sings the Blues</a>, over at her website.", 5, false );
-	return processOutput( $out, $print_on );
-}
-
-// ============================================================================
-
 function RMLdisplaymanual( $print_on = true )
 {
 	setTimeZone();
@@ -819,24 +789,37 @@ function RMLdisplaymanual( $print_on = true )
 
 function RMLdisplayreaders( $print_on = true )
 {
-	$out = '';
-	$sql = RMLfiresql("SELECT DISTINCT(author) AS users, COUNT(id) AS comments, AVG(level) AS avgrating FROM forum WHERE level>0 AND author<>'Anonymous' GROUP BY users ORDER BY comments DESC;");
-	for( $row=0; $row < pg_numrows( $sql ); $row++ ) {
-		$thisrow = pg_Fetch_Object( $sql, $row );
-		$thisuser = $thisrow->users;
-		$thisuserID = RMLgetuserID( $thisuser );
-		$avgrating = round($thisrow->avgrating,2);
-		$numcomments = RMLgetrating( $thisrow->comments );
-
-		if(!file_exists("./users/$thisuserID.png")) {
-			$image = "Anonymous";
+	$result = RMLfiresql("SELECT id,user_name,karma,irc,xmpp,diaspora,mastodon,ricochet FROM \"user\" WHERE user_name <> 'Anonymous' ORDER BY karma DESC");
+	
+	for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+		$thisrow = pg_Fetch_Object( $result, $row );
+		$thisid = $thisrow->id;	
+		$thisusername = $thisrow->user_name;
+		$thiskarma = $thisrow->karma;
+		$thiskarma = '(' . RMLgetrating($thiskarma) . ')';
+		$diaspora = $thisrow->diaspora;
+		$mastodon = $thisrow->mastodon;
+		$xmpp = $thisrow->xmpp;
+		$irc = $thisrow->irc;
+		$ricochet = $thisrow->ricochet;
+		
+		if(file_exists("./users/".$thisid.".png")) {	
+			$out .= "<img style=\"float:left\" src=\"./users/".$thisid.".png\">";
 		} else {
-			$image = $thisuserID;
+			$out .= "<img style=\"float:left\" src=\"./users/Anonymous.png\">";
 		}
-
-		$out .= "\n".'<div class="box">
-<div class="boxheader"><img class="docicon" src="./users/'.$image.'.png" /><b>'.$thisuser.'</b> ('.$numcomments.')</div><div class="boxtext">Read <b>'.$thisrow->comments.'</b> books, scoring <b>'.$avgrating.'</b> on average.</div>
-<div class="inlineclear"></div></div>';
+		
+		$out .= "\n".'<div class="boxheader"><b><a href="./?function=user&id='.$thisid.'">'.$thisusername.'</a></b> '.$thiskarma.'</div><div class="boxtext"><small>';
+		if($xmpp) $out .= "<b>XMPP</b>&nbsp;:&nbsp;$xmpp ";
+		if($irc) $out .= "<b>IRC</b>&nbsp;:&nbsp;$irc ";
+		if($diaspora) $out .= "<b>Diaspora*</b>&nbsp;:&nbsp;$diaspora ";
+		if($mastodon) $out .= "<b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
+		if($ricochet) $out .= "<b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
+		$out .= "</small></div><div class=\"inlineclear\"> </div>";
+		
+		
+		
+		
 	}
 	return processOutput( $out, $print_on );
 }
