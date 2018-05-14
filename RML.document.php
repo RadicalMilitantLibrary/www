@@ -244,6 +244,7 @@ function RMLcreatedocument( $print_on = true )
 
 function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 {
+	$karma = RMLgetkarma(RMLgetcurrentuser());	
 	$out = '';
 	$sql = RMLfiresql( "SELECT name,bio,born,dead,(SELECT COUNT(id) FROM document WHERE author_id = author.id AND status=2) AS numdoc FROM author where id=$id" );
 	if ( ! ( $thisrow = pg_Fetch_Object( $sql, 0 ) ) ) {
@@ -289,6 +290,10 @@ function RMLdisplaydocumentsbyauthor( $id, $print_on = true )
 
 		if( hasRights( 'editauthor' /*, array( $maintainer )*/ ) ) {
 			$out .= "\n".'<a href="?author=edit&amp;id='.$id.'" class="button edit" title="edit author">Edit</a>' ;
+		}
+
+		if( $karma > 0 ) {
+			$out .= '<a class="button" href="?forum=author&amp;id='.$id.'">Talk about this</a>';
 		}
 
 		$out .= "\n".'<div class="inlineclear">&nbsp;</div>';
@@ -470,13 +475,9 @@ function RMLviewdocument( $id, $print_on = true )
 	}
 	
 	if( $thisstatus > 0 ) {
-		$out .= '<a class="button save" href="./?function=download&amp;id='.$id.'">Borrow Book</a>';
+		$out .= '<a class="button save" href="./?function=download&amp;id='.$id.'">Borrow Book</a> ';
 	} 
 
-
-//	if( ($karma > 10) && ($thisstatus == 2) ) {
-//		$out .= "\n".'<a class="button save" href="?function=confirm&amp;id='.$id.'">Confirm</a>';
-//	}
 
 	if( $thishandle === $user &&  $thisstatus < 2 ) {
 		switch($thisstatus) {
@@ -504,9 +505,14 @@ function RMLviewdocument( $id, $print_on = true )
 	
 	.RMLdisplayerrors($id, false)
 	.RMLdisplayedits($id, false)
+
+	.'<p class="ParaNoIndent">'.$thisteaser.'</p>';
 	
-	.'<p class="ParaNoIndent">'.$thisteaser.'</p>
-<div class="inlineclear">&nbsp;</div>' . /*RMLdisplaycomments($id, false) .*/ '<div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
+	if( $karma ) {
+		$out .= '<a class="button" href="?forum=document&amp;id='.$id.'">Talk about this</a>';
+	}
+	
+	$out .= '<div class="inlineclear">&nbsp;</div><div class="box"><div class="boxheader"><b>Colophon</b></div><div class="boxtext"><small>'.$thiscopyright.'</small></div></div>'
 		.RMLdisplaytoc( $id, false );
 	return processOutput( $out, $print_on );
 }

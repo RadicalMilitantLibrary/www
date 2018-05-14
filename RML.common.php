@@ -77,10 +77,10 @@ function RMLdisplaymenu( $print_on = true )
 		$out .= "\n<a class=\"button\" href=\"?lists=view&amp;id=0\">Lists</a>";
 	}
 
-	if($function == 'manual') {
-		$out .= "\n<a class=\"activebutton\" href=\"?function=manual\">Manual</a>";
+	if($function == 'readers') {
+		$out .= "\n<a class=\"activebutton\" href=\"?function=readers\">Readers</a>";
 	} else {
-		$out .= "\n<a class=\"button\" href=\"?function=manual\">Manual</a>";
+		$out .= "\n<a class=\"button\" href=\"?function=readers\">Readers</a>";
 	}
 
 	$out .= "\n<a class=\"button\" href=\"?function=rss\">RSS</a>";
@@ -108,12 +108,6 @@ function RMLdisplaymenu( $print_on = true )
 	}
 	if((($function == 'user') && (RMLgetcurrentuser())) || ($message == 'new') || ($style == 'new') || ($document == 'new')) {
 		$out .= "\n<a class=\"activebutton\" href=\"?function=user\">$karma</a>";
-	}
-
-	if($function == 'readers') {
-		$out .= "\n<a class=\"activebutton\" href=\"?function=readers\">Readers</a>";
-	} else {
-		$out .= "\n<a class=\"button\" href=\"?function=readers\">Readers</a>";
 	}
 
 	$out .= "\n</div>";
@@ -253,15 +247,6 @@ function RMLdisplaymain( $id, $print_on = true ) {
 	break;
 	case 'edit':
 		$out .= RMLeditauthor( $id, false );
-		$frontpage = false;
-	break;
-	}
-
-	// ======================================
-
-	switch ( $comment ) {
-	case 'new':
-		$out .= RMLforumpost( false );
 		$frontpage = false;
 	break;
 	}
@@ -581,7 +566,11 @@ function RMLdisplaytitle( $print_on = true ) {
 	
 	switch ($forum) {
 	case 'view':
-		$title = "Readers talking Shit ...";
+		if($id > 0) {
+			$title = RMLgetforumtitle($id);
+		} else {		
+			$title = "Readers talking Shit ...";
+		}
 	break;
 	}
 
@@ -803,23 +792,20 @@ function RMLdisplayreaders( $print_on = true )
 		$irc = $thisrow->irc;
 		$ricochet = $thisrow->ricochet;
 		
+		$out .= "\n".'<div class="boxheader"><b><a href="./?function=user&id='.$thisid.'">'.$thisusername.'</a></b> '.$thiskarma.'</div><div class="boxtext"><small>';
+		
 		if(file_exists("./users/".$thisid.".png")) {	
 			$out .= "<img style=\"float:left\" src=\"./users/".$thisid.".png\">";
 		} else {
 			$out .= "<img style=\"float:left\" src=\"./users/Anonymous.png\">";
 		}
-		
-		$out .= "\n".'<div class="boxheader"><b><a href="./?function=user&id='.$thisid.'">'.$thisusername.'</a></b> '.$thiskarma.'</div><div class="boxtext"><small>';
+				
 		if($xmpp) $out .= "<b>XMPP</b>&nbsp;:&nbsp;$xmpp ";
-		if($irc) $out .= "<b>IRC</b>&nbsp;:&nbsp;$irc ";
-		if($diaspora) $out .= "<b>Diaspora*</b>&nbsp;:&nbsp;$diaspora ";
-		if($mastodon) $out .= "<b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
-		if($ricochet) $out .= "<b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
-		$out .= "</small></div><div class=\"inlineclear\"> </div>";
-		
-		
-		
-		
+		if($irc) $out .= "<br/><b>IRC</b>&nbsp;:&nbsp;$irc ";
+		if($diaspora) $out .= "<br/><b>Diaspora*</b>&nbsp;:&nbsp;$diaspora ";
+		if($mastodon) $out .= "<br/><b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
+		if($ricochet) $out .= "<br/><b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
+		$out .= "</small></div><div class=\"inlineclear\"> </div>";		
 	}
 	return processOutput( $out, $print_on );
 }

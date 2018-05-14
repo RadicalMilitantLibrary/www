@@ -16,106 +16,120 @@
 
 function RMLdisplayforum($print_on = true)
 {
+	$karma = RMLgetkarma(RMLgetcurrentuser());
 	$out = '';
 	
-	$out .= '<div class="boxheader"><b>... about The Library</b></div>';
+	global $id;
 	
-	$out .= '<div class="boxheader"><b>... about The Books</b></div>';
+	if($id > 0) { 
+		RMLforumread($id);
+	} else {
+		$result = RMLfiresql("SELECT author,body,posted_on,id FROM forum WHERE sticky_id <> 0 ORDER BY posted_on");
+		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+			$thisrow = pg_Fetch_Object( $result, $row );
+			$thisid = $thisrow->id;
+			$thisbody = $thisrow->body;
+			$thisauthor = $thisrow->author;
+			$thisposted = RMLfixdate($thisrow->posted_on);
+			$out .= '<div class="forum"><a href="./?forum=view&id='.$thisid.'">'.$thisbody.'</a></div>';
+			$out .= '<div style="float:right;margin-top:-1.4em;font-size:small">by : '.$thisauthor.' ('.$thisposted.')</div>';
+			if($row < pg_numrows($result) - 1) {
+				$out .= '<hr class="forumseperator" />';
+			}
+		}
 	
-	$out .= '<div class="boxheader"><b>... about The Authors</b></div>';
-	
-	$out .= '<div class="boxheader"><b>... about Shit</b></div>';
+		if($karma > 100) {
+			$out .= '<a class="button" href="./?forum=new">New Forum</a>';
+		}
 
-
+		$out .= '<div class="boxheader"><b>/b/ for bookz</b></div>';
+		$result = RMLfiresql("SELECT author,body,posted_on,id FROM forum WHERE misc_id <> 0 ORDER BY posted_on DESC");
+		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+			$thisrow = pg_Fetch_Object( $result, $row );
+			$thisid = $thisrow->id;
+			$thisbody = $thisrow->body;
+			$thisauthor = $thisrow->author;
+			$thisposted = RMLfixdate($thisrow->posted_on);
+			$out .= '<div class="forum"><a href="./?forum=view&id='.$thisid.'">'.$thisbody.'</a></div>';
+			$out .= '<div style="float:right;margin-top:-1.4em;font-size:small">by : '.$thisauthor.' ('.$thisposted.')</div>';
+			if($row < pg_numrows($result) - 1) {
+				$out .= '<hr class="forumseperator" />';
+			}
+		}
+	
+		if($karma > 1) {
+			$out .= '<a class="button" href="./?forum=bookz">New Forum</a>';
+		}
+	
+		$out .= '<div class="boxheader"><b>The Books</b></div>';
+		$result = RMLfiresql("SELECT author,body,posted_on,id,book_id FROM forum WHERE book_id <> 0 ORDER BY posted_on DESC");
+		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+			$thisrow = pg_Fetch_Object( $result, $row );
+			$thisid = $thisrow->id;
+			$thisbook = $thisrow->book_id;
+			$thisbody = $thisrow->body;
+			$thisauthor = $thisrow->author;
+			$thisposted = RMLfixdate($thisrow->posted_on);
+			$out .= '<a href="./?forum=view&id='.$thisid.'"><img src="./covers/cover'.$thisbook.'" /></a>';
+			if($row < pg_numrows($result) - 1) {
+				$out .= '<hr class="forumseperator" />';
+			}
+		}	
+		
+		$out .= '<div class="boxheader"><b>The Authors</b></div>';
+		$result = RMLfiresql("SELECT author,body,posted_on,id,author_id FROM forum WHERE author_id <> 0 ORDER BY posted_on DESC");
+		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
+			$thisrow = pg_Fetch_Object( $result, $row );
+			$thisid = $thisrow->id;
+			$thisauthorid = $thisrow->author_id;
+			$thisbody = $thisrow->body;
+			$thisauthor = $thisrow->author;
+			$thisposted = RMLfixdate($thisrow->posted_on);
+			$out .= '<a href="./?forum=view&id='.$thisid.'"><img style="width:150px" src="./authors/author'.$thisauthorid.'" /></a>';
+			if($row < pg_numrows($result) - 1) {
+				$out .= '<hr class="forumseperator" />';
+			}
+		}
+	}
+	
 	return processOutput( $out, $print_on);	
 }
 
 // ============================================================================
 
-function RMLforumread() {
-	global $id, $order;
+function RMLgetforumtitle($forumid) {
+	$result = RMLfiresql("SELECT book_id,author_id,misc_id,sticky_id,body FROM forum WHERE id=$forumid AND parent_id=0");
+	$thisrow = pg_Fetch_Object($result,0);
+	$thisbook = $thisrow->book_id;
+	$thisauthor = $thisrow->author_id;
+	$thismisc = $thisrow->misc_id;
+	$thissticky = $thisrow->sticky_id;
+	$thisbody = $thisrow->body;
 	
-	$result = RMLfiresql("SELECT thread_id,body,posted_on,level,author,parent_id FROM forum WHERE id=$id");
-	$numres = pg_numrows($result);
-	if($numres == 0) {
-		die("Forum Read : Bad id...");
+	if( $thisbook > 0 ) {
+		$result = RMLgetdocumenttitle($thisbook);
 	}
-
-	$thismessage = pg_Fetch_Object($result,0);
-	$threadid = $thismessage->thread_id;
-	$headlevel = $thismessage->level;
-	$author = $thismessage->author;
-	$date = $thismessage->posted_on;
-	$parent = $thismessage->parent_id;
-	$body = $thismessage->body;
-	$body = nl2br($thismessage->body);
 	
-	$date = RMLfixdate($date);
-	print("\n<div class=\"order\"><small>by : <b>$author</b> <i>$date</i></small></div>");
-	RMLdisplay("$body",5);
-
-	if(RMLgetcurrentuser()) {
-		print("\n<div class=\"functions\">");
-
-		if(RMLgetcurrentuser() == $author) {
-			print("\n<a href=\"?forum=edit&amp;id=$id&amp;parent=$parent&amp;order=$order\">");
-			print("\n<img class=\"button\" alt=\"Edit comment\" src=\"./img/edit.png\"/></a>");
-			if($parent == 0) {
-				print("\n<a href=\"?forum=delete&amp;id=$id&amp;parent=$parent&amp;order=$order\">");
-                print("\n<img float=\"right\" class=\"button\" alt=\"Delete comment\" src=\"./img/delete.png\"/></a>");
-			}
-		}
-		print("\n<a href=\"?forum=post&amp;parent=$id&amp;order=$order\">");
-        print("\n<img class=\"button\" alt=\"Add comment\" src=\"./img/add.png\"/></a>");
+	if( $thisauthor > 0 ) {
+		$result = RMLgetauthorname($thisauthor);
 	}
-	print("\n</div>");
-
-	$result = RMLfiresql("SELECT id,body,subject,author,posted_on FROM forum WHERE thread_id=$threadid AND parent_id=$id ORDER BY posted_on DESC");
 	
-	$numres = pg_numrows($result);
-	$count = 0;
-
-	while($count < $numres) {
-        print ("\n<hr class=\"forumseperator\">");
-		$thismessage = pg_Fetch_Object($result,$count);
-		$body = nl2br($thismessage->body);
-		$thisid = $thismessage->id;
-
-		setTimeZone();
-		$date = $thismessage->posted_on;
-		$date = strtotime($date);
-		$date = strftime('%d %b %Y %H:%M',$date);
-		$author = $thismessage->author;
-
-		$children = RMLfiresql("SELECT id FROM forum WHERE parent_id=$thisid");
-		$children = pg_numrows($children);
-
-		if($children > 0) {
-			if($children > 1) {
-				RMLdisplay("<b>$thismessage->subject</b> (<a href=\"?forum=read&amp;id=$thisid&amp;parent=$id&amp;order=$order\">$children replys</a>)",5);
-			} else {
-				RMLdisplay("<b>$thismessage->subject</b> (<a href=\"?forum=read&amp;id=$thisid&amp;parent=$id&amp;order=$order\">$children reply</a>)",5);
-			}
-		} else {
-			RMLdisplay("<b>$thismessage->subject</b>",5);
-		}
-		print("<div class=\"order\"><small>by: <b>$thismessage->author</b> <i>$date</i></small></div>");
-		RMLdisplay("<br>$body",8);
-
-		if(RMLgetcurrentuser()) {
-			if(RMLgetcurrentuser() == $author) {
-				print("\n<a href=\"?forum=edit&amp;id=$thisid&amp;parent=$id&amp;order=$order\">");
-	            print("\n<img class=\"button\" alt=\"Edit\" src=\"./img/edit.png\"/></a>");
-				if($children == 0) {
-					print("\n<a href=\"?forum=delete&amp;id=$thisid&amp;parent=$id&amp;order=$order\">");
-                    print("\n<img float=\"right\" class=\"button\" src=\"./img/delete.png\"/></a>");
-				}
-			}
-			print("\n<a href=\"?forum=post&amp;parent=$thismessage->id&amp;order=$order\">");
-            print("\n<img class=\"button\" alt=\"Add\" src=\"./img/add.png\"/></a>");
-		}
-		$count++;
+	if( $thismisc > 0 ) {
+		$result = $thisbody;
 	}
+	
+	if( $thissticky > 0 ) {
+		$result = $thisbody;
+	}
+	
+	return $result;
+}
+
+// ============================================================================
+
+function RMLforumread($forumid) {
+// thinking...	
+	
 }
 
 // ============================================================================

@@ -232,13 +232,11 @@ function RMLdisplayuserpage( $print_on = true ) {
 		$out = "<div class=\"order\"><img style=\"float:left\" src=\"./users/Anonymous.png\">";
 	}
 	
-	if($username) $out .= "<small><b>Name</b>&nbsp;:&nbsp;$username ";
-	if($karma) $out .= " <b>Karma</b>&nbsp;:&nbsp;$karma (".RMLgetrating($karma).") <br/>";
 	if($xmpp) $out .= "<b>XMPP</b>&nbsp;:&nbsp;$xmpp ";
-	if($irc) $out .= "<b>IRC</b>&nbsp;:&nbsp;$irc ";
-	if($diaspora) $out .= "<b>Diaspora*</b>&nbsp;:&nbsp;$diaspora ";
-	if($mastodon) $out .= "<b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
-	if($ricochet) $out .= "<b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
+	if($irc) $out .= "<br/><b>IRC</b>&nbsp;:&nbsp;$irc ";
+	if($diaspora) $out .= "<br/><b>Diaspora*</b>&nbsp;:&nbsp;$diaspora ";
+	if($mastodon) $out .= "<br/><b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
+	if($ricochet) $out .= "<br/><b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
 	$out .= "</small></div><div class=\"inlineclear\"> </div>"
 	.RMLdisplayfavourites( $thisid,false )
 	.RMLdisplaydocuments( false )
