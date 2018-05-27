@@ -24,6 +24,10 @@ function RMLdisplayforum($print_on = true)
 	if($id > 0) { 
 		RMLforumread($id);
 	} else {
+		if($karma > 1) {
+			$out .= '<a class="button" href="./?forum=add">New Forum</a>';
+		}
+
 		$result = RMLfiresql("SELECT author,body,posted_on,id FROM forum WHERE sticky_id <> 0 ORDER BY posted_on");
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
@@ -31,18 +35,11 @@ function RMLdisplayforum($print_on = true)
 			$thisbody = $thisrow->body;
 			$thisauthor = $thisrow->author;
 			$thisposted = RMLfixdate($thisrow->posted_on);
-			$out .= '<div class="forum"><a href="./?forum=view&id='.$thisid.'">'.$thisbody.'</a></div>';
+			$out .= '<div class="forumsticky"><a href="./?forum=view&id='.$thisid.'">'.$thisbody.'</a></div>';
 			$out .= '<div style="float:right;margin-top:-1.4em;font-size:small">by : '.$thisauthor.' ('.$thisposted.')</div>';
-			if($row < pg_numrows($result) - 1) {
-				$out .= '<hr class="forumseperator" />';
-			}
+			$out .= '<hr class="forumseperator" />';
 		}
 	
-		if($karma > 100) {
-			$out .= '<a class="button" href="./?forum=new">New Forum</a>';
-		}
-
-		$out .= '<div class="boxheader"><b>/b/ for bookz</b></div>';
 		$result = RMLfiresql("SELECT author,body,posted_on,id FROM forum WHERE misc_id <> 0 ORDER BY posted_on DESC");
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 			$thisrow = pg_Fetch_Object( $result, $row );
@@ -50,15 +47,9 @@ function RMLdisplayforum($print_on = true)
 			$thisbody = $thisrow->body;
 			$thisauthor = $thisrow->author;
 			$thisposted = RMLfixdate($thisrow->posted_on);
-			$out .= '<div class="forum"><a href="./?forum=view&id='.$thisid.'">'.$thisbody.'</a></div>';
+			$out .= '<div class="forummisc"><a href="./?forum=view&id='.$thisid.'">'.$thisbody.'</a></div>';
 			$out .= '<div style="float:right;margin-top:-1.4em;font-size:small">by : '.$thisauthor.' ('.$thisposted.')</div>';
-			if($row < pg_numrows($result) - 1) {
-				$out .= '<hr class="forumseperator" />';
-			}
-		}
-	
-		if($karma > 1) {
-			$out .= '<a class="button" href="./?forum=bookz">New Forum</a>';
+			$out .= '<hr class="forumseperator" />';
 		}
 	
 		$out .= '<div class="boxheader"><b>The Books</b></div>';

@@ -514,6 +514,25 @@ hr.forumseperator {
 	border-right-color: white
 }
 
+.forumsticky {
+	background-color 	: #AAA;
+	font-weight		: bold;
+	padding				: 3px
+}
+
+.forumsticky a {
+	color : black
+}
+
+
+.forummisc {
+	background-color	: #DDD;
+	padding				: 3px
+}
+
+.forummisc a {
+	color : black
+}
 
 label {
 	display			: block;

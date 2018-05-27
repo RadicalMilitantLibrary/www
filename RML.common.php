@@ -83,6 +83,12 @@ function RMLdisplaymenu( $print_on = true )
 		$out .= "\n<a class=\"button\" href=\"?function=readers\">Readers</a>";
 	}
 
+	if($forum == 'view') {
+		$out .= "\n<a class=\"activebutton\" href=\"?forum=view\">Forum</a>";
+	} else {
+		$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
+	}
+
 	$out .= "\n<a class=\"button\" href=\"?function=rss\">RSS</a>";
 
 	if( ( !$currentuser ) && ( $function <> 'login' ) ) {
@@ -90,14 +96,6 @@ function RMLdisplaymenu( $print_on = true )
 	}
 	if( ( !$currentuser ) && ( $function == 'login' ) ) {
 		$out .= "\n<a class=\"activebutton\" href=\"?function=login\">Login</a>";
-	}
-
-	if(($currentuser) && ($forum == 'view') ) {
-		$out .= "\n<a class=\"activebutton\" href=\"?forum=view\">Forum</a>";
-	}
-	
-	if($currentuser && !$forum) {
-		$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
 	}
 
 	$karma = RMLgetkarma($currentuser);
@@ -582,11 +580,18 @@ function RMLdisplaytitle( $print_on = true ) {
 
 function RMLdisplayfrontpage( $print_on = true ) {
 
-	$out = "\n".'<div class="order" style="text-align:center">Protecting your <a href="http://www.ala.org/advocacy/intfreedom/statementspols/freedomreadstatement">Freedom to Read</a> since 2010</div>';
+	$out .= '<img style="float:right;margin-left:10px;margin-bottom:10px" src="./img/about.jpg" />';
+	$out .= '<p class="ParaNoIndent">Welcome to a world of uniformly formatted, semi-proofread, very much readable ebooks. Made with love and attention to detail, by readers for readers. We are part of the copyright abolition movement. Meaning, we don\'t want to reform copyright, we are simply ignoring it. If You feel like giving a helping hand, You can sign up and get to work, (it will probably take a lifetime to proofread all these books on my own).</p>';
+	$out .= '<p class="ParaBlankOver">We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can log-in and fix it. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.</p>';
+	$out .= '<p class="ParaIndent">This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation.</p>';
 
-	$sql = '';
+	$out .= '<p class="ParaBlankOver">We only have two rules here. <a href="https://www.youtube.com/watch?v=dPtH2KPuQbs">Rule #1</a> and <a href="https://www.youtube.com/watch?v=IeTybKL1pM4">Rule #2</a>. I think rule #1 is universally accepted as a good idea. #2 less so. But these are the rules, Nina Paley will <a href="https://www.youtube.com/watch?v=XO9FKQAxWZc">explain why</a>. [Note: Nina had nothing to do with this, please dont pester her about it, we just like her.]';
 	
+	$out .= '<p class="ParaBlankOver">The logo is released under a Creative Commons Attribution-ShareAlike license by <a href="http://readersbillofrights.info">Readers Bill of Rights</a>. It is created by cartoonist and <a href="http://questioncopyright.org/">QuestionCopyright.org</a> artist-in-residence <a href="http://blog.ninapaley.com/">Nina Paley</a>. You can support Nina\'s work and view her amazing and Creative Commons licensed film, <a href="http://www.sitasingstheblues.com/">Sita Sings the Blues</a>, over at her website.</p>';
+
+	$out .= '<div class="inlineclear"></div>';
 	$out .= '<p class="Head1">Proofread books</p><p class="BoxText" style="text-align:center">';
+
 	$result = RMLfiresql("SELECT id FROM document WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {
 		$thisrow = pg_Fetch_Object($result,$row);
@@ -778,7 +783,7 @@ function RMLdisplaymanual( $print_on = true )
 
 function RMLdisplayreaders( $print_on = true )
 {
-	$result = RMLfiresql("SELECT id,user_name,karma,irc,xmpp,diaspora,mastodon,ricochet FROM \"user\" WHERE user_name <> 'Anonymous' ORDER BY karma DESC");
+	$result = RMLfiresql("SELECT id,user_name,karma,irc,xmpp,diaspora,mastodon,ricochet FROM \"user\" WHERE karma > 1 ORDER BY karma DESC");
 	
 	for( $row=0; $row < pg_numrows( $result ); $row++ ) {
 		$thisrow = pg_Fetch_Object( $result, $row );

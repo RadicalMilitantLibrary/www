@@ -147,7 +147,7 @@ function RMLdisplaysignup( $print_on = true ) {
 </fieldset></form></table></div></div>'
 
 .'<div class="box"><div class="boxheader"><b>Sign Up</b></div>
-<div class="boxtext">'."We take great pride in not knowing who our users are, so please don't use any identifying information to log on. This is NOT your 'username' and 'password', it's just two words used to identify you. (Hint: Use a password manager)<br><br><big><b>It is impossible to restore lost accounts.</b></big>".'
+<div class="boxtext">'."We take great pride in not knowing who our users are, so please don't use any identifying information to log on. This is NOT your 'username' and 'password', it's just two words used to identify you. (Hint: Use a password manager).<br><br><b>NOBODY WILL EVER CONTACT YOU ABOUT THIS FOR ANY REASON.</b><br><br><big><b>It is impossible to restore lost accounts.</b></big>".'
 <table><form method="post" action="?function=newuser"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
 <tr><td>Login </td><td>: <input type="password" size="40" name="login"/></td></tr>
 <tr><td>Logon </td><td>: <input type="password" size="40" name="logon"/></td></tr>
@@ -207,15 +207,11 @@ function getPwdHash( $password )
 // ============================================================================
 
 function RMLdisplayuserpage( $print_on = true ) {
-	global $id;
-	if($id <> 0) {
-		$result = RMLfiresql("SELECT id,user_name,karma,xmpp,diaspora,mastodon,irc,ricochet FROM \"user\" WHERE id=$id");
-	} else {
-		$result = RMLfiresql("SELECT id,user_name,karma,xmpp,diaspora,mastodon,irc,ricochet FROM \"user\" WHERE handle='". RMLgetcurrentuser() ."'");
-	}
+	$result = RMLfiresql("SELECT id,user_name,karma,xmpp,diaspora,mastodon,irc,ricochet FROM \"user\" WHERE handle='". RMLgetcurrentuser() ."'");
 
 	if(!$result) { return; }
 	if(pg_numrows($result) == 0) { return; }
+
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$thisid = $thisrow->id;
 	$username = $thisrow->user_name;
@@ -238,7 +234,6 @@ function RMLdisplayuserpage( $print_on = true ) {
 	if($mastodon) $out .= "<br/><b>Mastodon</b>&nbsp;:&nbsp;$mastodon ";
 	if($ricochet) $out .= "<br/><b>Ricochet</b>&nbsp;:&nbsp;$ricochet ";
 	$out .= "</small></div><div class=\"inlineclear\"> </div>"
-	.RMLdisplayfavourites( $thisid,false )
 	.RMLdisplaydocuments( false )
 	.RMLdisplaystylesheets( false )
 	.RMLdisplaymessages( false )

@@ -848,7 +848,7 @@ function RMLexporttxt( $id, $print_on = true )
 		$now = time();
 		$now = strftime('%d %b %Y %H:%M',$now);
 
-		$style = "\n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version (https://c3jemx2ube5v5zpg.onion/)\n\n\n";
+		$style = "\n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version \n\n\n";
 		$style = $style . "\n\n\n==========================================================\n" . $copyright . "\n==========================================================\n\n\n";
 
 		gzwrite($file,"$style");
@@ -918,7 +918,7 @@ function RMLexporthtml( $id )
 	$now = time();
 	$now = strftime('%d %b %Y %H:%M',$now);
 
-	$style = "\n\n<!-- \n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version (https://c3jemx2ube5v5zpg.onion/)\n\n-->\n";
+	$style = "\n\n<!-- \n\n  '$thistitle.html.gz' \n\n  Generated $now CET \n\n  $Version \n\n-->\n";
 	$style = $style . "\n\n<!--\n" . $copyright . "\n-->\n";
 	$style = $style . "\n<meta name=\"author\" content=\"$author\" />";
 	$style = $style . "\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
@@ -961,7 +961,7 @@ function RMLexporthtml( $id )
 	$copyright = nl2br($copyright);
 	$copyright = RMLpreparehtml($copyright);
 
-	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version<br/>http://c3jemx2ube5v5zpg.onion/</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
+	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
 
 	gzwrite($file,"\n$InfoCOM");
 
@@ -1045,7 +1045,7 @@ function RMLexportmd( $id )
 	$text
 		="\n"
 		."\n* Generated : $now CET"
-		."\n* Version   : $Version (https://c3jemx2ube5v5zpg.onion/)"
+		."\n* Version   : $Version "
 		."\n* Title     : $title" .( ( $subtitle != '' ) ? ' – ' .$subtitle : '' )
 		."\n* Author    : $author"
 		."\n\n## Colophon"
@@ -1059,7 +1059,7 @@ function RMLexportmd( $id )
 // ewa: continue ...
 	$copyright = RMLpreparemd( $copyright );
 
-	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version<br/>http://c3jemx2ube5v5zpg.onion/</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
+	$InfoCOM = "<p><center><br/><br/><br/><br/><small>$Version</small></center></p><br><hr><p><small>$copyright</small></p><hr>";
 
 	gzwrite($file,"\n$InfoCOM");
 
@@ -1202,10 +1202,10 @@ function RMLexportepub( $id ) {
 \t<dc:creator opf:role=\"aut\" opf:file-as=\"$fileas\">$author</dc:creator>
 \t<dc:language xsi:type=\"dcterms:RFC3066\">$language</dc:language>
 \t<dc:identifier id=\"uid\" opf:scheme=\"URI\">
-\t\thttps://c3jemx2ube5v5zpg.onion/?function=download&amp;id=$id
+\t\thttp://ncjeamtnv4vpao5cop2lgezdyemopk3bwvzigv2zry4bw2qk6va3e2yd.onion/?function=download&amp;id=$id
 \t</dc:identifier>
 \t<dc:subject>$subject</dc:subject>
-\t<dc:publisher>https://c3jemx2ube5v5zpg.onion</dc:publisher>
+\t<dc:publisher>http://ncjeamtnv4vpao5cop2lgezdyemopk3bwvzigv2zry4bw2qk6va3e2yd.onion</dc:publisher>
 \t<dc:date>$year</dc:date>
 </metadata>";
 
@@ -1311,7 +1311,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 	$title = preg_replace("@&@","&amp;",$title);
 	$subtitle = preg_replace("@&@","&amp;",$subtitle);
 
-	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><b>$author</b></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b><br/>http://c3jemx2ube5v5zpg.onion</div>" . $pageend;
+	$thistitle = $pagestart . "\n<div class=\"title\">$title</div><div class=\"subtitle\">$subtitle</div>\n<div class=\"author\"><b>$author</b></div><div class=\"publisher\"><img alt=\"Logo\" src=\"logo.png\"/><br/><b>~ All Your Books Are Belong to Us !!! ~</b></div>" . $pageend;
 
 	$epub->addFromString('title.html', $thistitle);
 	// ************************************** COPYRIGHT
@@ -1356,7 +1356,7 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 <ncx xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" version=\"2005-1\">
 <head>
 \t<meta name=\"dtb:depth\" content=\"2\"/>
-\t<meta name=\"dtb:uid\" content=\"https://c3jemx2ube5v5zpg.onion/?function=download&amp;id=$id\"/>
+\t<meta name=\"dtb:uid\" content=\"http://ncjeamtnv4vpao5cop2lgezdyemopk3bwvzigv2zry4bw2qk6va3e2yd.onion/?function=download&amp;id=$id\"/>
 \t<meta name=\"dtb:totalPageCount\" content=\"0\"/>
 \t<meta name=\"dtb:maxPageNumber\" content=\"0\"/>
 </head>
@@ -1731,10 +1731,10 @@ function RMLgeneraterss($print_on = true)
 	$out .= '<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">';
 	$out .= '<channel>';
 	$out .= '<title>Radical Militant Library</title>';
-	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>';
+	$out .= '<link>http://ncjeamtnv4vpao5cop2lgezdyemopk3bwvzigv2zry4bw2qk6va3e2yd.onion</link>';
 	$out .= '<image>';
 	$out .= '<url>./img/logo.png</url>';
-	$out .= '<link>http://c3jemx2ube5v5zpg.onion</link>';
+	$out .= '<link>http://ncjeamtnv4vpao5cop2lgezdyemopk3bwvzigv2zry4bw2qk6va3e2yd.onion</link>';
 	$out .= '</image>';
 	$out .= '<description>All Your Books Are Belong To Us !!!</description>';
 	
@@ -1750,7 +1750,7 @@ function RMLgeneraterss($print_on = true)
 	
 		$out .= '<item>';
 		$out .= '<title>'.$thistitle.' - '.$thisauthor.'</title>';
-		$out .= '<link>http://c3jemx2ube5v5zpg.onion/?document=view&amp;id='.$thisid.'</link>';
+		$out .= '<link>http://ncjeamtnv4vpao5cop2lgezdyemopk3bwvzigv2zry4bw2qk6va3e2yd.onion/?document=view&amp;id='.$thisid.'</link>';
 		$out .= '<description>'."\n".$thisteaser.'</description>';
 		$out .= '<pubDate>'.$thisdate.'</pubDate>';
 		$out .= '</item>';
@@ -2029,7 +2029,7 @@ FROM document WHERE id=" .$docID
 .( !isset( $book->edition ) )?'':'	edition =   {' .$book->edition .'},'
 .( !isset( $book->keywords ) )?'':'	keywords = {' .$book->keywords .'},'
 .( !isset( $book->volume ) )?'':'	volume =    {' .$book->volume .'},'
-.'	url =       {http://c3jemx2ube5v5zpg.onion/?document=view&id='.$docID .'},'
+.'	url =       {http://ncjeamtnv4vpao5cop2lgezdyemopk3bwvzigv2zry4bw2qk6va3e2yd.onion/?document=view&id='.$docID .'},'
 //.'	note = {' $book->colophon .'}'//for now just colophon
 .'}';
 }
