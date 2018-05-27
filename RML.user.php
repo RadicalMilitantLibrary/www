@@ -134,13 +134,7 @@ function RMLvalidateuser($login,$logon)
 // ============================================================================
 
 function RMLdisplaysignup( $print_on = true ) {
-	$out = "\n".'<div class="box"><div class="boxheader"><b>Login</b></div>
-<div class="boxtext"><strong>Take care, where you login!</strong>'
-
-/* at least visual hint at login */
-.'<div style="margin-top: 1ex;"><img src="./img/proxypic.png" alt="do not use fake onions: c3jembnkdnbcdniu !" ></div>'
-
-.'<table><form method="post" action="?function=login"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
+	$out = "\n".'<div class="box"><table><form method="post" action="?function=login"><input type="hidden" name="id" value="' .$_GET['id'] .'"><fieldset>
 <tr><td>Login </td><td>: <input type="password" size="40" name="login" /></td></tr>
 <tr><td>Logon </td><td>: <input type="password" size="40" name="logon" /></td></tr>
 <tr><td></td><td><input class="formbutton" type="submit" value="Turn On" /></td></tr>
