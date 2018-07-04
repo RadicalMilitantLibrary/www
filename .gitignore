@@ -1,1 +1,11 @@
+# netbeans project file
 nbproject
+# content, not code
+pictures/*
+covers/*
+authors/*
+uploads/*
+users/*
+output/*
+# settings should be private by default, caution if you publish those
+settings.php
