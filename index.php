@@ -32,6 +32,9 @@ require 'RML.image.php';
 require 'RML.lists.php';
 require 'RML.subject.php';
 
+// set timezone to prevent warning
+setTimezone();
+
 $id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
 if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
 if(is_numeric($_REQUEST['styleid'])) { $styleid = $_REQUEST['styleid']; }
