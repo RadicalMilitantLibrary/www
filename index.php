@@ -35,53 +35,68 @@ require 'RML.subject.php';
 // set timezone to prevent warning
 setTimezone();
 
-$id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
-if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
-if(is_numeric($_REQUEST['styleid'])) { $styleid = $_REQUEST['styleid']; }
-if(is_numeric($_REQUEST['section'])) { $section = $_REQUEST['section']; }
-if(is_numeric($_REQUEST['paragraphtype'])) { $paratype = $_REQUEST['paragraphtype']; }
-if(is_numeric($_REQUEST['languageid'])) { $languageid = $_REQUEST['languageid']; }
+$id = 0;
+$para = null;
+$subject = null;
+$lists = null;
+$author = null;
+$function = null;
+$message = null;
+$document = null;
+$comment = null;
+$style = null;
+$out = '';
 
-$para = RMLpreparestring($_REQUEST['para']);
-$function = RMLpreparestring($_REQUEST['function']);
-$message = RMLpreparestring($_REQUEST['message']);
-$blog = RMLpreparestring($_REQUEST['blog']);
-$document = RMLpreparestring($_REQUEST['document']);
-$subject = RMLpreparestring($_REQUEST['subject']);
-$body = RMLpreparestring($_REQUEST['body']);
-$login = RMLpreparestring($_REQUEST['login']);
-$logon = RMLpreparestring($_REQUEST['logon']);
-$mail = RMLpreparestring($_REQUEST['mail']);
-$author = RMLpreparestring($_REQUEST['author']);
-$cookie = RMLpreparestring($_COOKIE['RML']);
-$title = RMLpreparestring($_REQUEST['title']);
-$subtitle = RMLpreparestring($_REQUEST['subtitle']);
-$year = RMLpreparestring($_REQUEST['year']);
-$ISBN = RMLpreparestring($_REQUEST['ISBN']);
-$keywords = RMLpreparestring($_REQUEST['keywords']);
-$copyright = RMLpreparestring($_REQUEST['copyright']);
-$teaser = RMLpreparestring($_REQUEST['teaser']);
-$letter = RMLpreparestring($_REQUEST['letter']);
-$bodytext = RMLpreparestring($_REQUEST['bodytext']);
-$source = RMLpreparestring($_REQUEST['source']);
-$headline = RMLpreparestring($_REQUEST['headline']);
-$authorname = RMLpreparestring($_REQUEST['authorname']);
-$sortname = RMLpreparestring($_REQUEST['sortname']);
-$born = RMLpreparestring($_REQUEST['born']);
-$dead = RMLpreparestring($_REQUEST['dead']);
-$sequence = RMLpreparestring($_REQUEST['sequence']);
-$format = RMLpreparestring($_REQUEST['format']);
-$page = RMLpreparestring($_REQUEST['page']);
-$comment = RMLpreparestring($_REQUEST['comment']);
-$score = RMLpreparestring($_REQUEST['score']);
-$footnote = RMLpreparestring($_REQUEST['footnote']);
-$note = RMLpreparestring($_REQUEST['note']);
-$messageto = RMLpreparestring($_REQUEST['messageto']);
-$messagesubject = RMLpreparestring($_REQUEST['messagesubject']);
-$style = RMLpreparestring($_REQUEST['style']);
-$lists = RMLpreparestring($_REQUEST['lists']);
-$docid = RMLpreparestring($_REQUEST['docid']);
-$forum = RMLpreparestring($_REQUEST['forum']);
+if ( !isset($_REQUEST) || count($_REQUEST) <= 0 ) {
+
+	$id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
+	if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
+	if(is_numeric($_REQUEST['styleid'])) { $styleid = $_REQUEST['styleid']; }
+	if(is_numeric($_REQUEST['section'])) { $section = $_REQUEST['section']; }
+	if(is_numeric($_REQUEST['paragraphtype'])) { $paratype = $_REQUEST['paragraphtype']; }
+	if(is_numeric($_REQUEST['languageid'])) { $languageid = $_REQUEST['languageid']; }
+
+	$para = RMLpreparestring($_REQUEST['para']);
+	$function = RMLpreparestring($_REQUEST['function']);
+	$message = RMLpreparestring($_REQUEST['message']);
+	$blog = RMLpreparestring($_REQUEST['blog']);
+	$document = RMLpreparestring($_REQUEST['document']);
+	$subject = RMLpreparestring($_REQUEST['subject']);
+	$body = RMLpreparestring($_REQUEST['body']);
+	$login = RMLpreparestring($_REQUEST['login']);
+	$logon = RMLpreparestring($_REQUEST['logon']);
+	$mail = RMLpreparestring($_REQUEST['mail']);
+	$author = RMLpreparestring($_REQUEST['author']);
+	$cookie = RMLpreparestring($_COOKIE['RML']);
+	$title = RMLpreparestring($_REQUEST['title']);
+	$subtitle = RMLpreparestring($_REQUEST['subtitle']);
+	$year = RMLpreparestring($_REQUEST['year']);
+	$ISBN = RMLpreparestring($_REQUEST['ISBN']);
+	$keywords = RMLpreparestring($_REQUEST['keywords']);
+	$copyright = RMLpreparestring($_REQUEST['copyright']);
+	$teaser = RMLpreparestring($_REQUEST['teaser']);
+	$letter = RMLpreparestring($_REQUEST['letter']);
+	$bodytext = RMLpreparestring($_REQUEST['bodytext']);
+	$source = RMLpreparestring($_REQUEST['source']);
+	$headline = RMLpreparestring($_REQUEST['headline']);
+	$authorname = RMLpreparestring($_REQUEST['authorname']);
+	$sortname = RMLpreparestring($_REQUEST['sortname']);
+	$born = RMLpreparestring($_REQUEST['born']);
+	$dead = RMLpreparestring($_REQUEST['dead']);
+	$sequence = RMLpreparestring($_REQUEST['sequence']);
+	$format = RMLpreparestring($_REQUEST['format']);
+	$page = RMLpreparestring($_REQUEST['page']);
+	$comment = RMLpreparestring($_REQUEST['comment']);
+	$score = RMLpreparestring($_REQUEST['score']);
+	$footnote = RMLpreparestring($_REQUEST['footnote']);
+	$note = RMLpreparestring($_REQUEST['note']);
+	$messageto = RMLpreparestring($_REQUEST['messageto']);
+	$messagesubject = RMLpreparestring($_REQUEST['messagesubject']);
+	$style = RMLpreparestring($_REQUEST['style']);
+	$lists = RMLpreparestring($_REQUEST['lists']);
+	$docid = RMLpreparestring($_REQUEST['docid']);
+	$forum = RMLpreparestring($_REQUEST['forum']);
+}
 
 switch( $para ) {
 	case 'delete':
