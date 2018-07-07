@@ -693,6 +693,7 @@ function RMLgetprevlink()
 {
 	global $id, $document, $section, $page, $subject;
 
+	$result = '';
 	switch($document) {
 		case 'view':
 			if($section > 0) {
@@ -719,6 +720,7 @@ function RMLgetnextlink( $print_on = false )
 {
 	global $id, $document, $section, $page, $subject;
 
+	$result = '';
 	if( $document == 'view' ) {
 		$tablename = RMLgetactivetable( $id );
 		$sql = RMLfiresql( "SELECT COUNT(id) as counter FROM $tablename WHERE parent_id=0 and doc_id=$id" );
@@ -755,6 +757,7 @@ function RMLgetuplink()
 {
 	global $document, $section, $letter, $author, $id, $subject;
 
+	$result = '';
 	if ( $document == 'view') {
 		if( $section ) {
 			$result = '?document=view&amp;id='.$id;
