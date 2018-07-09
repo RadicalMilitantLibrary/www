@@ -2036,3 +2036,51 @@ FROM document WHERE id=" .$docID
 //.'	note = {' $book->colophon .'}'//for now just colophon
 .'}';
 }
+
+/* custom error handler */
+// influence what information is shown
+function showErrorMessage($errtype, $errno, $errstr, $errline, $errfile) {
+        echo "<b>".$errtype."</b> [ErrNo. ".$errno."] ".$errstr."<br />\n";
+        echo "  on <em>line ".$errline."</em> in file <code>".basename($errfile, ".php")."</code><br />\n";
+        //echo "  PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+}
+// error handler to be applied with `set_error_handler()`
+function customErrorHandler($errno, $errstr, $errfile, $errline)
+{
+    if (!(error_reporting() & $errno)) {
+        // This error code is not included in error_reporting, so let it fall
+        // through to the standard PHP error handler
+        return false;
+    }
+
+    $abort = false;
+    $errtype = 'UNKNOWN CONFLICT';
+    switch ($errno) {
+    case E_ERROR:
+    case E_USER_ERROR: // user triggered
+        $errtype = 'ERROR';
+        echo "Aborting with …<br />\n";
+        $abort = true;
+        break;
+    case E_WARNING:
+    case E_USER_WARNING: // user triggered
+        $errtype='WARNING';
+        break;
+    case E_NOTICE:
+    case E_USER_NOTICE: // user triggered
+        $errtype='NOTICE';
+        break;
+    E_PARSE:
+        $errtype='PARSE ERROR';
+        break;
+    default:
+        echo("Have a Look at http://php.net/manual/de/errorfunc.constants.php for ErrNo.<br />\n");
+        break;
+    }
+        showErrorMessage($errtype, $errno, $errstr, $errline, $errfile);
+        if($abort === true) {
+          exit(1);
+        }
+    /* Don't execute PHP internal error handler */
+    return true;
+}
