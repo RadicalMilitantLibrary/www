@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
-ini_set('display_errors', '1');
 // ============================================================================
 //  "Frontpage" for Radical Militant Library
 //  Copyright (C) Jotunbane
@@ -15,6 +13,10 @@ ini_set('display_errors', '1');
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // ============================================================================
+
+error_reporting(E_ALL ^E_NOTICE ^E_DEPRECATED);
+// error_reporting(E_ALL ^E_STRICT);
+ini_set('display_errors', '1');
 
 $starttime = microtime();
 $Version = "0.6";
@@ -34,6 +36,9 @@ require 'RML.subject.php';
 
 // set timezone to prevent warning
 setTimezone();
+
+// activate custom error handler; save old for use with `restore_error_handler`
+$old_error_handler = set_error_handler("customErrorHandler");
 
 $id = 0;
 $para = null;
