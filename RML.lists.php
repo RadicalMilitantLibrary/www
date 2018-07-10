@@ -19,6 +19,7 @@ function RMLdisplaylists($print_on = true) {
 	
 	$user = RMLgetcurrentuser();
 
+	$out = '';
 	if($id == 0) {
 		$result = RMLfiresql("SELECT id,name,owner,description,(SELECT COUNT(list_id) FROM listitems WHERE list_id=lists.id) AS counter FROM lists ORDER BY name");
 		for($row=0;$row<pg_numrows($result);$row++) {
