@@ -52,7 +52,7 @@ $comment = null;
 $style = null;
 $out = '';
 
-if ( !isset($_REQUEST) || count($_REQUEST) <= 0 ) {
+if ( isset($_REQUEST) || count($_REQUEST) <= 0 ) {
 
 	$id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
 	if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
@@ -105,6 +105,7 @@ if ( !isset($_REQUEST) || count($_REQUEST) <= 0 ) {
 
 switch( $para ) {
 	case 'delete':
+		if(RMLgetkarma(RMLgetcurrentuser()) < 1337) die("Grow Up");
 		RMLdeleteelement( $id );
 		$sequence = $sequence - 1;
 		header( 'Location: ?document=view&id='.$id.'&section='.$section.'#s'.$sequence );
@@ -266,6 +267,5 @@ switch ( $style ) {
 $out .= RMLdisplayhead( false )
 	.RMLdisplaytop( false )
 	.RMLdisplaymain( $id, false )
-	.RMLdisplaybottom( false )
 	.RMLdisplayend( false );
 return processOutput( $out, true );

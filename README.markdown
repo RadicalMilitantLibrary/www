@@ -30,7 +30,6 @@ It is maintained and mainly funded by Jotunbane, so if you are willing to help, 
 
 via Bitcoin [19czh9hk8v7hMptokenBFZDNGX4aGiyTRN](bitcoin:19czh9hk8v7hMptokenBFZDNGX4aGiyTRN)
 
-or Monero [49LJ7DffPBeZrBovTh2KzGZumU2N6m7PTQm12tfsKSMAMkAehMHaXoVZcdwmR7g7yNQ91QKopGL4BbGsHBZGTT8LR8kovxL](monero:49LJ7DffPBeZrBovTh2KzGZumU2N6m7PTQm12tfsKSMAMkAehMHaXoVZcdwmR7g7yNQ91QKopGL4BbGsHBZGTT8LR8kovxL)
 
 ## License Terms
 

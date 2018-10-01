@@ -56,8 +56,8 @@ function RMLdisplaymenu( $print_on = true )
 	
 	$currentuser = RMLgetcurrentuser();
 
-	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" /></a><a class="button home" href=".">Home</a>
-';
+	$out = "\n\n".'<!-- MENU START --><div class="menu"><a href="."><img class="logo" alt="Logo" src="./img/logo.png" />';
+	// </a><a class="button home" href=".">Home</a>
 
 	if(($author == 'view') || ($document == 'view')) {
 		$out .= "\n<a class=\"activebutton\" href=\"?author=view&amp;letter=A\">Authors</a>";
@@ -77,19 +77,21 @@ function RMLdisplaymenu( $print_on = true )
 		$out .= "\n<a class=\"button\" href=\"?lists=view&amp;id=0\">Lists</a>";
 	}
 
-	if($function == 'readers') {
-		$out .= "\n<a class=\"activebutton\" href=\"?function=readers\">Readers</a>";
-	} else {
-		$out .= "\n<a class=\"button\" href=\"?function=readers\">Readers</a>";
+	if($currentuser) {
+		if($function == 'readers') {
+			$out .= "\n<a class=\"activebutton\" href=\"?function=readers\">Users</a>";
+		} else {
+			$out .= "\n<a class=\"button\" href=\"?function=readers\">Users</a>";
+		}
+
+		if($forum == 'view') {
+			$out .= "\n<a class=\"activebutton\" href=\"?forum=view\">Forum</a>";
+		} else {
+			$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
+		}
 	}
 
-	if($forum == 'view') {
-		$out .= "\n<a class=\"activebutton\" href=\"?forum=view\">Forum</a>";
-	} else {
-		$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
-	}
-
-	$out .= "\n<a class=\"button\" href=\"?function=rss\">RSS</a>";
+//	$out .= "\n<a class=\"button\" href=\"?function=rss\">RSS</a>";
 
 	if( ( !$currentuser ) && ( $function <> 'login' ) ) {
 		$out .= "\n<a class=\"button\" href=\"?function=login\">Login</a>";
@@ -346,24 +348,6 @@ function RMLrejectedit($id,$sequence) {
 
 // ============================================================================
 
-function RMLdisplaybottom( $print_on = true )
-{
-	$prevlink = RMLgetprevlink();
-	$nextlink = RMLgetnextlink();
-	$uplink = RMLgetuplink();
-
-	$out = "\n\n".'<!-- BOTTOM START --><div class="order">'
-.( isset( $prevlink ) ? '<a class="button prev" href="'.$prevlink.'">Prev</a> ' : '' )
-.( isset( $uplink ) ? '<a class="button up" href="'.$uplink.'">Up</a> ' : '' )
-.( isset( $nextlink ) ? '<a class="button next" href="'.$nextlink.'">Next</a> ' : '' );
-
-	$out .= "</div>";	
-	
-	return processOutput( $out, $print_on );
-}
-
-// ============================================================================
-
 function RMLdisplayend( $print_on = true )
 {
 	global $SQLcounter, $SQLtime, $SQLsize, $starttime, $Version;
@@ -410,7 +394,7 @@ function RMLdisplaytitle( $print_on = true ) {
 	global $function, $subject, $static, $message, $document, $author, $id, $section, $sequence, $format, $comment, $news, $footnote, $note, $style, $lists, $forum;
 
 	//default
-	$title = '~ All Your Books Are Belong to Us!!! ~';
+	$title = "~ Jotunbane's Library ~";
 
 	$out = '<p class="pagetitle">';
 
@@ -467,7 +451,7 @@ function RMLdisplaytitle( $print_on = true ) {
 		$title = "Upload '$docname'";
 	break;
 	case 'readers':
-		$title = '~ Radical Militant Readers ~';
+		$title = '~ Highest Rated Users ~';
 	break;
 	case 'import':
 		$docname = RMLgetdocumenttitle( $id );
@@ -580,17 +564,9 @@ function RMLdisplaytitle( $print_on = true ) {
 
 function RMLdisplayfrontpage( $print_on = true ) {
 
-	$out .= '<img style="float:right;margin-left:10px;margin-bottom:10px" src="./img/about.jpg" />';
-	$out .= '<p class="ParaNoIndent">Welcome to a world of uniformly formatted, semi-proofread, very much readable ebooks. Made with love and attention to detail, by readers for readers. We are part of the copyright abolition movement. Meaning, we don\'t want to reform copyright, we are simply ignoring it. If You feel like giving a helping hand, You can sign up and get to work, (it will probably take a lifetime to proofread all these books on my own).</p>';
-	$out .= '<p class="ParaBlankOver">We store our books in a PostgreSQL database. Or, to be exact, we store all the paragraphs in all our books in a database. In that way it is easy to correct mistakes and spelling errors, so if you see any, you can log-in and fix it. And it saves us from having to store all those ePub files, when you borrow a book we just create a new one with all the latest updates, just for you.</p>';
-	$out .= '<p class="ParaIndent">This gives us a lot of flexibility. We can output the books in any format we like (ePub only currently, HTML and plaintext are implemented but turned off). We can change the layout of all the books in one operation.</p>';
+	$out .= '<img style="float:right;margin-left:20px;margin-bottom:10px" src="./img/about.jpg" />';
 
-	$out .= '<p class="ParaBlankOver">We only have two rules here. <a href="https://www.youtube.com/watch?v=dPtH2KPuQbs">Rule #1</a> and <a href="https://www.youtube.com/watch?v=IeTybKL1pM4">Rule #2</a>. I think rule #1 is universally accepted as a good idea. #2 less so. But these are the rules, Nina Paley will <a href="https://www.youtube.com/watch?v=XO9FKQAxWZc">explain why</a>. [Note: Nina had nothing to do with this, please dont pester her about it, we just like her.]';
-	
-	$out .= '<p class="ParaBlankOver">The logo is released under a Creative Commons Attribution-ShareAlike license by <a href="http://readersbillofrights.info">Readers Bill of Rights</a>. It is created by cartoonist and <a href="http://questioncopyright.org/">QuestionCopyright.org</a> artist-in-residence <a href="http://blog.ninapaley.com/">Nina Paley</a>. You can support Nina\'s work and view her amazing and Creative Commons licensed film, <a href="http://www.sitasingstheblues.com/">Sita Sings the Blues</a>, over at her website.</p>';
-
-	$out .= '<div class="inlineclear"></div>';
-	$out .= '<p class="Head1">Proofread books</p><p class="BoxText" style="text-align:center">';
+	$out .= '<p class="BoxText" style="text-align:center">';
 
 	$result = RMLfiresql("SELECT id FROM document WHERE status=3 ORDER BY posted_on DESC LIMIT 20");
 	for($row=0;$row<pg_numrows($result);$row++) {

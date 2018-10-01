@@ -689,100 +689,6 @@ function RMLgettexttype( $typename, $reverse = false )
 
 // ============================================================================
 
-function RMLgetprevlink()
-{
-	global $id, $document, $section, $page, $subject;
-
-	$result = '';
-	switch($document) {
-		case 'view':
-			if($section > 0) {
-				$prevsection = $section - 1;
-				$result = "?document=view&amp;id=$id&amp;section=$prevsection";
-			}
-		break;
-	}
-
-	switch($subject) {
-		case 'view':
-			if($page > 1) {
-				$tmp = $page - 1;
-				$result = "?subject=view&amp;id=$id&amp;page=$tmp";
-			}
-		break;
-	}
-	return $result;
-}
-
-// ============================================================================
-
-function RMLgetnextlink( $print_on = false )
-{
-	global $id, $document, $section, $page, $subject;
-
-	$result = '';
-	if( $document == 'view' ) {
-		$tablename = RMLgetactivetable( $id );
-		$sql = RMLfiresql( "SELECT COUNT(id) as counter FROM $tablename WHERE parent_id=0 and doc_id=$id" );
-		if( ! ( $thisrow = pg_Fetch_Object( $sql, 0 ) ) ) {
-			$out = 'ERROR: No valid dacument in <code>getnextlink()</code>.';
-		} else {
-			$maxsection = $thisrow->counter;
-
-			if($section > 0) {
-				if($section < $maxsection) {
-					$nextsection = $section + 1;
-					$result = '?document=view&amp;id='.$id.'&amp;section='.$nextsection;
-				}
-			} else {
-				$result = '?document=view&amp;id='.$id.'&amp;section=1';
-			}
-		}
-	} elseif( $subject == 'view' ) {
-		if( !isset($page) || $page === '' || $page === 0 ) {
-			$page = 1;
-		}
-		if( $page < ( RMLgetmaxpage() - 1 ) ) {
-			$result = '?subject=view&amp;id='.$id.'&amp;page='.( $page + 1 );
-		}
-	}
-
-	$out = $result;
-	return processOutput( $out, $print_on );
-}
-
-// ============================================================================
-
-function RMLgetuplink()
-{
-	global $document, $section, $letter, $author, $id, $subject;
-
-	$result = '';
-	if ( $document == 'view') {
-		if( $section ) {
-			$result = '?document=view&amp;id='.$id;
-		} else {
-			$sql = RMLfiresql( "SELECT author_id,(SELECT sort_name FROM author WHERE id=document.author_id) AS sort_name FROM document WHERE id=$id" );
-			$thisrow = pg_Fetch_Object( $sql, 0 );
-			$authorid = $thisrow->author_id;
-			$thissortname = $thisrow->sort_name;
-			$myletter = $thissortname[0];
-			$result = '?author=view&amp;id='.$authorid.'&amp;letter='.$myletter;
-		}
-	}
-
-	if( $subject == 'view' && $id > 0 ) {
-		$result = '?subject=view&amp;id=0&amp;letter='.$letter;
-	}
-
-	if( $author == 'view' && $id > 0 ) {
-		$result = '?author=view&amp;letter='.$letter;
-	}
-	return $result;
-}
-
-// ============================================================================
-
 function RMLdisplaytoc( $id, $print_on = true )
 {
 	$out = '';
@@ -1712,7 +1618,7 @@ function RMLupdatenews( $print_on = true )
 // ============================================================================
 
 function RMLgetrating( $number ) {
-	if( $number > 1000 ) return "Elite";
+	if( $number > 1336 ) return "Elite";
 	if( $number > 750 ) return "Jedi Master";
 	if( $number > 500 ) return "Jedi";
 	if( $number > 250 ) return "Zen Master";
@@ -1722,8 +1628,8 @@ function RMLgetrating( $number ) {
 	if( $number > 25 ) return "Apprentice";
 	if( $number > 10 ) return "Novice";
 	if( $number > 5 ) return "Amateur";
-	if( $number > 1 ) return "Trainee";
-	return "dyslexic";
+	if( $number > 1 ) return "Mostly Harmless";
+	return "Harmless";
 }
 
 // ============================================================================

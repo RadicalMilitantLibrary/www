@@ -114,8 +114,9 @@ img.Cover {
 }
 
 img.FrontCover {
-	margin			: 0;
-	max-height		: 180px;
+	margin-right	: 1px;
+	margin-bottom	: 3px;
+	max-height		: 150px;
 	border-width	: 1px;
 	border-style	: solid;
 	border-color	: black;

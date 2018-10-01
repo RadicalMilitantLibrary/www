@@ -111,7 +111,7 @@ function RMLeditdocument( $id ) {
 	$languageid = $thisres->language_id;
 	$thisid = $thisres->id;
 
-	if( ! hasRights( 'editdocument', array( $thisres->handle ) ) ) {
+	if( !hasRights('editdocument', array($thisres->handle)) && RMLgetkarma(RMLgetcurrentuser()) < 1336 ) {
 		$out = "ERROR: Document Update : Cookie baaaaaaaad...";
 	} else {
 
@@ -170,9 +170,8 @@ function RMLupdatedocument( $id, $print_on = true ) {
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$handle = $thisrow->handle;
 
-	if( ! hasRights( 'editdocument', array( $handle ) ) ) {
-		$out = "ERROR: Document Update : Cookie baaaaaaaad...";
-	} else {
+	if( !hasRights('editdocument', array($handle)) && RMLgetkarma(RMLgetcurrentuser()) < 1336 ) {
+		$out = "ERROR: Document Update : Cookie baaaaaaaad...";	} else {
 
 		$subject_id = RMLgetsubjectid($subject);
 		$author_id = RMLgetauthorid($author);
@@ -727,6 +726,8 @@ function RMLreaddocument( $id, $section, $print_on = true )
 	$result = RMLfiresql( "SELECT handle FROM document WHERE id=$id" );
 	$thisowner = pg_Fetch_Object( $result, 0 );
 	$owner = $thisowner->handle;
+	
+	$currentkarma = RMLgetkarma(RMLgetcurrentuser());
 
 	$out = '';
 	$result = RMLfiresql( "SELECT body,paragraphtype,id FROM $tablename WHERE doc_id=$id AND parent_id=$thisparent order by id" );
@@ -737,8 +738,9 @@ function RMLreaddocument( $id, $section, $print_on = true )
 		$sequence = $thisrow->id;
 
 		if( RMLgetcurrentuser() ) {
-		// .' <small>[<a href="?para=delete&amp;id='.$id.'&amp;section='.$section.'&amp;sequence=s'.$sequence.'">Delete</a>]</small>'
-		
+		if($currentkarma > 1336) {
+				$thisbody .= ' <small>[<a href="?para=delete&amp;id='.$id.'&amp;section='.$section.'&amp;sequence=s'.$sequence.'">Delete</a>]</small>';
+			}
 			$out .= RMLdisplay( '<a id="s'.$sequence.'"/><small>[<a href="?function=edit&amp;id='.$id.'&amp;sequence=s'.$sequence.'&amp;section='.$section.'">Edit</a>]</small>'.$thisbody, $type, false );
 		} else {
 			$out .= RMLdisplay( '<a id="s'.$sequence.'"/>'.$thisbody, $type, false );
@@ -1174,10 +1176,7 @@ function RMLdeleteelement( $id )
 	$result = RMLfiresql( "SELECT handle FROM document WHERE id=$id" );
 	$thisrow = pg_Fetch_Object( $result, 0 );
 	$owner = $thisrow->handle;
-	if( ! hasRights( 'editdocument', array( $owner ) ) ) {
-		$out = "ERROR : Not your document ...";
-	} else {
-
+	
 		$result = RMLfiresql("SELECT body,paragraphtype FROM $table_name WHERE doc_id=$id AND id=$sequence");
 		$thisrow = pg_Fetch_Object($result,0);
 		$paratype = $thisrow->paragraphtype;
@@ -1192,11 +1191,7 @@ function RMLdeleteelement( $id )
 		}
 		RMLfiresql("DELETE FROM $table_name WHERE doc_id=$id AND id=$sequence");
 
-	// Should not be necessary and will clearly not work like this (Jotunbane)
-	//	InfoCOMfiresql("UPDATE $table_name SET id=id-1 WHERE doc_id=$id AND id>$sequence AND (paragraphtype < 10 OR paragraphtype > 16)");
 
-		//TODO: deal with pictures...
-	}
 	return processOutput( $out, $print_on );
 }
 

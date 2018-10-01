@@ -89,7 +89,7 @@ function RMLgetkarma($userhandle) {
 
 function RMLgivekarma($userid) {
 	if($userid == '') return 0;
-	$result = RMLfiresql("UPDATE \"user\" SET karma=karma+1 WHERE id='$userid'");
+	$result = RMLfiresql("UPDATE \"user\" SET karma=karma+1 WHERE id='$userid' AND karma < 1337");
 }
 
 // ============================================================================
