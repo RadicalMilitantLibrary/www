@@ -52,7 +52,7 @@ $comment = null;
 $style = null;
 $out = '';
 
-if ( isset($_REQUEST) || count($_REQUEST) <= 0 ) {
+if ( isset($_REQUEST) && count($_REQUEST) > 0 ) {
 
 	$id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
 	if(is_numeric($_REQUEST['parent'])) { $parent = $_REQUEST['parent']; }
