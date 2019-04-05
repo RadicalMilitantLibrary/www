@@ -160,9 +160,13 @@ function RMLcreatenewuser()
 		die( 'RMLcreatenewuser() : Blowfish not available ... FATAL' );
 	}
     $username = RMLgetusername($login, $logon);
-    
+  
+RMLdisplay("USER : $username",5);
+  
 	$result = RMLfiresql("SELECT id FROM \"user\" WHERE handle='$username'");
 	
+	
+
 	if(pg_num_rows($result) == 0) {
 		RMLfiresql("INSERT INTO \"user\" (id,handle,user_name,karma) VALUES(DEFAULT,'$username',DEFAULT,DEFAULT)");
 	} else {
@@ -180,11 +184,11 @@ function RMLgetusername($string1, $string2) {
 	$result = crypt($string1, $string2);
 	
 	$options = ['salt' => $secret_salt];
-    $result = password_hash($result, PASSWORD_BCRYPT, $options);
-        
-    list( $salt, $result ) = preg_split( '@\.@', $result );
-    
-    return $result;
+  $result = password_hash($result, PASSWORD_BCRYPT, $options);
+  
+	$result = substr($result,29);
+
+  return $result;
 }
 
 // ============================================================================

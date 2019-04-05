@@ -77,21 +77,17 @@ function RMLdisplaymenu( $print_on = true )
 		$out .= "\n<a class=\"button\" href=\"?lists=view&amp;id=0\">Lists</a>";
 	}
 
-	if($currentuser) {
-		if($function == 'readers') {
-			$out .= "\n<a class=\"activebutton\" href=\"?function=readers\">Users</a>";
-		} else {
-			$out .= "\n<a class=\"button\" href=\"?function=readers\">Users</a>";
-		}
-
-		if($forum == 'view') {
-			$out .= "\n<a class=\"activebutton\" href=\"?forum=view\">Forum</a>";
-		} else {
-			$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
-		}
+	if($function == 'readers') {
+		$out .= "\n<a class=\"activebutton\" href=\"?function=readers\">Users</a>";
+	} else {
+		$out .= "\n<a class=\"button\" href=\"?function=readers\">Users</a>";
 	}
 
-//	$out .= "\n<a class=\"button\" href=\"?function=rss\">RSS</a>";
+	if($forum == 'view') {
+		$out .= "\n<a class=\"activebutton\" href=\"?forum=view\">Forum</a>";
+	} else {
+		$out .= "\n<a class=\"button\" href=\"?forum=view\">Forum</a>";
+	}
 
 	if( ( !$currentuser ) && ( $function <> 'login' ) ) {
 		$out .= "\n<a class=\"button\" href=\"?function=login\">Login</a>";

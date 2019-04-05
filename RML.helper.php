@@ -1427,15 +1427,14 @@ $epub->addFile("./fonts/DejaVuSansMono.ttf", "DejaVuSansMono.ttf");
 
 function RMLgetstylesheet($authorid,$subjectid,$id)
 {
-	//$owner = RMLgetcurrentuser();
+	$owner = RMLgetcurrentuser();
 	global $function;
-	$result = RMLfiresql("SELECT style FROM stylesheet WHERE id=19");
+	$result = RMLfiresql("SELECT style FROM stylesheet WHERE id=1");
 	$thisrow = pg_Fetch_Object($result,0);
 	$style = $thisrow->style;
 	
 	return $style;
 	
-	/*
 	$result = RMLfiresql("SELECT style FROM stylesheet WHERE owner='$owner' AND name='document$id'");
 	if(pg_numrows($result) > 0) {
 		$thisrow = pg_Fetch_Object($result,0);
@@ -1467,7 +1466,7 @@ function RMLgetstylesheet($authorid,$subjectid,$id)
 	$result = RMLfiresql("SELECT style FROM stylesheet WHERE id=1");
 	$thisrow = pg_Fetch_Object($result,0);
 	$style = $thisrow->style;
-	return $style;*/
+	return $style;
 }
 
 // ============================================================================

@@ -23,7 +23,7 @@ function RMLdisplayauthor( $id, $print_on = true )
 	if( !isset( $id ) || $id == 0 ) {
 		$out .= RMLdisplayauthororder( false );
 
-		$result = RMLfiresql("SELECT id,name,sort_name,born,dead,bio,(SELECT COUNT(author_id) FROM document WHERE author_id = author.id AND status=2) AS counter FROM author WHERE letter='$letter' GROUP BY counter,sort_name,author.id,author.name,author.born,author.dead,author.bio ORDER BY sort_name");
+		$result = RMLfiresql("SELECT id,name,sort_name,born,dead,bio,(SELECT COUNT(author_id) FROM document WHERE author_id = author.id AND status>1) AS counter FROM author WHERE letter='$letter' GROUP BY counter,sort_name,author.id,author.name,author.born,author.dead,author.bio ORDER BY sort_name");
 		$displaycount = 0;
 		setTimeZone();
 		for( $row=0; $row < pg_numrows( $result ); $row++ ) {
