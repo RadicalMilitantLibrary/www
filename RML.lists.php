@@ -35,7 +35,7 @@ function RMLdisplaylists($print_on = true) {
 				$thisdesc = strip_tags( $thisdesc );
 			}
 		
-			$out .= "\n<div class=\"box\"><div class=\"boxheader\"><a href=\"?lists=view&amp;id=$thisid\"><b>$thisname</b></a></div><div class=\"order\" style=\"text-align:right;margin:0;margin-top:-1.4em\"><small><b>$counter</b> books</small></div><p class=\"boxtext\">$thisdesc</p></div>";
+			$out .= "\n<div class=\"box\"><div class=\"boxheader\"><a href=\"?lists=view&amp;id=$thisid\"><b>$thisname</b></a></div><div class=\"order\" style=\"text-align:right;margin:0;margin-top:-1.4em\"><small><b>$counter</b> books</small></div><div class=\"boxtext\">$thisdesc</div></div>";
 		}
 		if($user) {
 			$out .= '<a class="button star" href="?lists=create">New List</a>';

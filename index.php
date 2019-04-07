@@ -52,6 +52,8 @@ $comment = null;
 $style = null;
 $out = '';
 
+$cookie = RMLpreparestring($_COOKIE['RML']);
+
 if ( isset($_REQUEST) && count($_REQUEST) > 0 ) {
 
 	$id = ( is_numeric($_REQUEST['id']) && $_REQUEST['id'] > 0 ) ? $_REQUEST['id'] : 0 ;
@@ -72,7 +74,6 @@ if ( isset($_REQUEST) && count($_REQUEST) > 0 ) {
 	$logon = RMLpreparestring($_REQUEST['logon']);
 	$mail = RMLpreparestring($_REQUEST['mail']);
 	$author = RMLpreparestring($_REQUEST['author']);
-	$cookie = RMLpreparestring($_COOKIE['RML']);
 	$title = RMLpreparestring($_REQUEST['title']);
 	$subtitle = RMLpreparestring($_REQUEST['subtitle']);
 	$year = RMLpreparestring($_REQUEST['year']);

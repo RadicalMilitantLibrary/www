@@ -1008,6 +1008,7 @@ function RMLflushdocument( $id )
 		RMLfiresql( "DELETE FROM $table WHERE doc_id=$id" );
 		RMLfiresql( "DELETE FROM footnote where docid=$id" );
 		RMLfiresql( "UPDATE document SET status=0 WHERE id=$id" );
+		RMLfiresql( "DELETE FROM korrektur WHERE doc_id=$id" );
 		del_dir( './pictures/'.$id );
 	}
 }
